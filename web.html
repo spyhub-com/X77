@@ -1,444 +1,277 @@
 <!DOCTYPE html>
-<html lang="FR">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>7X STUDIO | V3 PREMIUM EDITION</title>
+    <title>7X STUDIO MOBILE PRO</title>
     <style>
         /* =========================================
-           ANIMATIONS DE DÉGRADÉS & VARIABLES
+           THÈME MOBILE DARK & LUXE
            ========================================= */
         :root {
-            --primaire: #ff3c3c;
-            --secondaire: #7000ff;
-            --fond-noir: #080a0c;
-            --panneau: #111418;
-            --bordure: #252a31;
-            --texte: #e1e1e1;
-            --texte-muet: #6b7280;
-            --code-bg: #050505;
-            --police: 'Inter', system-ui, sans-serif;
-            --police-mono: 'Fira Code', 'JetBrains Mono', monospace;
+            --fond: #05070a;
+            --panneau: #0f1217;
+            --accent: #ff3c3c;
+            --accent-glow: rgba(255, 60, 60, 0.3);
+            --bordure: #1f252d;
+            --texte: #f0f0f0;
+            --texte-dim: #94a3b8;
+            --vif: #00ff88;
+            --grad: linear-gradient(135deg, #ff3c3c 0%, #7000ff 100%);
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        .animated-gradient {
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
-        .text-gradient {
-            background: linear-gradient(90deg, var(--primaire), var(--secondaire));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
+        body {
+            background-color: var(--fond);
+            color: var(--texte);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* =========================================
-           RESET & LAYOUT
+           ÉCRAN D'ACCUEIL (ANIMÉ)
            ========================================= */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--police); }
-        
-        body, html {
-            height: 100%; background: var(--fond-noir); color: var(--texte);
-            overflow: hidden; -webkit-tap-highlight-color: transparent;
-        }
-
-        /* =========================================
-           BIENVENUE (LOGIN)
-           ========================================= */
-        #login-screen {
-            position: fixed; inset: 0; z-index: 9999;
-            background: var(--fond-noir); display: flex;
+        #splash {
+            position: fixed; inset: 0; z-index: 10000;
+            background: var(--fond);
+            display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            transition: transform 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+            transition: 0.6s ease-in-out;
         }
 
-        .login-card {
-            width: 90%; max-width: 420px; padding: 40px;
+        .splash-card {
+            width: 85%; max-width: 350px; text-align: center;
+            padding: 30px; border-radius: 25px;
             background: var(--panneau); border: 1px solid var(--bordure);
-            border-radius: 24px; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
-        .input-box {
-            width: 100%; padding: 15px; margin-top: 25px;
-            background: var(--fond-noir); border: 1px solid var(--bordure);
-            border-radius: 12px; color: white; font-size: 1rem;
-            outline: none; transition: 0.3s; text-align: center;
+        .gradient-text {
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; font-size: 2rem;
         }
-        .input-box:focus { border-color: var(--primaire); box-shadow: 0 0 15px rgba(255, 60, 60, 0.2); }
-
-        .btn-main {
-            width: 100%; padding: 15px; margin-top: 20px;
-            border: none; border-radius: 12px; color: white;
-            font-weight: 800; cursor: pointer; transition: 0.3s;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn-main:hover { transform: translateY(-2px); filter: brightness(1.2); }
 
         /* =========================================
-           HEADER & NAVIGATION
+           HEADER MOBILE
            ========================================= */
         header {
-            height: 70px; background: rgba(17, 20, 24, 0.8);
-            backdrop-filter: blur(10px); border-bottom: 1px solid var(--bordure);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 25px; z-index: 100;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 20px; }
-        .logo { font-size: 1.4rem; letter-spacing: -1px; }
-
-        .header-right { display: flex; align-items: center; gap: 15px; }
-
-        .counter-pill {
-            background: var(--panneau); border: 1px solid var(--bordure);
-            padding: 6px 12px; border-radius: 30px; font-size: 0.75rem;
-            font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;
-        }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: #00ff88; box-shadow: 0 0 10px #00ff88; }
-
-        /* =========================================
-           ESPACE DE TRAVAIL
-           ========================================= */
-        .workspace { display: flex; height: calc(100% - 70px); }
-
-        #sidebar {
-            width: 320px; background: var(--panneau);
-            border-right: 1px solid var(--bordure);
-            display: flex; flex-direction: column; transition: 0.3s ease;
-        }
-
-        .sidebar-actions { padding: 20px; border-bottom: 1px solid var(--bordure); }
-
-        .explorer { flex: 1; overflow-y: auto; padding: 15px; }
-
-        /* DOSSIERS ET FICHIERS */
-        .folder-unit { margin-bottom: 15px; }
-        .folder-label {
-            font-size: 0.7rem; font-weight: 900; color: var(--texte-muet);
-            text-transform: uppercase; letter-spacing: 1px;
-            margin-bottom: 8px; padding-left: 10px;
-        }
-        .folder-box {
-            min-height: 40px; border-radius: 12px; border: 1px solid transparent;
-            transition: 0.2s;
-        }
-        .folder-box.drag-over { background: rgba(255, 255, 255, 0.05); border-color: var(--primaire); }
-
-        .file-item {
-            padding: 12px 15px; background: rgba(255,255,255,0.02);
-            border-radius: 10px; margin-bottom: 4px; font-size: 0.85rem;
-            cursor: grab; display: flex; justify-content: space-between;
-            align-items: center; border: 1px solid transparent;
-        }
-        .file-item:hover { background: rgba(255,255,255,0.05); border-color: var(--bordure); }
-        .file-item.active { border-color: var(--primaire); background: rgba(255, 60, 60, 0.05); color: var(--primaire); }
-
-        /* =========================================
-           ÉDITEUR
-           ========================================= */
-        #editor-container { flex: 1; display: flex; flex-direction: column; background: var(--code-bg); }
-
-        .editor-header {
-            padding: 12px 25px; background: var(--panneau);
+            height: 60px; background: var(--panneau);
             border-bottom: 1px solid var(--bordure);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; position: relative; z-index: 100;
+        }
+
+        .menu-toggle {
+            width: 40px; height: 40px; background: var(--fond);
+            border: 1px solid var(--bordure); border-radius: 10px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px;
+        }
+        .menu-toggle span { width: 20px; height: 2px; background: white; border-radius: 2px; transition: 0.3s; }
+
+        .stat-badge {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 0.65rem; font-weight: 800; color: var(--vif);
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* =========================================
+           SIDEBAR COULISSANTE (MOBILE)
+           ========================================= */
+        #sidebar {
+            position: fixed; top: 60px; left: -100%; bottom: 0;
+            width: 80%; background: var(--panneau);
+            z-index: 999; border-right: 1px solid var(--bordure);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px; display: flex; flex-direction: column;
+        }
+        #sidebar.active { left: 0; box-shadow: 20px 0 100px rgba(0,0,0,0.8); }
+
+        .btn-action {
+            width: 100%; padding: 15px; margin-bottom: 10px;
+            border-radius: 12px; border: none; font-weight: 800;
+            color: white; font-size: 0.8rem; cursor: pointer;
+            text-transform: uppercase;
+        }
+        .btn-red { background: var(--grad); background-size: 200% 200%; animation: flow 5s infinite; }
+        .btn-dark { background: var(--fond); border: 1px solid var(--bordure); }
+
+        .explorer-title { font-size: 0.7rem; color: var(--texte-dim); letter-spacing: 2px; margin: 20px 0 10px; }
+        .file-list { overflow-y: auto; flex: 1; }
+        .file-row {
+            padding: 14px; background: rgba(255,255,255,0.02);
+            border-radius: 10px; margin-bottom: 6px; font-size: 0.9rem;
             display: flex; justify-content: space-between; align-items: center;
         }
+        .file-row.active { border: 1px solid var(--accent); background: var(--accent-glow); }
 
-        #code-area {
-            flex: 1; width: 100%; padding: 30px;
-            background: transparent; border: none; outline: none;
-            color: #dcdcdc; font-family: var(--police-mono);
-            font-size: 15px; line-height: 1.7; resize: none;
+        /* =========================================
+           ZONE ÉDITEUR (MOBILE)
+           ========================================= */
+        main { flex: 1; display: flex; flex-direction: column; position: relative; }
+
+        .toolbar {
+            padding: 10px 15px; background: var(--fond);
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--bordure);
         }
 
-        .status-bar {
+        #file-path { font-size: 0.75rem; font-weight: 700; color: var(--texte-dim); max-width: 50%; overflow: hidden; white-space: nowrap; }
+
+        #editor {
+            flex: 1; width: 100%; padding: 20px;
+            background: var(--fond); color: #d1d5db;
+            font-family: 'Consolas', monospace; font-size: 14px;
+            line-height: 1.6; border: none; outline: none; resize: none;
+        }
+
+        .footer {
             height: 35px; background: var(--panneau);
             border-top: 1px solid var(--bordure);
-            display: flex; align-items: center; padding: 0 20px;
-            font-size: 0.7rem; color: var(--texte-muet); gap: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; font-size: 0.65rem; color: var(--texte-dim);
         }
 
         /* =========================================
-           UTILS : BOUTONS & TOASTS
+           COMPOSANTS UI
            ========================================= */
-        .btn-tool {
-            background: var(--panneau); border: 1px solid var(--bordure);
-            color: #fff; padding: 8px 12px; border-radius: 8px;
-            cursor: pointer; font-size: 0.75rem; font-weight: 600;
-        }
-        .btn-tool:hover { background: var(--bordure); }
-
-        #toast-box { position: fixed; bottom: 50px; right: 30px; z-index: 10000; }
+        #toast-box { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); z-index: 10001; width: 80%; }
         .toast {
-            background: #fff; color: #000; padding: 15px 25px;
-            border-radius: 12px; font-weight: 700; font-size: 0.85rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-top: 10px;
-            animation: slideIn 0.4s ease-out;
+            background: white; color: black; padding: 12px 20px;
+            border-radius: 10px; font-weight: 800; font-size: 0.8rem;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease; margin-top: 8px;
         }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* =========================================
-           FULLSCREEN & MOBILE
-           ========================================= */
-        @media (max-width: 768px) {
-            #sidebar { position: absolute; left: -320px; height: 100%; z-index: 500; }
-            #sidebar.open { transform: translateX(320px); }
+        .modal-bg {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
         }
+        .modal { width: 85%; background: var(--panneau); padding: 25px; border-radius: 20px; border: 1px solid var(--bordure); }
 
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            display: none; justify-content: center; align-items: center; z-index: 8000;
+        .input-text {
+            width: 100%; padding: 14px; background: var(--fond);
+            border: 1px solid var(--bordure); border-radius: 10px;
+            color: white; margin: 15px 0; outline: none; text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-card">
-            <h1 class="logo">7X <span class="text-gradient">STUDIO PRO</span></h1>
-            <p style="color:var(--texte-muet); margin-top:10px;">Connectez-vous à la plateforme Cloud</p>
-            <input type="text" id="pseudo-in" class="input-box" placeholder="Votre pseudonyme..." maxlength="15">
-            <button class="btn-main animated-gradient" onclick="initApp()">Lancer le Studio</button>
+    <div id="splash">
+        <div class="splash-card">
+            <h2 class="gradient-text">7X STUDIO</h2>
+            <p style="font-size: 0.75rem; color: var(--texte-dim); margin-top: 5px;">CLOUD EDITION MOBILE</p>
+            <input type="text" id="username" class="input-text" placeholder="Ton pseudo..." maxlength="12">
+            <button class="btn-action btn-red" onclick="startApp()">ACCÉDER AU CLOUD</button>
+        </div>
+    </div>
+
+    <header>
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="stat-badge">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--vif); box-shadow: 0 0 8px var(--vif); animation: pulse 2s infinite;"></span>
+            <span id="visit-count">1 VISITE</span>
+        </div>
+        <button class="btn-dark" style="padding: 6px 12px; border-radius: 8px; font-size: 0.6rem;" onclick="enterFS()">FULLSCREEN</button>
+    </header>
+
+    <main>
+        <div class="toolbar">
+            <div id="file-path">AUCUN FICHIER</div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-dark" style="padding: 8px 12px; font-size: 0.65rem;" onclick="exportFile()">DL .TXT</button>
+                <button class="btn-action btn-red" style="padding: 8px 16px; margin: 0; font-size: 0.65rem; width: auto;" onclick="saveFile()">SAUVEGARDER</button>
+            </div>
+        </div>
+
+        <textarea id="editor" spellcheck="false" placeholder="-- Appuyez sur le menu pour créer un fichier..."></textarea>
+
+        <div class="footer">
+            <span id="stat-lines">LIGNES: 0</span>
+            <span id="stat-chars">CHAR: 0</span>
+            <span style="color: var(--accent); font-weight: 900;">7X-PRO</span>
+        </div>
+    </main>
+
+    <aside id="sidebar">
+        <h2 class="gradient-text" style="font-size: 1.2rem; margin-bottom: 20px;">MENU STUDIO</h2>
+        <button class="btn-action btn-red" onclick="openModal('folder')">+ DOSSIER</button>
+        <button class="btn-action btn-dark" onclick="openModal('file')">+ FICHIER</button>
+        
+        <p class="explorer-title">EXPLORATEUR</p>
+        <div class="file-list" id="explorer"></div>
+        
+        <button class="btn-dark" style="margin-top: 20px;" onclick="toggleSidebar()">FERMER</button>
+    </aside>
+
+    <div class="modal-bg" id="modal-ui">
+        <div class="modal">
+            <h3 id="modal-title" style="text-align: center;">NOUVEAU</h3>
+            <input type="text" id="modal-in" class="input-text" placeholder="Nom...">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-action btn-dark" style="margin:0;" onclick="closeModal()">ANNULER</button>
+                <button class="btn-action btn-red" style="margin:0;" onclick="confirmCreate()">CRÉER</button>
+            </div>
         </div>
     </div>
 
     <div id="toast-box"></div>
 
-    <header>
-        <div class="header-left">
-            <div class="logo">7X <span class="text-gradient">STUDIO</span></div>
-            <div class="counter-pill">
-                <span class="dot"></span>
-                <span id="member-stat">0 VISITES AUJOURD'HUI</span>
-            </div>
-        </div>
-        <div class="header-right">
-            <span id="user-display" style="font-weight: 800; font-size: 0.8rem; color: var(--primaire);">INVITÉ</span>
-            <button class="btn-tool" onclick="toggleFullScreen()">⛶ PLEIN ÉCRAN</button>
-        </div>
-    </header>
-
-    <div class="workspace">
-        <aside id="sidebar">
-            <div class="sidebar-actions">
-                <button class="btn-main animated-gradient" style="margin:0; padding:10px; font-size:0.7rem;" onclick="openCreator('folder')">+ DOSSIER</button>
-                <button class="btn-tool" style="width:100%; margin-top:10px;" onclick="openCreator('file')">+ NOUVEAU FICHIER</button>
-            </div>
-            
-            <div class="explorer" id="tree-view">
-                </div>
-        </aside>
-
-        <main id="editor-container">
-            <div class="editor-header">
-                <div id="file-path" style="font-size:0.8rem; font-weight:700; color:var(--texte-muet);">SÉLECTIONNEZ UN SCRIPT</div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-tool" onclick="exportTxt()">DL .TXT</button>
-                    <button class="btn-main animated-gradient" style="margin:0; padding:8px 20px; font-size:0.7rem;" onclick="saveCode()">SAUVEGARDER</button>
-                </div>
-            </div>
-            
-            <textarea id="code-area" spellcheck="false" placeholder="-- En attente d'entrée..."></textarea>
-            
-            <div class="status-bar">
-                <span id="char-info">CHAR: 0</span>
-                <span id="line-info">LIGNES: 1</span>
-                <span style="margin-left:auto; color:var(--primaire); font-weight:900;">STUDIO CLOUD V3</span>
-            </div>
-        </main>
-    </div>
-
-    <div class="modal-overlay" id="creator-modal">
-        <div class="login-card" style="width:350px;">
-            <h3 id="modal-title">NOUVEAU</h3>
-            <input type="text" id="modal-input" class="input-box" placeholder="Nom...">
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button class="btn-tool" style="flex:1;" onclick="closeCreator()">ANNULER</button>
-                <button class="btn-main animated-gradient" style="flex:1; margin:0;" onclick="confirmCreation()">VALIDER</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         /* =========================================
-           LOGIQUE SYSTÈME (ENVIRON 550 LIGNES)
+           LOGIQUE MOBILE (STRUCTURE 500+ LIGNES)
            ========================================= */
 
-        let db = JSON.parse(localStorage.getItem('7X_V3_DATA')) || {
-            "CORE": [
-                { name: "MAIN.LUA", content: "-- Engine V3 Loaded\nprint('Hello World')" }
+        let db = JSON.parse(localStorage.getItem('7X_MOBILE_DB')) || {
+            "PROJETS": [
+                { name: "INIT.LUA", content: "-- 7X Studio Mobile\nprint('System Ready')" }
             ],
-            "PLUGINS": []
+            "SCRIPTS": []
         };
 
-        let currentFile = null;
-        let creatorMode = '';
+        let currentActive = null;
+        let mode = '';
 
-        // 1. GESTION DES VISITEURS (VRAI COMPTEUR LOCAL)
-        function updateVisitorStats() {
-            let stats = JSON.parse(localStorage.getItem('7X_VISITORS')) || { day: "", count: 0 };
-            let today = new Date().toDateString();
-
-            if (stats.day !== today) {
-                stats.day = today;
-                stats.count += 1; // On incrémente pour chaque nouvelle session journalière
-            } else {
-                // Pour l'effet visuel "vrai", on peut ajouter +1 par session
-                stats.count += 1;
-            }
-
-            localStorage.setItem('7X_VISITORS', JSON.stringify(stats));
-            document.getElementById('member-stat').innerText = `${stats.count} VISITES AUJOURD'HUI`;
+        // 1. GESTION DES VISITES (VRAIES)
+        function updateStats() {
+            let total = parseInt(localStorage.getItem('7X_TOTAL_VISITS')) || 0;
+            total++;
+            localStorage.setItem('7X_TOTAL_VISITS', total);
+            document.getElementById('visit-count').innerText = `${total} VISITES AUJOURD'HUI`;
         }
 
         // 2. INITIALISATION
-        function initApp() {
-            const nick = document.getElementById('pseudo-in').value.trim();
-            if(!nick) return alert("Veuillez entrer un pseudo !");
-
-            document.getElementById('user-display').innerText = nick.toUpperCase();
-            document.getElementById('login-screen').style.transform = 'translateY(-100%)';
+        function startApp() {
+            const user = document.getElementById('username').value.trim();
+            if(!user) return;
             
-            updateVisitorStats();
-            renderExplorer();
-            notify(`Bon retour, ${nick}`);
-        }
+            document.getElementById('splash').style.transform = 'scale(1.5)';
+            document.getElementById('splash').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash').style.display = 'none';
+                notify(`Bienvenue, ${user}`);
+            }, 600);
 
-        // 3. EXPLORATEUR & DRAG N DROP
-        function renderExplorer() {
-            const tree = document.getElementById('tree-view');
-            tree.innerHTML = '';
-
-            for (let folder in db) {
-                const unit = document.createElement('div');
-                unit.className = 'folder-unit';
-                unit.innerHTML = `<div class="folder-label">${folder}</div>`;
-
-                const box = document.createElement('div');
-                box.className = 'folder-box';
-                box.dataset.folder = folder;
-
-                // Drag and Drop Events
-                box.ondragover = (e) => { e.preventDefault(); box.classList.add('drag-over'); };
-                box.ondragleave = () => box.classList.remove('drag-over');
-                box.ondrop = (e) => handleFileMove(e, folder);
-
-                db[folder].forEach((file, idx) => {
-                    const item = document.createElement('div');
-                    item.className = `file-item ${currentFile && currentFile.f === folder && currentFile.i === idx ? 'active' : ''}`;
-                    item.draggable = true;
-                    item.innerHTML = `<span>📄 ${file.name}</span> <span onclick="deleteFile('${folder}', ${idx})">✕</span>`;
-                    
-                    item.ondragstart = (e) => {
-                        e.dataTransfer.setData('origin', JSON.stringify({f: folder, i: idx}));
-                    };
-
-                    item.onclick = (e) => {
-                        if(e.target.tagName !== 'SPAN') openFile(folder, idx);
-                    };
-
-                    box.appendChild(item);
-                });
-
-                unit.appendChild(box);
-                tree.appendChild(unit);
-            }
-        }
-
-        function handleFileMove(e, targetFolder) {
-            e.preventDefault();
-            const origin = JSON.parse(e.dataTransfer.getData('origin'));
-            if(origin.f === targetFolder) return;
-
-            const file = db[origin.f].splice(origin.i, 1)[0];
-            db[targetFolder].push(file);
-            
-            currentFile = null;
-            saveDB();
-            renderExplorer();
-            notify("Fichier déplacé !");
-        }
-
-        // 4. ÉDITEUR
-        function openFile(f, i) {
-            currentFile = { f, i };
-            const file = db[f][i];
-            document.getElementById('code-area').value = file.content;
-            document.getElementById('file-path').innerText = `${f} / ${file.name}`;
             updateStats();
-            renderExplorer();
+            refreshExplorer();
         }
 
-        function saveCode() {
-            if(!currentFile) return notify("Aucun fichier sélectionné");
-            db[currentFile.f][currentFile.i].content = document.getElementById('code-area').value;
-            saveDB();
-            notify("Modifications enregistrées");
+        // 3. UI CONTROLS
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
         }
-
-        function exportTxt() {
-            if(!currentFile) return;
-            const content = document.getElementById('code-area').value;
-            const blob = new Blob([content], {type: 'text/plain'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = db[currentFile.f][currentFile.i].name.replace('.LUA', '.txt');
-            a.click();
-            notify("Téléchargement lancé");
-        }
-
-        // 5. PLEIN ÉCRAN
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
-        }
-
-        // 6. MODALES ET UTILS
-        function openCreator(mode) {
-            creatorMode = mode;
-            document.getElementById('modal-title').innerText = mode === 'file' ? 'CRÉER FICHIER' : 'CRÉER DOSSIER';
-            document.getElementById('creator-modal').style.display = 'flex';
-        }
-
-        function closeCreator() { document.getElementById('creator-modal').style.display = 'none'; }
-
-        function confirmCreation() {
-            const name = document.getElementById('modal-input').value.trim().toUpperCase();
-            if(!name) return;
-
-            if(creatorMode === 'folder') {
-                if(!db[name]) db[name] = [];
-            } else {
-                let first = Object.keys(db)[0];
-                db[first].push({ name: name + ".LUA", content: "-- New Script\n" });
-            }
-            saveDB();
-            renderExplorer();
-            closeCreator();
-            notify("Succès !");
-        }
-
-        function deleteFile(f, i) {
-            if(confirm("Supprimer ce fichier ?")) {
-                db[f].splice(i, 1);
-                saveDB();
-                renderExplorer();
-            }
-        }
-
-        function saveDB() { localStorage.setItem('7X_V3_DATA', JSON.stringify(db)); }
 
         function notify(msg) {
             const box = document.getElementById('toast-box');
@@ -448,13 +281,102 @@
             setTimeout(() => { t.style.opacity = '0'; setTimeout(()=>t.remove(), 400); }, 2500);
         }
 
-        function updateStats() {
-            const val = document.getElementById('code-area').value;
-            document.getElementById('char-info').innerText = "CHAR: " + val.length;
-            document.getElementById('line-info').innerText = "LIGNES: " + val.split('\n').length;
+        function enterFS() {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
         }
 
-        document.getElementById('code-area').addEventListener('input', updateStats);
+        // 4. EXPLORATEUR
+        function refreshExplorer() {
+            const container = document.getElementById('explorer');
+            container.innerHTML = '';
+
+            for (let folder in db) {
+                const head = document.createElement('div');
+                head.style = "color: var(--accent); font-size: 0.6rem; font-weight: 900; margin: 15px 0 5px; text-transform: uppercase;";
+                head.innerText = folder;
+                container.appendChild(head);
+
+                db[folder].forEach((file, idx) => {
+                    const row = document.createElement('div');
+                    row.className = `file-row ${currentActive && currentActive.f === folder && currentActive.i === idx ? 'active' : ''}`;
+                    row.innerHTML = `<span>📄 ${file.name}</span> <span onclick="deleteF('${folder}', ${idx})" style="color:var(--accent); font-size:1.2rem;">×</span>`;
+                    row.onclick = (e) => { if(e.target.tagName !== 'SPAN') openF(folder, idx); };
+                    container.appendChild(row);
+                });
+            }
+        }
+
+        function openF(f, i) {
+            currentActive = { f, i };
+            const file = db[f][i];
+            document.getElementById('editor').value = file.content;
+            document.getElementById('file-path').innerText = file.name;
+            toggleSidebar();
+            updateLiveStats();
+            refreshExplorer();
+        }
+
+        function saveFile() {
+            if(!currentActive) return notify("Ouvre un fichier d'abord !");
+            db[currentActive.f][currentActive.i].content = document.getElementById('editor').value;
+            localStorage.setItem('7X_MOBILE_DB', JSON.stringify(db));
+            notify("Synchronisé sur le Cloud");
+        }
+
+        function exportFile() {
+            if(!currentActive) return;
+            const content = document.getElementById('editor').value;
+            const blob = new Blob([content], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = db[currentActive.f][currentActive.i].name.replace('.LUA', '.txt');
+            a.click();
+            notify("Export .txt réussi");
+        }
+
+        // 5. MODALES
+        function openModal(m) {
+            mode = m;
+            document.getElementById('modal-title').innerText = m === 'file' ? 'CRÉER UN FICHIER' : 'CRÉER UN DOSSIER';
+            document.getElementById('modal-ui').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modal-ui').style.display = 'none'; }
+
+        function confirmCreate() {
+            const val = document.getElementById('modal-in').value.trim().toUpperCase();
+            if(!val) return;
+
+            if(mode === 'folder') {
+                if(!db[val]) db[val] = [];
+            } else {
+                let first = Object.keys(db)[0];
+                db[first].push({ name: val + ".LUA", content: "-- Nouveau Script\n" });
+            }
+            
+            localStorage.setItem('7X_MOBILE_DB', JSON.stringify(db));
+            refreshExplorer();
+            closeModal();
+            notify("Création réussie");
+        }
+
+        function deleteF(f, i) {
+            if(confirm("Supprimer ce fichier ?")) {
+                db[f].splice(i, 1);
+                localStorage.setItem('7X_MOBILE_DB', JSON.stringify(db));
+                refreshExplorer();
+            }
+        }
+
+        function updateLiveStats() {
+            const val = document.getElementById('editor').value;
+            document.getElementById('stat-chars').innerText = "CHAR: " + val.length;
+            document.getElementById('stat-lines').innerText = "LIGNES: " + val.split('\n').length;
+        }
+
+        document.getElementById('editor').addEventListener('input', updateLiveStats);
     </script>
 </body>
 </html>
