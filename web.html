@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>7X STUDIO | GALAXY V7 ULTIMATE</title>
+    
+    <meta property="og:title" content="7X STUDIO - GALAXY V7">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://7x-studio.com">
+    <meta property="og:image" content="https://i.imgur.com/your-image.png"> <meta property="og:description" content="Le studio de développement mobile ultime. Créez, éditez et gérez vos scripts LUA dans un environnement Galaxy ultra-fluide avec sauvegarde Cloud.">
+    <meta name="theme-color" content="#bc4be3">
+    <meta name="twitter:card" content="summary_large_image">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -153,6 +161,8 @@
             transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             padding: 30px 20px;
             border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
         }
 
         #side-menu.active {
@@ -272,6 +282,17 @@
             letter-spacing: 0.5px;
             color: var(--cyan);
         }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 10005;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
     </style>
 </head>
 <body>
@@ -347,14 +368,14 @@
         <div class="footer">
             <div id="line-stat">LIGNES: 0</div>
             <div id="user-label" style="color:var(--cyan); font-weight: 900;">GALAXY-V7</div>
-            <div style="font-weight: 800;">© 7X STUDIO</div>
+            <div style="font-weight: 800; color: var(--text-muted);">© 7X STUDIO</div>
         </div>
     </main>
 
-    <div class="modal-overlay" id="modal-box" style="display:none; position: fixed; inset:0; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center;">
+    <div class="modal-overlay" id="modal-box">
         <div class="login-box" style="background: var(--bg-panel); border: 1px solid var(--border);">
             <h3 id="modal-head" style="color:white; margin-bottom: 5px;">NOUVEAU</h3>
-            <p id="modal-suggest" style="font-size: 0.65rem; color: var(--text-muted);"></p>
+            <p id="modal-suggest" style="font-size: 0.65rem; color: var(--text-muted); margin-bottom: 10px;"></p>
             <input type="text" id="modal-input" class="gal-input" placeholder="NOM...">
             <div style="display:flex; gap:10px;">
                 <button class="gal-btn" style="background:rgba(255,255,255,0.05); flex:1;" onclick="closeModal()">ANNULER</button>
@@ -376,15 +397,17 @@
         const fileNames = ["CLIENT_SIDE", "SERVER_CONFIG", "API_HANDLER", "MAIN_UI", "VERSION_LOG"];
 
         function playPing() {
-            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+            try {
+                if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+            } catch(e) {}
         }
 
         function notify(text, icon) {
@@ -415,7 +438,9 @@
 
         function toggleFS() {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen().catch(e => {
+                    notify('Erreur Plein Écran', 'fa-solid fa-circle-exclamation');
+                });
                 notify('Plein Écran', 'fa-solid fa-expand');
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
@@ -451,7 +476,7 @@
         }
 
         function saveActiveFile() {
-            if(!activeFile) return;
+            if(!activeFile) return notify('Aucun fichier', 'fa-solid fa-triangle-exclamation');
             db[activeFile.f][activeFile.i].c = document.getElementById('editor-area').value;
             localStorage.setItem('7X_V7_DB', JSON.stringify(db));
             notify('Sauvegarde OK', 'fa-solid fa-cloud-bolt');
@@ -485,11 +510,11 @@
             else { let fk = Object.keys(db)[0]; db[fk].push({ n: val + ".LUA", c: "-- Script by 7X Studio\n" }); }
             localStorage.setItem('7X_V7_DB', JSON.stringify(db));
             renderFiles(); closeModal();
-            notify('Créé avec succès', 'fa-solid fa-check-double');
+            notify('Élément Créé', 'fa-solid fa-check-double');
         }
 
         function deleteFile(f, i) {
-            if(confirm("Supprimer définitivement ?")) {
+            if(confirm("Supprimer ?")) {
                 db[f].splice(i, 1);
                 localStorage.setItem('7X_V7_DB', JSON.stringify(db));
                 renderFiles();
