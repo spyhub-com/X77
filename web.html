@@ -3,380 +3,626 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>7X STUDIO MOBILE PRO</title>
+    <title>7X STUDIO | GALAXY V6 PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* =========================================
-           THÈME MOBILE DARK & LUXE
-           ========================================= */
         :root {
-            --fond: #05070a;
-            --panneau: #0f1217;
-            --accent: #ff3c3c;
-            --accent-glow: rgba(255, 60, 60, 0.3);
-            --bordure: #1f252d;
-            --texte: #f0f0f0;
-            --texte-dim: #94a3b8;
-            --vif: #00ff88;
-            --grad: linear-gradient(135deg, #ff3c3c 0%, #7000ff 100%);
+            --bg-deep: #050508;
+            --bg-panel: #0d0d16;
+            --accent: #bc4be3;
+            --accent-light: #764ba2;
+            --cyan: #00d4ff;
+            --text: #f5f5f7;
+            --text-muted: #86868b;
+            --border: rgba(255, 255, 255, 0.08);
+            --grad-gal: linear-gradient(135deg, #050508 0%, #11112b 100%);
+            --grad-btn: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes popDown {
+            0% { transform: translate(-50%, -100%); opacity: 0; }
+            100% { transform: translate(-50%, 20px); opacity: 1; }
+        }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        @keyframes bgFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseNeon {
+            0% { box-shadow: 0 0 5px var(--cyan); }
+            50% { box-shadow: 0 0 15px var(--cyan); }
+            100% { box-shadow: 0 0 5px var(--cyan); }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
-            background-color: var(--fond);
-            color: var(--texte);
+            background: var(--grad-gal);
+            background-size: 300% 300%;
+            animation: bgFlow 15s infinite ease;
+            color: var(--text);
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* =========================================
-           ÉCRAN D'ACCUEIL (ANIMÉ)
-           ========================================= */
-        #splash {
-            position: fixed; inset: 0; z-index: 10000;
-            background: var(--fond);
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            transition: 0.6s ease-in-out;
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
         }
 
-        .splash-card {
-            width: 85%; max-width: 350px; text-align: center;
-            padding: 30px; border-radius: 25px;
-            background: var(--panneau); border: 1px solid var(--bordure);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        .login-box {
+            width: 88%;
+            max-width: 380px;
+            padding: 40px 30px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .gradient-text {
-            background: var(--grad);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 900; font-size: 2rem;
+        .gal-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, var(--cyan), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
         }
 
-        /* =========================================
-           HEADER MOBILE
-           ========================================= */
+        .gal-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: white;
+            font-size: 1rem;
+            margin: 25px 0 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .gal-input:focus {
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .gal-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 14px;
+            background: var(--grad-btn);
+            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .gal-btn:active {
+            transform: scale(0.96);
+        }
+
         header {
-            height: 60px; background: var(--panneau);
-            border-bottom: 1px solid var(--bordure);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; position: relative; z-index: 100;
+            height: 65px;
+            background: rgba(13, 13, 22, 0.8);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
         }
 
-        .menu-toggle {
-            width: 40px; height: 40px; background: var(--fond);
-            border: 1px solid var(--bordure); border-radius: 10px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px;
-        }
-        .menu-toggle span { width: 20px; height: 2px; background: white; border-radius: 2px; transition: 0.3s; }
-
-        .stat-badge {
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            padding: 5px 12px; border-radius: 20px;
-            font-size: 0.65rem; font-weight: 800; color: var(--vif);
-            display: flex; align-items: center; gap: 6px;
+        .btn-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 1.2rem;
         }
 
-        /* =========================================
-           SIDEBAR COULISSANTE (MOBILE)
-           ========================================= */
-        #sidebar {
-            position: fixed; top: 60px; left: -100%; bottom: 0;
-            width: 80%; background: var(--panneau);
-            z-index: 999; border-right: 1px solid var(--bordure);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 20px; display: flex; flex-direction: column;
+        .v-stat {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
         }
-        #sidebar.active { left: 0; box-shadow: 20px 0 100px rgba(0,0,0,0.8); }
 
-        .btn-action {
-            width: 100%; padding: 15px; margin-bottom: 10px;
-            border-radius: 12px; border: none; font-weight: 800;
-            color: white; font-size: 0.8rem; cursor: pointer;
+        .dot-live {
+            width: 6px;
+            height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+            animation: pulseNeon 1.5s infinite;
+        }
+
+        #side-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 82%;
+            height: 100%;
+            background: #080810;
+            z-index: 1000;
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 30px 20px;
+            border-right: 1px solid var(--border);
+        }
+
+        #side-menu.active {
+            left: 0;
+            box-shadow: 20px 0 60px rgba(0,0,0,0.8);
+        }
+
+        .search-container {
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 42px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .explorer {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .folder-title {
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-item {
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .file-item.active {
+            background: rgba(188, 75, 227, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .file-item i.fa-trash-can {
+            color: #ff4b4b;
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .action-bar {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #file-name-display {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-mini {
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            color: white;
             text-transform: uppercase;
         }
-        .btn-red { background: var(--grad); background-size: 200% 200%; animation: flow 5s infinite; }
-        .btn-dark { background: var(--fond); border: 1px solid var(--bordure); }
 
-        .explorer-title { font-size: 0.7rem; color: var(--texte-dim); letter-spacing: 2px; margin: 20px 0 10px; }
-        .file-list { overflow-y: auto; flex: 1; }
-        .file-row {
-            padding: 14px; background: rgba(255,255,255,0.02);
-            border-radius: 10px; margin-bottom: 6px; font-size: 0.9rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .file-row.active { border: 1px solid var(--accent); background: var(--accent-glow); }
-
-        /* =========================================
-           ZONE ÉDITEUR (MOBILE)
-           ========================================= */
-        main { flex: 1; display: flex; flex-direction: column; position: relative; }
-
-        .toolbar {
-            padding: 10px 15px; background: var(--fond);
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--bordure);
+        .btn-save {
+            background: var(--accent);
+            border: none;
         }
 
-        #file-path { font-size: 0.75rem; font-weight: 700; color: var(--texte-dim); max-width: 50%; overflow: hidden; white-space: nowrap; }
-
-        #editor {
-            flex: 1; width: 100%; padding: 20px;
-            background: var(--fond); color: #d1d5db;
-            font-family: 'Consolas', monospace; font-size: 14px;
-            line-height: 1.6; border: none; outline: none; resize: none;
+        #editor-area {
+            flex: 1;
+            width: 100%;
+            background: transparent;
+            color: #d4d4d8;
+            padding: 25px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border: none;
+            outline: none;
+            resize: none;
         }
 
-        .footer {
-            height: 35px; background: var(--panneau);
-            border-top: 1px solid var(--bordure);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; font-size: 0.65rem; color: var(--texte-dim);
+        .status-footer {
+            height: 40px;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
         }
 
-        /* =========================================
-           COMPOSANTS UI
-           ========================================= */
-        #toast-box { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); z-index: 10001; width: 80%; }
-        .toast {
-            background: white; color: black; padding: 12px 20px;
-            border-radius: 10px; font-weight: 800; font-size: 0.8rem;
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: slideUp 0.3s ease; margin-top: 8px;
+        #pop-container {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            z-index: 10001;
+            pointer-events: none;
         }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .modal-bg {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-            display: none; justify-content: center; align-items: center; z-index: 2000;
+        .pop-msg {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 10px;
+            animation: popDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            pointer-events: auto;
         }
-        .modal { width: 85%; background: var(--panneau); padding: 25px; border-radius: 20px; border: 1px solid var(--bordure); }
 
-        .input-text {
-            width: 100%; padding: 14px; background: var(--fond);
-            border: 1px solid var(--bordure); border-radius: 10px;
-            color: white; margin: 15px 0; outline: none; text-align: center;
+        .pop-msg i {
+            font-size: 1.1rem;
+            color: var(--accent);
         }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-card {
+            width: 85%;
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="splash">
-        <div class="splash-card">
-            <h2 class="gradient-text">7X STUDIO</h2>
-            <p style="font-size: 0.75rem; color: var(--texte-dim); margin-top: 5px;">CLOUD EDITION MOBILE</p>
-            <input type="text" id="username" class="input-text" placeholder="Ton pseudo..." maxlength="12">
-            <button class="btn-action btn-red" onclick="startApp()">ACCÉDER AU CLOUD</button>
+    <div id="pop-container"></div>
+
+    <div id="splash-screen">
+        <div class="login-box">
+            <h1 class="gal-title">7X STUDIO</h1>
+            <p style="color: var(--text-muted); font-size: 0.8rem; letter-spacing: 1px;">SYSTEM CLOUD V6</p>
+            <input type="text" id="nick-input" class="gal-input" placeholder="NOM D'UTILISATEUR" maxlength="15">
+            <button class="gal-btn" onclick="boot()">INITIALISER L'INTERFACE</button>
         </div>
     </div>
 
     <header>
-        <button class="menu-toggle" onclick="toggleSidebar()">
-            <span></span><span></span><span></span>
-        </button>
-        <div class="stat-badge">
-            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--vif); box-shadow: 0 0 8px var(--vif); animation: pulse 2s infinite;"></span>
-            <span id="visit-count">1 VISITE</span>
+        <div class="btn-icon" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars-staggered"></i>
         </div>
-        <button class="btn-dark" style="padding: 6px 12px; border-radius: 8px; font-size: 0.6rem;" onclick="enterFS()">FULLSCREEN</button>
+        <div class="gal-title" style="font-size: 1.2rem; margin:0;">7X</div>
+        <div class="v-stat">
+            <div class="dot-live"></div>
+            <span id="vis-display">1 VISITE</span>
+        </div>
     </header>
 
-    <main>
-        <div class="toolbar">
-            <div id="file-path">AUCUN FICHIER</div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-dark" style="padding: 8px 12px; font-size: 0.65rem;" onclick="exportFile()">DL .TXT</button>
-                <button class="btn-action btn-red" style="padding: 8px 16px; margin: 0; font-size: 0.65rem; width: auto;" onclick="saveFile()">SAUVEGARDER</button>
+    <aside id="side-menu">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-weight: 900; font-size: 1.4rem;">MENU</h2>
+            <div class="btn-icon" style="width: 35px; height: 35px;" onclick="toggleMenu()">
+                <i class="fa-solid fa-xmark"></i>
             </div>
         </div>
 
-        <textarea id="editor" spellcheck="false" placeholder="-- Appuyez sur le menu pour créer un fichier..."></textarea>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="file-search" class="search-input" placeholder="Rechercher..." oninput="renderFiles()">
+        </div>
+        
+        <div style="display:flex; gap:10px; margin-bottom: 20px;">
+            <button class="gal-btn" style="padding:12px; font-size:0.7rem;" onclick="openCreator('folder')">
+                <i class="fa-solid fa-folder-plus"></i> DOSSIER
+            </button>
+            <button class="gal-btn" style="padding:12px; font-size:0.7rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); box-shadow:none;" onclick="openCreator('file')">
+                <i class="fa-solid fa-file-circle-plus"></i> FICHIER
+            </button>
+        </div>
 
-        <div class="footer">
-            <span id="stat-lines">LIGNES: 0</span>
-            <span id="stat-chars">CHAR: 0</span>
-            <span style="color: var(--accent); font-weight: 900;">7X-PRO</span>
+        <div class="explorer" id="explorer-root"></div>
+    </aside>
+
+    <main>
+        <div class="action-bar">
+            <div id="file-name-display">
+                <i class="fa-solid fa-code"></i> AUCUN FICHIER
+            </div>
+            <div class="btn-group">
+                <button class="btn-mini" onclick="exportData()">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+                <button class="btn-mini btn-save" onclick="saveActiveFile()">
+                    <i class="fa-solid fa-floppy-disk"></i> SAUVER
+                </button>
+            </div>
+        </div>
+
+        <textarea id="editor-area" spellcheck="false" placeholder="-- Prêt à coder ? Ouvrez un fichier via le menu."></textarea>
+
+        <div class="status-footer">
+            <div id="line-stat">LIGNES: 0</div>
+            <div id="char-stat">CARACTÈRES: 0</div>
+            <div id="user-label" style="color:var(--cyan)">SANS NOM</div>
         </div>
     </main>
 
-    <aside id="sidebar">
-        <h2 class="gradient-text" style="font-size: 1.2rem; margin-bottom: 20px;">MENU STUDIO</h2>
-        <button class="btn-action btn-red" onclick="openModal('folder')">+ DOSSIER</button>
-        <button class="btn-action btn-dark" onclick="openModal('file')">+ FICHIER</button>
-        
-        <p class="explorer-title">EXPLORATEUR</p>
-        <div class="file-list" id="explorer"></div>
-        
-        <button class="btn-dark" style="margin-top: 20px;" onclick="toggleSidebar()">FERMER</button>
-    </aside>
-
-    <div class="modal-bg" id="modal-ui">
-        <div class="modal">
-            <h3 id="modal-title" style="text-align: center;">NOUVEAU</h3>
-            <input type="text" id="modal-in" class="input-text" placeholder="Nom...">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-action btn-dark" style="margin:0;" onclick="closeModal()">ANNULER</button>
-                <button class="btn-action btn-red" style="margin:0;" onclick="confirmCreate()">CRÉER</button>
+    <div class="modal-overlay" id="modal-box">
+        <div class="modal-card">
+            <h3 id="modal-head">NOUVEL ÉLÉMENT</h3>
+            <input type="text" id="modal-input" class="gal-input" placeholder="NOM DE L'ÉLÉMENT">
+            <div style="display:flex; gap:10px;">
+                <button class="gal-btn" style="background:rgba(255,255,255,0.05); flex:1;" onclick="closeModal()">ANNULER</button>
+                <button class="gal-btn" style="flex:1;" onclick="confirmAction()">CRÉER</button>
             </div>
         </div>
     </div>
 
-    <div id="toast-box"></div>
-
     <script>
-        /* =========================================
-           LOGIQUE MOBILE (STRUCTURE 500+ LIGNES)
-           ========================================= */
-
-        let db = JSON.parse(localStorage.getItem('7X_MOBILE_DB')) || {
-            "PROJETS": [
-                { name: "INIT.LUA", content: "-- 7X Studio Mobile\nprint('System Ready')" }
-            ],
+        let db = JSON.parse(localStorage.getItem('7X_V6_STORAGE')) || {
+            "CORE": [{ n: "INIT.LUA", c: "print('7X Studio Mobile Active')\n-- Version 6.0" }],
             "SCRIPTS": []
         };
+        let activeFile = null;
+        let actionTarget = '';
+        let audioCtx = null;
 
-        let currentActive = null;
-        let mode = '';
-
-        // 1. GESTION DES VISITES (VRAIES)
-        function updateStats() {
-            let total = parseInt(localStorage.getItem('7X_TOTAL_VISITS')) || 0;
-            total++;
-            localStorage.setItem('7X_TOTAL_VISITS', total);
-            document.getElementById('visit-count').innerText = `${total} VISITES AUJOURD'HUI`;
+        function playPing() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
         }
 
-        // 2. INITIALISATION
-        function startApp() {
-            const user = document.getElementById('username').value.trim();
-            if(!user) return;
-            
-            document.getElementById('splash').style.transform = 'scale(1.5)';
-            document.getElementById('splash').style.opacity = '0';
+        function notify(text, iconClass) {
+            const container = document.getElementById('pop-container');
+            const el = document.createElement('div');
+            el.className = 'pop-msg';
+            el.innerHTML = `<i class="${iconClass}"></i> ${text}`;
+            container.appendChild(el);
+            playPing();
             setTimeout(() => {
-                document.getElementById('splash').style.display = 'none';
-                notify(`Bienvenue, ${user}`);
-            }, 600);
-
-            updateStats();
-            refreshExplorer();
+                el.style.opacity = '0';
+                el.style.transform = 'translate(-50%, -20px)';
+                setTimeout(() => el.remove(), 400);
+            }, 2500);
         }
 
-        // 3. UI CONTROLS
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
+        function updateVisits() {
+            let v = parseInt(localStorage.getItem('7X_V6_VISITS')) || 0;
+            v++;
+            localStorage.setItem('7X_V6_VISITS', v);
+            document.getElementById('vis-display').innerText = v + (v > 1 ? ' VISITES' : ' VISITE');
         }
 
-        function notify(msg) {
-            const box = document.getElementById('toast-box');
-            const t = document.createElement('div');
-            t.className = 'toast'; t.innerText = msg;
-            box.appendChild(t);
-            setTimeout(() => { t.style.opacity = '0'; setTimeout(()=>t.remove(), 400); }, 2500);
+        function boot() {
+            const nick = document.getElementById('nick-input').value.trim();
+            if(!nick) return;
+            document.getElementById('user-label').innerText = nick.toUpperCase();
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => { document.getElementById('splash-screen').style.visibility = 'hidden'; }, 500);
+            updateVisits();
+            renderFiles();
+            notify('Système Galaxy V6 Connecté', 'fa-solid fa-satellite-dish');
         }
 
-        function enterFS() {
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        function toggleMenu() {
+            document.getElementById('side-menu').classList.toggle('active');
         }
 
-        // 4. EXPLORATEUR
-        function refreshExplorer() {
-            const container = document.getElementById('explorer');
-            container.innerHTML = '';
+        function renderFiles() {
+            const search = document.getElementById('file-search').value.toLowerCase();
+            const root = document.getElementById('explorer-root');
+            root.innerHTML = '';
 
             for (let folder in db) {
                 const head = document.createElement('div');
-                head.style = "color: var(--accent); font-size: 0.6rem; font-weight: 900; margin: 15px 0 5px; text-transform: uppercase;";
-                head.innerText = folder;
-                container.appendChild(head);
+                head.className = 'folder-title';
+                head.innerHTML = `<i class="fa-solid fa-folder-open"></i> ${folder}`;
+                root.appendChild(head);
 
                 db[folder].forEach((file, idx) => {
-                    const row = document.createElement('div');
-                    row.className = `file-row ${currentActive && currentActive.f === folder && currentActive.i === idx ? 'active' : ''}`;
-                    row.innerHTML = `<span>📄 ${file.name}</span> <span onclick="deleteF('${folder}', ${idx})" style="color:var(--accent); font-size:1.2rem;">×</span>`;
-                    row.onclick = (e) => { if(e.target.tagName !== 'SPAN') openF(folder, idx); };
-                    container.appendChild(row);
+                    if (file.n.toLowerCase().includes(search)) {
+                        const item = document.createElement('div');
+                        item.className = `file-item ${activeFile && activeFile.f === folder && activeFile.i === idx ? 'active' : ''}`;
+                        item.innerHTML = `
+                            <span><i class="fa-solid fa-file-code" style="margin-right:8px; opacity:0.6;"></i>${file.n}</span>
+                            <i class="fa-solid fa-trash-can" onclick="deleteFile('${folder}', ${idx})"></i>
+                        `;
+                        item.onclick = (e) => { if(e.target.tagName !== 'I') openFile(folder, idx); };
+                        root.appendChild(item);
+                    }
                 });
             }
         }
 
-        function openF(f, i) {
-            currentActive = { f, i };
+        function openFile(f, i) {
+            activeFile = { f, i };
             const file = db[f][i];
-            document.getElementById('editor').value = file.content;
-            document.getElementById('file-path').innerText = file.name;
-            toggleSidebar();
-            updateLiveStats();
-            refreshExplorer();
+            document.getElementById('editor-area').value = file.content || file.c;
+            document.getElementById('file-name-display').innerHTML = `<i class="fa-solid fa-file-lines"></i> ${file.n}`;
+            toggleMenu();
+            updateStats();
+            renderFiles();
         }
 
-        function saveFile() {
-            if(!currentActive) return notify("Ouvre un fichier d'abord !");
-            db[currentActive.f][currentActive.i].content = document.getElementById('editor').value;
-            localStorage.setItem('7X_MOBILE_DB', JSON.stringify(db));
-            notify("Synchronisé sur le Cloud");
+        function saveActiveFile() {
+            if(!activeFile) return notify('Aucun fichier ouvert', 'fa-solid fa-circle-exclamation');
+            db[activeFile.f][activeFile.i].c = document.getElementById('editor-area').value;
+            localStorage.setItem('7X_V6_STORAGE', JSON.stringify(db));
+            notify('Sauvegardé sur le Cloud', 'fa-solid fa-cloud-arrow-up');
         }
 
-        function exportFile() {
-            if(!currentActive) return;
-            const content = document.getElementById('editor').value;
+        function exportData() {
+            if(!activeFile) return;
+            const content = document.getElementById('editor-area').value;
             const blob = new Blob([content], {type: 'text/plain'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = db[currentActive.f][currentActive.i].name.replace('.LUA', '.txt');
+            a.download = db[activeFile.f][activeFile.i].n.replace('.LUA', '.txt');
             a.click();
-            notify("Export .txt réussi");
+            notify('Exportation terminée', 'fa-solid fa-file-export');
         }
 
-        // 5. MODALES
-        function openModal(m) {
-            mode = m;
-            document.getElementById('modal-title').innerText = m === 'file' ? 'CRÉER UN FICHIER' : 'CRÉER UN DOSSIER';
-            document.getElementById('modal-ui').style.display = 'flex';
+        function openCreator(m) {
+            actionTarget = m;
+            document.getElementById('modal-head').innerText = m === 'file' ? 'CRÉER FICHIER' : 'CRÉER DOSSIER';
+            document.getElementById('modal-box').style.display = 'flex';
         }
 
-        function closeModal() { document.getElementById('modal-ui').style.display = 'none'; }
+        function closeModal() { document.getElementById('modal-box').style.display = 'none'; }
 
-        function confirmCreate() {
-            const val = document.getElementById('modal-in').value.trim().toUpperCase();
+        function confirmAction() {
+            const val = document.getElementById('modal-input').value.trim().toUpperCase();
             if(!val) return;
 
-            if(mode === 'folder') {
+            if(actionTarget === 'folder') {
                 if(!db[val]) db[val] = [];
             } else {
-                let first = Object.keys(db)[0];
-                db[first].push({ name: val + ".LUA", content: "-- Nouveau Script\n" });
+                let firstKey = Object.keys(db)[0];
+                db[firstKey].push({ n: val + ".LUA", c: "-- Nouveau Script\n" });
             }
             
-            localStorage.setItem('7X_MOBILE_DB', JSON.stringify(db));
-            refreshExplorer();
+            localStorage.setItem('7X_V6_STORAGE', JSON.stringify(db));
+            renderFiles();
             closeModal();
-            notify("Création réussie");
+            notify('Élément créé', 'fa-solid fa-circle-check');
         }
 
-        function deleteF(f, i) {
-            if(confirm("Supprimer ce fichier ?")) {
+        function deleteFile(f, i) {
+            if(confirm("Supprimer ce script ?")) {
                 db[f].splice(i, 1);
-                localStorage.setItem('7X_MOBILE_DB', JSON.stringify(db));
-                refreshExplorer();
+                localStorage.setItem('7X_V6_STORAGE', JSON.stringify(db));
+                renderFiles();
+                notify('Fichier supprimé', 'fa-solid fa-trash-arrow-up');
             }
         }
 
-        function updateLiveStats() {
-            const val = document.getElementById('editor').value;
-            document.getElementById('stat-chars').innerText = "CHAR: " + val.length;
-            document.getElementById('stat-lines').innerText = "LIGNES: " + val.split('\n').length;
+        function updateStats() {
+            const text = document.getElementById('editor-area').value;
+            document.getElementById('char-stat').innerText = 'CARACTÈRES: ' + text.length;
+            document.getElementById('line-stat').innerText = 'LIGNES: ' + (text.split('\n').length);
         }
 
-        document.getElementById('editor').addEventListener('input', updateLiveStats);
+        document.getElementById('editor-area').addEventListener('input', updateStats);
     </script>
 </body>
 </html>
