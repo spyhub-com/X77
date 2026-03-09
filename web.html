@@ -5,192 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIRTUAL SERVEUR LUA | 7X</title>
     <style>
-        :root {
-            --bg-dark: #0f0f17;
-            --bg-panel: #161625;
-            --bg-header: #1a1b2b;
-            --accent: #5ea1ff;
-            --border: #2d2d44;
-            --text: #d1d1e0;
-            --text-dim: #78789e;
-            --lua-keyword: #ff757f;
-            --lua-string: #c3e88d;
-            --lua-comment: #565f89;
+        body {
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg-dark); color: var(--text); height: 100vh; overflow: hidden; }
-
-        /* AUTH SCREEN */
-        .overlay { position: fixed; inset: 0; background: var(--bg-dark); z-index: 100; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: var(--bg-panel); padding: 40px; border: 1px solid var(--border); width: 400px; text-align: center; }
-        input { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--border); color: white; margin: 20px 0; outline: none; }
-        .btn-blue { background: var(--accent); color: white; border: none; padding: 12px 24px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn-blue:hover { opacity: 0.8; }
-
-        /* MAIN LAYOUT */
-        header { 
-            height: 60px; background: var(--bg-header); border-bottom: 2px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 25px;
-            font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.2rem;
+        header {
+            background-color: #11111b;
+            padding: 15px 20px;
+            border-bottom: 2px solid #89b4fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .user-tag { font-size: 0.9rem; color: var(--text-dim); }
-
-        #main-container { display: flex; height: calc(100vh - 60px); }
-
-        /* SIDEBAR */
-        aside { width: 280px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .sidebar-title { padding: 25px; font-weight: bold; font-size: 1.1rem; letter-spacing: 1px; }
-        .actions { display: flex; gap: 10px; padding: 0 20px 20px 20px; border-bottom: 1px solid var(--border); }
-        .small-btn { flex: 1; padding: 8px; font-size: 0.75rem; background: var(--accent); color: white; border: none; cursor: pointer; }
-        
-        .file-list { flex: 1; overflow-y: auto; padding: 15px 0; }
-        .item { display: flex; align-items: center; padding: 8px 25px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: var(--text-dim); }
-        .item:hover { background: rgba(255,255,255,0.05); color: white; }
-        .item.active { background: rgba(94, 161, 255, 0.1); color: var(--accent); border-left: 3px solid var(--accent); }
-        .icon { margin-right: 12px; }
-
-        /* EDITOR */
-        main { flex: 1; display: flex; flex-direction: column; background: var(--bg-dark); }
-        .editor-header { padding: 25px; font-weight: bold; border-bottom: 1px solid var(--border); }
-        #editor-container { flex: 1; position: relative; padding: 20px; }
-        textarea { 
-            width: 100%; height: 100%; background: transparent; border: 1px solid var(--border);
-            color: #fff; font-family: 'Consolas', monospace; font-size: 1.1rem; resize: none;
-            outline: none; padding: 15px; line-height: 1.6;
+        #workspace {
+            display: flex;
+            flex: 1;
         }
-
-        .hidden { display: none !important; }
-        @media (max-width: 768px) { aside { display: none; } }
+        #sidebar {
+            width: 250px;
+            background-color: #181825;
+            padding: 20px;
+            border-right: 1px solid #313244;
+        }
+        #editor-container {
+            flex: 1;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 90%;
+            background-color: #11111b;
+            color: #a6e3a1;
+            border: 1px solid #45475a;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+        }
+        button {
+            background-color: #89b4fa;
+            color: #11111b;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #74c7ec; }
     </style>
 </head>
 <body>
 
-    <div id="auth" class="overlay">
-        <div class="login-box">
-            <h2 style="font-family: monospace;">VIRTUAL SERVEUR LUA</h2>
-            <input type="text" id="pseudo" placeholder="Entrez votre Pseudo">
-            <button class="btn-blue" onclick="login()">CONNEXION</button>
+    <header>
+        <h2>VIRTUAL SERVEUR LUA | 7X</h2>
+        <div id="greeting"></div>
+    </header>
+
+    <div id="workspace">
+        <div id="sidebar">
+            <h3>Mes Fichiers</h3>
+            <button onclick="creerDossier()">+ Nouveau Dossier</button>
+            <button onclick="creerFichier()">+ Fichier .lua</button>
+            <ul id="file-list" style="list-style-type: none; padding-left: 0; margin-top: 20px;">
+                <li>📁 <em>main_folder</em></li>
+                <li>&nbsp;&nbsp;📄 script.lua</li>
+            </ul>
+        </div>
+
+        <div id="editor-container">
+            <h3>Éditeur Lua</h3>
+            <textarea id="lua-code" placeholder="-- Tape ton code Lua ici..."></textarea>
+            <button onclick="sauvegarderCode()">Sauvegarder</button>
         </div>
     </div>
 
-    <header>
-        <div>VIRTUAL SERVEUR LUA | <span style="color:var(--accent)">7X</span></div>
-        <div class="user-tag" id="user-display"></div>
-    </header>
-
-    <div id="main-container" class="hidden">
-        <aside>
-            <div class="sidebar-title">Mes Fichiers</div>
-            <div class="actions">
-                <button class="small-btn" onclick="add('folder')">+ Nouveau Dossier</button>
-                <button class="small-btn" onclick="add('file')">+ Fichier .lua</button>
-            </div>
-            <div id="files" class="file-list"></div>
-        </aside>
-
-        <main>
-            <div class="editor-header">Éditeur Lua</div>
-            <div id="editor-container">
-                <textarea id="editor" placeholder="-- Tape ton code Lua ici..." oninput="autoSave()"></textarea>
-            </div>
-        </main>
-    </div>
-
     <script>
-        let state = { user: "", files: [], activeId: null };
+        window.onload = function() {
+            let username = localStorage.getItem("lua7x_username");
 
-        function login() {
-            const p = document.getElementById('pseudo').value.trim();
-            if(p.length < 2) return;
-            state.user = p;
-            localStorage.setItem('7x_user', p);
-            document.getElementById('auth').classList.add('hidden');
-            document.getElementById('main-container').classList.remove('hidden');
-            document.getElementById('user-display').textContent = `Salut ${p} !`;
-            loadData();
-        }
-
-        function loadData() {
-            const saved = localStorage.getItem(`7x_data_${state.user}`);
-            if(saved) {
-                state.files = JSON.parse(saved);
-            } else {
-                state.files = [{ id: 1, name: 'main_folder', type: 'folder' }, { id: 2, name: 'script.lua', type: 'file', content: '-- Script Initial' }];
+            if (!username) {
+                username = prompt("Bienvenue sur VIRTUAL SERVEUR LUA | 7X. \nQuel est ton Username ?");
+                if (username) {
+                    localStorage.setItem("lua7x_username", username);
+                } else {
+                    username = "Anonyme";
+                }
             }
-            renderFiles();
-        }
 
-        function renderFiles() {
-            const container = document.getElementById('files');
-            container.innerHTML = "";
-            state.files.forEach(f => {
-                const div = document.createElement('div');
-                div.className = `item ${state.activeId === f.id ? 'active' : ''}`;
-                div.innerHTML = `<span class="icon">${f.type === 'folder' ? '📁' : '📄'}</span> ${f.name}`;
-                div.onclick = () => selectFile(f.id);
-                // Clic droit pour supprimer
-                div.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    if(confirm(`Supprimer ${f.name} ?`)) {
-                        state.files = state.files.filter(x => x.id !== f.id);
-                        save(); renderFiles();
-                    }
-                };
-                container.appendChild(div);
-            });
-        }
+            document.getElementById("greeting").innerText = `Salut ${username} !`;
 
-        function selectFile(id) {
-            const f = state.files.find(x => x.id === id);
-            if(f.type === 'folder') return;
-            state.activeId = id;
-            document.getElementById('editor').value = f.content || "";
-            renderFiles();
-        }
-
-        function add(type) {
-            const name = prompt(`Nom du ${type === 'file' ? 'fichier' : 'dossier'} :`);
-            if(!name) return;
-            const newFile = {
-                id: Date.now(),
-                name: type === 'file' ? (name.endsWith('.lua') ? name : name + '.lua') : name,
-                type: type,
-                content: ""
-            };
-            state.files.push(newFile);
-            save(); renderFiles();
-        }
-
-        function autoSave() {
-            if(!state.activeId) return;
-            const f = state.files.find(x => x.id === state.activeId);
-            f.content = document.getElementById('editor').value;
-            save();
-        }
-
-        function save() {
-            localStorage.setItem(`7x_data_${state.user}`, JSON.stringify(state.files));
-        }
-
-        // Auto-login si déjà connecté
-        window.onload = () => {
-            const u = localStorage.getItem('7x_user');
-            if(u) {
-                document.getElementById('pseudo').value = u;
-                login();
+            let savedCode = localStorage.getItem("lua7x_code");
+            if (savedCode) {
+                document.getElementById("lua-code").value = savedCode;
             }
         };
 
-        // Gérer la touche Tab dans l'éditeur
-        document.getElementById('editor').onkeydown = function(e) {
-            if(e.key == 'Tab') {
-                e.preventDefault();
-                let s = this.selectionStart;
-                this.value = this.value.substring(0,s) + "    " + this.value.substring(this.selectionEnd);
-                this.selectionEnd = s + 4;
-            }
-        };
+        function sauvegarderCode() {
+            let code = document.getElementById("lua-code").value;
+            localStorage.setItem("lua7x_code", code);
+            alert("Code sauvegardé !");
+        }
+
+        function creerDossier() {
+            prompt("Nom du dossier :");
+            alert("Cette fonctionnalité sera gérée en JavaScript bientôt !");
+        }
+
+        function creerFichier() {
+            prompt("Nom du fichier (ex: main.lua) :");
+            alert("Cette fonctionnalité sera gérée en JavaScript bientôt !");
+        }
     </script>
 </body>
 </html>
