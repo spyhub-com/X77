@@ -1,124 +1,469 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="FR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIRTUAL SERVEUR LUA | 7X</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>7X STUDIO | CLOUD EDITION</title>
     <style>
-        body {
-            background-color: #1e1e2e;
-            color: #cdd6f4;
-            font-family: 'Courier New', Courier, monospace;
+        /* --- VARIABLES DU THEME STUDIO --- */
+        :root {
+            --primaire: #d32f2f; /* Rouge Cerise */
+            --primaire-hover: #b71c1c;
+            --fond: #f8f9fa; /* Gris très clair */
+            --panneau: #ffffff; /* Blanc pur */
+            --texte: #212121;
+            --texte-clair: #757575;
+            --bordure: #e0e0e0;
+            --code-bg: #f5f5f5;
+            --code-texte: #1e1e1e;
+            --ombre: 0 4px 12px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+            --police-ui: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --police-code: 'Consolas', 'Monaco', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
+            font-family: var(--police-ui);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        body, html {
+            background-color: var(--fond);
+            color: var(--texte);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
             display: flex;
-            height: 100vh;
             flex-direction: column;
         }
+
+        /* --- ECRAN DE DEMARRAGE (BOOT STUDIO) --- */
+        #boot-screen {
+            position: fixed; inset: 0;
+            background: var(--panneau);
+            z-index: 50000;
+            display: flex; flex-direction: column;
+            padding: 40px;
+            font-family: var(--police-code);
+            color: var(--texte);
+            font-size: 0.9rem;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .boot-header { font-size: 1.5rem; font-weight: bold; color: var(--primaire); margin-bottom: 20px; letter-spacing: 1px; }
+        .boot-line { margin-bottom: 12px; opacity: 0; animation: fadeIn 0.3s forwards; }
+        
+        #boot-input-container { display: flex; align-items: center; gap: 10px; margin-top: 30px; }
+        #boot-input {
+            background: transparent; border: none; color: var(--primaire);
+            font-family: var(--police-code); font-size: 1rem; width: 100%;
+            border-bottom: 2px solid var(--primaire); font-weight: bold;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* --- NOTIFICATIONS (ZEN EN BAS A DROITE) --- */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: var(--texte); color: white; padding: 12px 24px;
+            border-radius: 8px; font-size: 0.85rem; font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-left: 4px solid var(--primaire);
+            animation: slideInRight 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+        }
+        @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* --- EN-TETE (HEADER) --- */
         header {
-            background-color: #11111b;
-            padding: 15px 20px;
-            border-bottom: 2px solid #89b4fa;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            height: 65px; background: var(--panneau);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 25px; border-bottom: 1px solid var(--bordure);
+            box-shadow: var(--ombre); z-index: 100;
         }
-        #workspace {
-            display: flex;
-            flex: 1;
-        }
+
+        .logo { font-weight: 800; letter-spacing: 1px; font-size: 1.1rem; color: var(--texte); }
+        .logo span { color: var(--primaire); }
+
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .pseudo-badge { background: rgba(211, 47, 47, 0.1); color: var(--primaire); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .btn-header { background: var(--fond); border: 1px solid var(--bordure); padding: 8px 16px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: var(--transition); color: var(--texte); }
+        .btn-header:hover { background: var(--primaire); color: white; border-color: var(--primaire); }
+
+        /* --- CORPS PRINCIPAL --- */
+        #main-app { display: flex; flex: 1; position: relative; }
+
+        /* --- BARRE LATERALE --- */
         #sidebar {
-            width: 250px;
-            background-color: #181825;
-            padding: 20px;
-            border-right: 1px solid #313244;
+            width: 280px; background: var(--panneau);
+            border-right: 1px solid var(--bordure);
+            display: flex; flex-direction: column; transition: var(--transition);
         }
-        #editor-container {
-            flex: 1;
-            padding: 20px;
+        @media (max-width: 768px) { #sidebar { position: absolute; left: -280px; height: 100%; z-index: 500; } #sidebar.ouvert { transform: translateX(280px); box-shadow: 20px 0 40px rgba(0,0,0,0.1); } }
+
+        .actions-fichiers { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px solid var(--fond); }
+        .btn-creation { background: var(--panneau); border: 1px solid var(--bordure); color: var(--texte); padding: 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: var(--transition); }
+        .btn-creation:hover { border-color: var(--primaire); color: var(--primaire); }
+
+        .explorateur { flex: 1; overflow-y: auto; padding: 10px; background: var(--fond); }
+        .dossier-titre { font-size: 0.7rem; font-weight: 700; color: var(--texte-clair); padding: 10px 5px 5px 5px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .fichier-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; margin-bottom: 4px; border-radius: 6px;
+            font-size: 0.85rem; cursor: pointer; transition: var(--transition);
+            background: var(--panneau); border: 1px solid transparent;
         }
-        textarea {
-            width: 100%;
-            height: 90%;
-            background-color: #11111b;
-            color: #a6e3a1;
-            border: 1px solid #45475a;
-            padding: 10px;
-            font-size: 16px;
-            resize: none;
+        .fichier-item:hover { border-color: var(--bordure); }
+        .fichier-item.actif { background: rgba(211, 47, 47, 0.05); border-color: rgba(211, 47, 47, 0.2); color: var(--primaire); font-weight: 600; }
+        .btn-suppr { color: #bdbdbd; font-weight: bold; padding: 2px 8px; border-radius: 4px; transition: var(--transition); }
+        .btn-suppr:hover { color: white; background: var(--primaire); }
+
+        /* --- ZONE D'EDITION --- */
+        #editeur { flex: 1; display: flex; flex-direction: column; background: var(--panneau); }
+        
+        .outils-editeur {
+            padding: 12px 20px; background: var(--fond); border-bottom: 1px solid var(--bordure);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        button {
-            background-color: #89b4fa;
-            color: #11111b;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 10px;
+        #chemin-fichier { font-size: 0.8rem; font-weight: 600; color: var(--texte-clair); }
+        
+        .groupe-boutons { display: flex; gap: 10px; }
+        .btn-dl { background: var(--panneau); border: 1px solid var(--bordure); color: var(--texte); padding: 8px 15px; border-radius: 6px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: var(--transition); }
+        .btn-dl:hover { background: var(--texte); color: white; }
+        .btn-save { background: var(--primaire); color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; font-size: 0.75rem; cursor: pointer; box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3); transition: var(--transition); }
+        .btn-save:hover { background: var(--primaire-hover); }
+
+        #champ-code {
+            flex: 1; width: 100%; background: var(--code-bg); color: var(--code-texte);
+            border: none; padding: 25px; font-family: var(--police-code);
+            font-size: 0.9rem; line-height: 1.6; resize: none;
         }
-        button:hover { background-color: #74c7ec; }
+
+        /* --- MENU MOBILE --- */
+        #btn-menu-mobile {
+            position: fixed; bottom: 25px; left: 20px; width: 55px; height: 55px;
+            background: var(--panneau); border: 1px solid var(--bordure); border-radius: 50%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 5px; cursor: pointer; box-shadow: var(--ombre); z-index: 1000;
+        }
+        .ligne-menu { width: 22px; height: 2px; background: var(--texte); border-radius: 2px; }
+
+        /* --- MODALES --- */
+        .modal-fond { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 20000; }
+        .modal-contenu { background: var(--panneau); width: 90%; max-width: 380px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--bordure); }
+        .modal-contenu h3 { color: var(--texte); margin-bottom: 15px; font-size: 1.1rem; }
+        .modal-contenu input { width: 100%; padding: 12px 15px; background: var(--fond); border: 1px solid var(--bordure); color: var(--texte); border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; transition: var(--transition); }
+        .modal-contenu input:focus { border-color: var(--primaire); background: var(--panneau); }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-actions button { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .btn-annuler { background: var(--fond); color: var(--texte); border: 1px solid var(--bordure) !important; }
+        .btn-annuler:hover { background: #e0e0e0; }
+        .btn-valider { background: var(--primaire); color: white; }
+        .btn-valider:hover { background: var(--primaire-hover); }
     </style>
 </head>
 <body>
 
+    <div id="boot-screen">
+        <div class="boot-header">7X STUDIO :: INITIALISATION</div>
+        <div id="boot-prompt-area">
+            <div class="boot-line" style="color:var(--texte-clair);">Authentification requise pour accéder à l'espace de travail.</div>
+            <div id="boot-input-container">
+                <span style="font-weight:bold; color:var(--texte);">Identifiant :</span>
+                <input type="text" id="boot-input" autocomplete="off" spellcheck="false" maxlength="15" placeholder="Votre pseudo...">
+            </div>
+        </div>
+        <div id="boot-console" style="margin-top:30px;"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
     <header>
-        <h2>VIRTUAL SERVEUR LUA | 7X</h2>
-        <div id="greeting"></div>
+        <div class="logo">7X <span>STUDIO</span></div>
+        <div class="header-actions">
+            <span id="pseudo-display" class="pseudo-badge">INVITÉ</span>
+            <button class="btn-header" onclick="basculerPleinEcran()">Plein Écran</button>
+        </div>
     </header>
 
-    <div id="workspace">
-        <div id="sidebar">
-            <h3>Mes Fichiers</h3>
-            <button onclick="creerDossier()">+ Nouveau Dossier</button>
-            <button onclick="creerFichier()">+ Fichier .lua</button>
-            <ul id="file-list" style="list-style-type: none; padding-left: 0; margin-top: 20px;">
-                <li>📁 <em>main_folder</em></li>
-                <li>&nbsp;&nbsp;📄 script.lua</li>
-            </ul>
-        </div>
+    <div id="main-app">
+        <aside id="sidebar">
+            <div class="actions-fichiers">
+                <button class="btn-creation" onclick="ouvrirModal('dossier')">+ Dossier</button>
+                <button class="btn-creation" onclick="ouvrirModal('fichier')">+ Fichier</button>
+            </div>
+            <div class="explorateur" id="liste-fichiers"></div>
+        </aside>
 
-        <div id="editor-container">
-            <h3>Éditeur Lua</h3>
-            <textarea id="lua-code" placeholder="-- Tape ton code Lua ici..."></textarea>
-            <button onclick="sauvegarderCode()">Sauvegarder</button>
+        <main id="editeur">
+            <div class="outils-editeur">
+                <div id="chemin-fichier">Espace de travail vide</div>
+                <div class="groupe-boutons">
+                    <button class="btn-dl" onclick="telechargerFichierTXT()">Télécharger .TXT</button>
+                    <button class="btn-save" onclick="sauvegarderFichier()">Enregistrer</button>
+                </div>
+            </div>
+            <textarea id="champ-code" spellcheck="false" placeholder="Sélectionnez ou créez un fichier pour commencer à éditer..."></textarea>
+        </main>
+    </div>
+
+    <button id="btn-menu-mobile" onclick="toggleSidebar()">
+        <div class="ligne-menu"></div>
+        <div class="ligne-menu"></div>
+        <div class="ligne-menu"></div>
+    </button>
+
+    <div class="modal-fond" id="modal-creation">
+        <div class="modal-contenu">
+            <h3 id="titre-modal">Nouveau</h3>
+            <input type="text" id="nom-entree" placeholder="Saisissez un nom...">
+            <div class="modal-actions">
+                <button class="btn-annuler" onclick="fermerModal()">Annuler</button>
+                <button class="btn-valider" onclick="validerCreation()">Créer</button>
+            </div>
         </div>
     </div>
 
     <script>
-        window.onload = function() {
-            let username = localStorage.getItem("lua7x_username");
+        /* ==========================================================================
+           1. SEQUENCE DE DEMARRAGE (BOOT)
+           ========================================================================== */
+        const inputBoot = document.getElementById('boot-input');
+        inputBoot.focus();
 
-            if (!username) {
-                username = prompt("Bienvenue sur VIRTUAL SERVEUR LUA | 7X. \nQuel est ton Username ?");
-                if (username) {
-                    localStorage.setItem("lua7x_username", username);
+        inputBoot.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                let pseudo = inputBoot.value.trim() || "Utilisateur";
+                document.getElementById('pseudo-display').innerText = pseudo;
+                document.getElementById('boot-prompt-area').style.display = 'none';
+                demarrerSequence(pseudo);
+            }
+        });
+
+        function demarrerSequence(pseudo) {
+            const consoleDiv = document.getElementById('boot-console');
+            const etapes = [
+                `> Connexion de [${pseudo}] au serveur sécurisé...`,
+                `> Vérification de l'empreinte réseau (IP cryptée)...`,
+                `> Validation des protocoles SSL/TLS... <span style="color:var(--primaire)">[SUCCÈS]</span>`,
+                `> Synchronisation de l'espace de travail local...`,
+                `> Chargement de l'interface Studio...`
+            ];
+
+            let index = 0;
+            function afficherEtape() {
+                if(index < etapes.length) {
+                    const ligne = document.createElement('div');
+                    ligne.className = 'boot-line';
+                    ligne.innerHTML = etapes[index];
+                    consoleDiv.appendChild(ligne);
+                    index++;
+                    setTimeout(afficherEtape, Math.random() * 400 + 300);
                 } else {
-                    username = "Anonyme";
+                    setTimeout(() => {
+                        const ecranBoot = document.getElementById('boot-screen');
+                        ecranBoot.style.opacity = '0';
+                        setTimeout(() => ecranBoot.style.display = 'none', 800);
+                        notifier(`Bienvenue dans votre espace, ${pseudo}`);
+                    }, 600);
                 }
             }
+            afficherEtape();
+        }
 
-            document.getElementById("greeting").innerText = `Salut ${username} !`;
+        /* ==========================================================================
+           2. GESTION DE L'INTERFACE ET DES NOTIFICATIONS
+           ========================================================================== */
+        function notifier(message) {
+            const conteneur = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            conteneur.appendChild(toast);
+            
+            // Disparition douce
+            setTimeout(() => { 
+                toast.style.opacity = '0'; 
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.4s ease';
+                setTimeout(() => toast.remove(), 400); 
+            }, 3000);
+        }
 
-            let savedCode = localStorage.getItem("lua7x_code");
-            if (savedCode) {
-                document.getElementById("lua-code").value = savedCode;
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('ouvert');
+        }
+
+        function basculerPleinEcran() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    notifier("Le plein écran n'est pas supporté ici.");
+                });
+            } else {
+                document.exitFullscreen();
             }
-        };
-
-        function sauvegarderCode() {
-            let code = document.getElementById("lua-code").value;
-            localStorage.setItem("lua7x_code", code);
-            alert("Code sauvegardé !");
         }
 
-        function creerDossier() {
-            prompt("Nom du dossier :");
-            alert("Cette fonctionnalité sera gérée en JavaScript bientôt !");
+        /* ==========================================================================
+           3. NOYAU DE L'APPLICATION (DONNÉES ET FICHIERS)
+           ========================================================================== */
+        const CLE_SAUVEGARDE = '7X_STUDIO_PRO';
+        // Structure de base si le stockage est vide
+        let baseDonnees = JSON.parse(localStorage.getItem(CLE_SAUVEGARDE)) || { "PROJET_PRINCIPAL": [] };
+        let fichierActif = null;
+        let actionEnCours = '';
+
+        function sauvegarderLocal() {
+            localStorage.setItem(CLE_SAUVEGARDE, JSON.stringify(baseDonnees));
         }
 
-        function creerFichier() {
-            prompt("Nom du fichier (ex: main.lua) :");
-            alert("Cette fonctionnalité sera gérée en JavaScript bientôt !");
+        /* --- MODALES --- */
+        function ouvrirModal(type) {
+            actionEnCours = type;
+            document.getElementById('titre-modal').innerText = type === 'fichier' ? 'Créer un fichier' : 'Créer un dossier';
+            document.getElementById('nom-entree').value = '';
+            document.getElementById('modal-creation').style.display = 'flex';
+            document.getElementById('nom-entree').focus();
         }
+
+        function fermerModal() {
+            document.getElementById('modal-creation').style.display = 'none';
+        }
+
+        function validerCreation() {
+            const saisie = document.getElementById('nom-entree').value.trim();
+            if(!saisie) return;
+
+            if(actionEnCours === 'dossier') {
+                const nomDossier = saisie.toUpperCase();
+                if(!baseDonnees[nomDossier]) {
+                    baseDonnees[nomDossier] = [];
+                    notifier("Dossier créé : " + nomDossier);
+                }
+            } else {
+                // Création de fichier
+                let nomFichier = saisie;
+                // On ajoute .lua par défaut si aucune extension n'est précisée
+                if(!nomFichier.includes('.')) nomFichier += '.lua';
+                
+                let premierDossier = Object.keys(baseDonnees)[0] || "PROJET";
+                const indexNouveau = baseDonnees[premierDossier].length;
+                
+                baseDonnees[premierDossier].push({ nom: nomFichier, code: '-- Nouveau fichier\n' });
+                
+                // Ouvre automatiquement le nouveau fichier
+                chargerFichier(premierDossier, indexNouveau);
+                notifier("Fichier créé avec succès");
+            }
+            
+            sauvegarderLocal();
+            actualiserExplorateur();
+            fermerModal();
+        }
+
+        /* --- MANIPULATION DES FICHIERS --- */
+        function chargerFichier(dossier, index) {
+            fichierActif = { d: dossier, i: index };
+            const fichier = baseDonnees[dossier][index];
+            
+            document.getElementById('champ-code').value = fichier.code;
+            document.getElementById('chemin-fichier').innerText = `${dossier} / ${fichier.nom}`;
+            
+            // Ferme la sidebar sur mobile après sélection
+            if(window.innerWidth <= 768) toggleSidebar();
+            
+            actualiserExplorateur();
+        }
+
+        function sauvegarderFichier() {
+            if(!fichierActif) return notifier("Veuillez sélectionner un fichier à enregistrer.");
+            
+            const codeActuel = document.getElementById('champ-code').value;
+            baseDonnees[fichierActif.d][fichierActif.i].code = codeActuel;
+            
+            sauvegarderLocal();
+            notifier("Modifications enregistrées");
+        }
+
+        function supprimerFichier(dossier, index) {
+            if(confirm("Confirmez-vous la suppression de ce fichier ?")) {
+                baseDonnees[dossier].splice(index, 1);
+                
+                // Si le fichier supprimé était celui ouvert, on nettoie l'éditeur
+                if(fichierActif && fichierActif.d === dossier && fichierActif.i === index) {
+                    fichierActif = null;
+                    document.getElementById('champ-code').value = "";
+                    document.getElementById('chemin-fichier').innerText = "Espace de travail vide";
+                }
+                
+                sauvegarderLocal();
+                actualiserExplorateur();
+                notifier("Fichier supprimé");
+            }
+        }
+
+        /* --- TELECHARGEMENT --- */
+        function telechargerFichierTXT() {
+            if(!fichierActif) return notifier("Aucun fichier ouvert à télécharger.");
+            
+            const contenuCode = document.getElementById('champ-code').value;
+            const nomFichierBase = baseDonnees[fichierActif.d][fichierActif.i].nom;
+            
+            // On s'assure que le format de sortie est .txt
+            const nomFichierTXT = nomFichierBase.includes('.') 
+                ? nomFichierBase.split('.')[0] + ".txt" 
+                : nomFichierBase + ".txt";
+
+            const blob = new Blob([contenuCode], { type: "text/plain" });
+            const lienTelechargement = document.createElement("a");
+            
+            lienTelechargement.href = URL.createObjectURL(blob);
+            lienTelechargement.download = nomFichierTXT;
+            
+            document.body.appendChild(lienTelechargement);
+            lienTelechargement.click();
+            document.body.removeChild(lienTelechargement);
+            
+            notifier("Téléchargement lancé");
+        }
+
+        /* --- AFFICHAGE DE L'ARBORESCENCE --- */
+        function actualiserExplorateur() {
+            const conteneur = document.getElementById('liste-fichiers');
+            conteneur.innerHTML = "";
+            
+            for (let dossier in baseDonnees) {
+                // Création de l'en-tête du dossier
+                const titreDossier = document.createElement('div');
+                titreDossier.className = 'dossier-titre';
+                titreDossier.innerText = dossier;
+                conteneur.appendChild(titreDossier);
+                
+                // Boucle sur les fichiers du dossier
+                baseDonnees[dossier].forEach((fichier, idx) => {
+                    const estSelectionne = fichierActif && fichierActif.d === dossier && fichierActif.i === idx;
+                    
+                    const elementFichier = document.createElement('div');
+                    elementFichier.className = `fichier-item ${estSelectionne ? 'actif' : ''}`;
+                    
+                    // Contenu de la ligne (Nom + Bouton Supprimer)
+                    elementFichier.innerHTML = `
+                        <span>${fichier.nom}</span> 
+                        <span class="btn-suppr" onclick="event.stopPropagation(); supprimerFichier('${dossier}', ${idx})">✕</span>
+                    `;
+                    
+                    elementFichier.onclick = () => chargerFichier(dossier, idx);
+                    conteneur.appendChild(elementFichier);
+                });
+            }
+        }
+
+        // Initialisation de l'affichage au démarrage
+        actualiserExplorateur();
     </script>
 </body>
 </html>
