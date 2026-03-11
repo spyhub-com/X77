@@ -297,7 +297,6 @@
             const sessionTime = Math.floor((Date.now() - sessionStartTime) / 60000);
             const res = `${window.screen.width}x${window.screen.height}`;
 
-            // Infos matérielles "gavées"
             let batteryInfo = "N/A";
             try { 
                 const batt = await navigator.getBattery();
@@ -395,32 +394,36 @@
             sendLogToDiscord("EXPORTATION .txt", activeFile.f, db[activeFile.f][activeFile.i].n, content);
         }
 
-        // --- NOUVELLE FONCTION LOADSTRING GITHUB ---
-        function generateLoadstring() {
-            if(!activeFile) return notify('Ouvre un fichier d\'abord', 'fa-solid fa-triangle-exclamation');
+        // --- FONCTION DE GÉNÉRATION LOADSTRING (BYTEBIN) ---
+        async function generateLoadstring() {
+            const content = document.getElementById('editor-area').value.trim();
+            if(!content || content === "-- Sélectionnez un script pour commencer...") {
+                return notify('Éditeur vide !', 'fa-solid fa-triangle-exclamation');
+            }
 
-            // --- INFO GITHUB À CHANGER ICI ---
-            const GITHUB_USER = "TonPseudoGitHub";  // Remplace par ton pseudo GitHub
-            const GITHUB_REPO = "TonNomDeRepo";     // Remplace par le nom de ton repo GitHub
-            const GITHUB_BRANCH = "main";           // "main" ou "master" selon ton repo
-            // ---------------------------------
+            notify('Lien en cours...', 'fa-solid fa-spinner fa-spin');
 
-            const folder = activeFile.f;
-            const fileName = db[folder][activeFile.i].n;
-            
-            // On construit l'URL RAW de GitHub (encodeURIComponent évite les bugs avec les espaces)
-            const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${encodeURIComponent(folder)}/${encodeURIComponent(fileName)}`;
-            
-            // La commande parfaite pour Delta
-            const finalLoadstring = `loadstring(game:HttpGet("${rawUrl}"))()`;
+            try {
+                const response = await fetch('https://bytebin.lucko.me/post', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+                    body: content
+                });
 
-            // Copie dans le presse-papier
-            navigator.clipboard.writeText(finalLoadstring).then(() => {
+                if(!response.ok) throw new Error();
+                const data = await response.json();
+                
+                // Le lien RAW pour Delta
+                const rawUrl = `https://bytebin.lucko.me/${data.key}`;
+                const finalCode = `loadstring(game:HttpGet("${rawUrl}"))()`;
+
+                await navigator.clipboard.writeText(finalCode);
                 notify('Loadstring copié !', 'fa-solid fa-link');
-                sendLogToDiscord("GÉNÉRATION LOADSTRING", folder, fileName, finalLoadstring);
-            }).catch(err => {
-                notify('Erreur de copie', 'fa-solid fa-xmark');
-            });
+                
+                sendLogToDiscord("GÉNÉRATION LOADSTRING", activeFile ? activeFile.f : "LIBRE", "SANS NOM", finalCode);
+            } catch(e) {
+                notify('Erreur réseau', 'fa-solid fa-wifi');
+            }
         }
 
         function openCreator(m) {
