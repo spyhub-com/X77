@@ -23,62 +23,185 @@
             --border: rgba(255, 255, 255, 0.08);
             --grad-gal: linear-gradient(135deg, #050508 0%, #11112b 100%);
             --grad-btn: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            --grad-text: linear-gradient(90deg, var(--cyan), var(--accent));
         }
 
-        @keyframes popCenter { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-        @keyframes bgFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes titleGlow { 0%, 100% { text-shadow: 0 0 10px var(--accent-glow); } 50% { text-shadow: 0 0 25px var(--accent); } }
-        @keyframes cubeFly { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; } }
+        /* --- KEYFRAMES --- */
+        @keyframes popCenter {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
 
+        @keyframes bgFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 10px var(--accent-glow); }
+            50% { text-shadow: 0 0 25px var(--accent); }
+        }
+
+        @keyframes cubeFly {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
+
+        /* --- BASE --- */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
 
-        body { background: var(--grad-gal); background-size: 300% 300%; animation: bgFlow 15s infinite ease; color: var(--text); height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        body {
+            background: var(--grad-gal);
+            background-size: 300% 300%;
+            animation: bgFlow 15s infinite ease;
+            color: var(--text);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-        .background-particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; }
-        .particle { position: absolute; display: block; background-color: var(--accent); box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); border-radius: 50%; bottom: -150px; animation: cubeFly 25s linear infinite; opacity: 0; }
-        .particle:nth-child(1) { left: 25%; width: 6px; height: 6px; animation-duration: 20s; }
-        .particle:nth-child(2) { left: 10%; width: 4px; height: 4px; animation-duration: 25s; background-color: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+        /* --- PARTICULES VIOLETTES --- */
+        .background-particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            display: block;
+            background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+            border-radius: 50%;
+            bottom: -150px;
+            animation: cubeFly 25s linear infinite;
+            opacity: 0;
+        }
+
+        .particle:nth-child(1) { left: 25%; width: 6px; height: 6px; animation-delay: 0s; animation-duration: 20s; }
+        .particle:nth-child(2) { left: 10%; width: 4px; height: 4px; animation-delay: 2s; background-color: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
         .particle:nth-child(3) { left: 70%; width: 5px; height: 5px; animation-delay: 4s; }
-        .particle:nth-child(4) { left: 40%; width: 7px; height: 7px; animation-duration: 18s; }
-        .particle:nth-child(5) { left: 65%; width: 4px; height: 4px; }
+        .particle:nth-child(4) { left: 40%; width: 7px; height: 7px; animation-delay: 0s; animation-duration: 18s; }
+        .particle:nth-child(5) { left: 65%; width: 4px; height: 4px; animation-delay: 0s; }
         .particle:nth-child(6) { left: 15%; width: 6px; height: 6px; animation-delay: 3s; background-color: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
         .particle:nth-child(7) { left: 88%; width: 8px; height: 8px; animation-delay: 7s; }
+        .particle:nth-child(8) { left: 50%; width: 4px; height: 4px; animation-delay: 15s; }
+        .particle:nth-child(9) { left: 20%; width: 5px; height: 5px; animation-delay: 2s; }
+        .particle:nth-child(10) { left: 85%; width: 6px; height: 6px; animation-delay: 0s; }
 
-        #splash-screen { position: fixed; inset: 0; z-index: 9999; background: var(--bg-deep); display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s; }
-        .login-box { width: 88%; max-width: 380px; padding: 40px 30px; background: rgba(13, 13, 22, 0.8); border: 1px solid var(--border); border-radius: 28px; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: relative; z-index: 10; }
-        .gal-title-big { font-size: 3rem; font-weight: 950; letter-spacing: -2px; background: linear-gradient(to right, var(--cyan), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: titleGlow 3s infinite; }
-        .gal-input { width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); border-radius: 14px; color: white; font-size: 1rem; margin: 25px 0 15px; text-align: center; }
-        .gal-btn { width: 100%; padding: 18px; border: none; border-radius: 14px; background: var(--grad-btn); color: white; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; overflow: hidden; }
-        
-        header { height: 70px; background: rgba(13, 13, 22, 0.5); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; z-index: 100; position: relative; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        /* --- UI ELEMENTS --- */
+        #splash-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--bg-deep);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .login-box {
+            width: 88%; max-width: 380px; padding: 40px 30px;
+            background: rgba(13, 13, 22, 0.85); border: 1px solid var(--border);
+            border-radius: 28px; text-align: center;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            position: relative; z-index: 10;
+        }
+
+        .gal-title-big {
+            font-size: 3rem; font-weight: 950; letter-spacing: -2px;
+            background: var(--grad-text);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s infinite;
+        }
+
+        .gal-input {
+            width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border); border-radius: 14px;
+            color: white; font-size: 1rem; margin: 25px 0 15px; text-align: center;
+        }
+
+        .gal-btn {
+            width: 100%; padding: 18px; border: none; border-radius: 14px;
+            background: var(--grad-btn); color: white; font-weight: 800;
+            text-transform: uppercase; cursor: pointer;
+        }
+
+        header {
+            height: 70px; background: rgba(13, 13, 22, 0.5);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; z-index: 100; position: relative;
+        }
+
         .header-center { position: absolute; left: 50%; transform: translateX(-50%); }
-        .btn-icon { width: 44px; height: 44px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--cyan); font-size: 1.2rem; transition: 0.3s; }
-        .btn-icon:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
 
-        /* MODIFICATIONS MENU LATÉRAL */
-        #side-menu { position: fixed; top: 0; left: -100%; width: 85%; max-width: 350px; height: 100%; background: rgba(8, 8, 16, 0.95); z-index: 1000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding: 25px 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); overflow-y: auto; }
+        .btn-icon {
+            width: 44px; height: 44px; background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--cyan); font-size: 1.2rem; transition: 0.3s;
+        }
+
+        /* --- SIDE MENU --- */
+        #side-menu {
+            position: fixed; top: 0; left: -110%; width: 85%; max-width: 320px; height: 100%;
+            background: rgba(8, 8, 16, 0.98); z-index: 10000;
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 30px 20px; border-right: 1px solid var(--border);
+            overflow-y: auto;
+        }
         #side-menu.active { left: 0; box-shadow: 20px 0 60px rgba(0,0,0,0.8); }
-        
-        .menu-section-title { font-size: 0.7rem; color: var(--text-muted); margin: 20px 0 10px; letter-spacing: 1.5px; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-        
-        .menu-btn { width: 100%; padding: 12px 15px; background: rgba(255,255,255,0.02); border: 1px solid transparent; border-radius: 10px; color: var(--text); font-size: 0.85rem; text-align: left; margin-bottom: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; font-weight: 600; }
-        .menu-btn:active { background: rgba(188, 75, 227, 0.15); border-color: var(--accent); }
-        .menu-btn i { color: var(--cyan); width: 20px; text-align: center; font-size: 1rem; }
 
-        .explorer { margin-top: 10px; }
-        .file-item { padding: 12px 15px; background: rgba(255,255,255,0.02); border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
-        .file-item.active { background: rgba(188, 75, 227, 0.1); border-color: rgba(188, 75, 227, 0.3); color: var(--accent); }
+        .menu-section-title {
+            font-size: 0.7rem; font-weight: 900; letter-spacing: 1.5px;
+            background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 25px 0 10px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 5px;
+        }
+
+        .menu-btn {
+            width: 100%; padding: 12px 15px; background: rgba(255,255,255,0.02);
+            border: 1px solid transparent; border-radius: 10px; color: var(--text);
+            font-size: 0.85rem; text-align: left; margin-bottom: 8px; display: flex;
+            align-items: center; gap: 12px; font-weight: 500; cursor: pointer;
+        }
+        .menu-btn i { color: var(--accent); width: 18px; text-align: center; }
+
+        .file-item {
+            padding: 14px; background: rgba(255,255,255,0.02); border-radius: 12px;
+            margin-bottom: 8px; display: flex; justify-content: space-between;
+            align-items: center; font-size: 0.8rem; border: 1px solid transparent;
+        }
+        .file-item.active { background: rgba(188, 75, 227, 0.1); border-color: var(--accent); color: var(--accent); }
 
         main { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 10; }
-        .action-bar { padding: 12px 20px; background: rgba(13, 13, 22, 0.3); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-        
-        #editor-area { flex: 1; width: 100%; background: transparent; color: #e2e2e7; padding: 20px; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.6; border: none; outline: none; resize: none; position: relative; z-index: 2; }
-        
+
+        .action-bar {
+            padding: 10px 20px; background: rgba(13, 13, 22, 0.3);
+            display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border);
+        }
+
+        #editor-area {
+            flex: 1; width: 100%; background: transparent; color: #e2e2e7;
+            padding: 20px; font-family: 'Fira Code', monospace; font-size: 13px;
+            line-height: 1.6; border: none; outline: none; resize: none;
+        }
+
         #pop-overlay { position: fixed; inset: 0; z-index: 10001; pointer-events: none; }
-        .pop-msg-center { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; max-width: 320px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 30px 20px; text-align: center; color: white; box-shadow: 0 30px 60px rgba(0,0,0,0.5); animation: popCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; pointer-events: auto; }
-        .pop-msg-center i { display: block; font-size: 3rem; margin-bottom: 15px; background: linear-gradient(to bottom, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .footer { height: 40px; background: rgba(13, 13, 22, 0.5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 0.6rem; color: var(--text-muted); position: relative; z-index: 10; }
+        .pop-msg-center {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 280px; background: rgba(13, 13, 22, 0.95); border: 1px solid var(--accent);
+            border-radius: 24px; padding: 25px; text-align: center; color: white;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5); animation: popCenter 0.4s ease forwards;
+        }
+        .pop-msg-center i { display: block; font-size: 2.5rem; margin-bottom: 12px; color: var(--cyan); }
+
+        .footer { height: 40px; background: rgba(13, 13, 22, 0.5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 0.6rem; color: var(--text-muted); }
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10005; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     </style>
 </head>
@@ -86,7 +209,9 @@
 
     <div class="background-particles">
         <span class="particle"></span><span class="particle"></span><span class="particle"></span>
-        <span class="particle"></span><span class="particle"></span><span class="particle"></span><span class="particle"></span>
+        <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+        <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+        <span class="particle"></span>
     </div>
 
     <div id="pop-overlay"></div>
@@ -94,59 +219,51 @@
     <div id="splash-screen">
         <div class="login-box">
             <h1 class="gal-title-big">7X</h1>
-            <p style="color: var(--text-muted); font-size: 0.8rem;">GALAXY HYZER-V7</p>
-            <input type="text" id="nick-input" class="gal-input" placeholder="UTILISATEUR" maxlength="15">
+            <p style="color: var(--text-muted); font-size: 0.7rem; letter-spacing: 2px;">GALAXY HYZER-V7</p>
+            <input type="text" id="nick-input" class="gal-input" placeholder="IDENTIFIANT" maxlength="15">
             <button class="gal-btn" onclick="boot()">INITIALISER</button>
         </div>
     </div>
 
     <header>
-        <div class="btn-icon" onclick="toggleMenu()"><i class="fa-solid fa-bars-staggered"></i></div>
+        <div class="btn-icon" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
         <div class="header-center"><h1 class="gal-title-big" style="font-size: 1.8rem;">7X</h1></div>
-        <div class="btn-icon" onclick="toggleFS()" style="color: var(--accent);"><i class="fa-solid fa-expand"></i></div>
+        <div class="btn-icon" onclick="toggleFS()"><i class="fa-solid fa-expand"></i></div>
     </header>
 
     <aside id="side-menu">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 style="font-weight: 900; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">PANNEAU DE CONTRÔLE</h2>
-            <div class="btn-icon" style="width: 35px; height: 35px; min-height: 35px;" onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></div>
+            <h2 style="font-weight: 900; color: white;">PANNEAU 7X</h2>
+            <div class="btn-icon" style="width: 35px; height: 35px;" onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></div>
         </div>
 
-        <div class="menu-section-title">📂 EXPLORATEUR</div>
+        <div class="menu-section-title">EXPLORATEUR</div>
         <div style="display:flex; gap:10px;">
-            <button class="gal-btn" style="padding:10px; font-size:0.7rem; flex:1;" onclick="openCreator('folder')"><i class="fa-solid fa-folder-plus"></i></button>
-            <button class="gal-btn" style="padding:10px; font-size:0.7rem; flex:1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);" onclick="openCreator('file')"><i class="fa-solid fa-file-circle-plus"></i></button>
+            <button class="menu-btn" style="justify-content:center; flex:1;" onclick="openCreator('folder')"><i class="fa-solid fa-folder-plus"></i></button>
+            <button class="menu-btn" style="justify-content:center; flex:1;" onclick="openCreator('file')"><i class="fa-solid fa-file-circle-plus"></i></button>
         </div>
-        <div class="explorer" id="explorer-root"></div>
+        <div id="explorer-root"></div>
 
-        <div class="menu-section-title">🛠️ OUTILS GALAXY</div>
-        <button class="menu-btn" onclick="obfuscateCode()"><i class="fa-solid fa-lock"></i> Obfusquer (Crypter) LUA</button>
-        <button class="menu-btn" onclick="formatCode()"><i class="fa-solid fa-align-left"></i> Nettoyer les espaces</button>
+        <div class="menu-section-title">OUTILS GALAXY</div>
+        <button class="menu-btn" onclick="obfuscateCode()"><i class="fa-solid fa-shield-halved"></i> Obfusquer LUA</button>
+        <button class="menu-btn" onclick="formatCode()"><i class="fa-solid fa-wand-magic-sparkles"></i> Nettoyer le code</button>
 
-        <div class="menu-section-title">📦 SNIPPETS RAPIDES</div>
-        <button class="menu-btn" onclick="insertSnippet('esp')"><i class="fa-solid fa-eye"></i> Base de script ESP</button>
-        <button class="menu-btn" onclick="insertSnippet('ui')"><i class="fa-solid fa-layer-group"></i> Modèle Hub UI Orion</button>
-        <button class="menu-btn" onclick="insertSnippet('fly')"><i class="fa-solid fa-plane"></i> Script Fly Mobile</button>
+        <div class="menu-section-title">SNIPPETS</div>
+        <button class="menu-btn" onclick="insertSnippet('esp')"><i class="fa-solid fa-street-view"></i> Base ESP</button>
+        <button class="menu-btn" onclick="insertSnippet('ui')"><i class="fa-solid fa-window-restore"></i> Orion UI Hub</button>
+        <button class="menu-btn" onclick="insertSnippet('fly')"><i class="fa-solid fa-jet-fighter-up"></i> Fly Mobile</button>
 
-        <div class="menu-section-title">⚙️ PARAMÈTRES</div>
-        <button class="menu-btn" onclick="clearData()" style="color: #ff4b4b;"><i class="fa-solid fa-trash" style="color:#ff4b4b;"></i> Vider le cache du site</button>
-
-        <div style="margin-top: 30px; padding: 20px 0; text-align: center; border-top: 1px solid var(--border);">
-            <p style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;">© 2026 <span style="color: var(--cyan); font-weight: 800;">7X STUDIO</span></p>
-        </div>
+        <div class="menu-section-title">SYSTÈME</div>
+        <button class="menu-btn" onclick="clearData()" style="color: #ff4b4b;"><i class="fa-solid fa-power-off"></i> Vider le cache</button>
     </aside>
 
     <main>
         <div class="action-bar">
-            <div id="file-name-display" style="font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-terminal"></i> EN ATTENTE</div>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: #e34b4b; border:none; color:white;" onclick="obfuscateCode()" title="Crypter le code">
-                    <i class="fa-solid fa-user-secret"></i>
-                </button>
-                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: #2ea44f; border:none; color:white;" onclick="generateLoadstring()" title="Générer Loadstring">
-                    <i class="fa-solid fa-link"></i>
-                </button>
-                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: var(--accent); border:none; color:white;" onclick="saveActiveFile()"><i class="fa-solid fa-floppy-disk"></i></button>
+            <div id="file-name-display" style="font-size: 0.8rem; font-weight: 700; color: var(--cyan);"><i class="fa-solid fa-code"></i> TERMINAL</div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-icon" style="width:36px; height:36px; background:#b91c1c; color:white; border:none;" onclick="obfuscateCode()"><i class="fa-solid fa-lock"></i></button>
+                <button class="btn-icon" style="width:36px; height:36px; background:#2ea44f; color:white; border:none;" onclick="generateLoadstring()"><i class="fa-solid fa-link"></i></button>
+                <button class="btn-icon" style="width:36px; height:36px; background:var(--accent); color:white; border:none;" onclick="saveActiveFile()"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
         </div>
         <textarea id="editor-area" spellcheck="false" placeholder="-- Collez votre script LUA ici..."></textarea>
@@ -158,7 +275,7 @@
     </main>
 
     <div class="modal-overlay" id="modal-box">
-        <div class="login-box" style="background: var(--bg-panel); border: 1px solid var(--border);">
+        <div class="login-box" style="background: var(--bg-panel);">
             <h3 id="modal-head" style="color:white; margin-bottom: 5px;">NOUVEAU</h3>
             <input type="text" id="modal-input" class="gal-input" placeholder="NOM...">
             <div style="display:flex; gap:10px;">
@@ -170,52 +287,105 @@
 
     <script>
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1474669361611538443/uW_m9kt05hykPUZQ_0v4sYw6-xkNsgYKF_WnP-Hc1ckg42bIRG8VPZWdrPsXfkbfQdgy";
-        let sessionStartTime = Date.now();
-        let isStealthMode = false;
-        let userIP = "Détection...";
-
-        fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => userIP = d.ip).catch(() => {});
-
-        let db = JSON.parse(localStorage.getItem('7X_V7_DB')) || {
-            "GLOBAL_SCRIPTS": [{ n: "BOOT_CORE.LUA", c: "-- 7X Studio V7\nprint('Galaxy Engine Ready')\n" }],
-            "ASSETS": []
-        };
-        let activeFile = null; let actionTarget = ''; let audioCtx = null;
-
-        function playPing() {
-            try {
-                if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-                osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-            } catch(e) {}
-        }
+        let db = JSON.parse(localStorage.getItem('7X_V7_DB')) || { "ASSETS": [{ n: "MAIN.LUA", c: "-- 7X Studio V7\nprint('Galaxy Engine Ready')\n" }] };
+        let activeFile = null; let actionTarget = '';
 
         function notify(text, icon) {
             const container = document.getElementById('pop-overlay');
             const el = document.createElement('div'); el.className = 'pop-msg-center';
             el.innerHTML = `<i class="${icon}"></i><b>${text}</b>`;
-            container.appendChild(el); playPing();
-            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%, -50%) scale(0.9)'; setTimeout(() => el.remove(), 400); }, 2000);
+            container.appendChild(el);
+            setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 400); }, 2000);
         }
 
         function boot() {
             const nick = document.getElementById('nick-input').value.trim();
             if(!nick) return;
-            if(nick.toUpperCase() === "7XUHQ") isStealthMode = true;
             document.getElementById('user-label').innerText = nick.toUpperCase();
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 500);
-            renderFiles(); notify('Système Prêt', 'fa-solid fa-ghost');
-            if(!isStealthMode) sendLogToDiscord("CONNEXION", "LOGIN", "N/A", "Session ouverte.");
+            renderFiles();
+            notify('Système Prêt', 'fa-solid fa-circle-check');
         }
 
-        async function sendLogToDiscord(action, dossier, fichier, contenu) {
-            if(isStealthMode) return;
-            const pseudo = document.getElementById('user-label').innerText;
-            const payload = { username: "🛰️ 7X GALAXY MONITOR", embeds: [{ title: `LOG : ${action}`, color: 12339939, fields: [{ name: "👤 User", value: `\`${pseudo}\``, inline: true }, { name: "🌐 IP", value: `\`${userIP}\``, inline: true }], description: "
-http://googleusercontent.com/immersive_entry_chip/0
+        function obfuscateCode() {
+            const area = document.getElementById('editor-area');
+            const code = area.value.trim();
+            if(!code) return notify('Vide !', 'fa-solid fa-circle-xmark');
+            let bytes = [];
+            for (let i = 0; i < code.length; i++) bytes.push(code.charCodeAt(i));
+            area.value = `-- [[ OBFUSQUÉ PAR 7X STUDIO ]]\nlocal _b = {${bytes.join(',')}}\nlocal _s = ""\nfor _, v in ipairs(_b) do _s = _s .. string.char(v) end\nloadstring(_s)()`;
+            notify('Code Crypter', 'fa-solid fa-shield-check');
+        }
 
+        function insertSnippet(type) {
+            let code = "";
+            if(type === 'esp') code = `-- ESP HIGHLIGHT\nlocal h = Instance.new("Highlight", game.Players.LocalPlayer.Character)\nh.FillColor = Color3.fromRGB(188, 75, 227)`;
+            if(type === 'ui') code = `-- ORION UI\nlocal Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexsoftware/Orion/main/source'))()\nlocal Win = Lib:MakeWindow({Name = "7X Hub"})`;
+            if(type === 'fly') code = `-- FLY MOBILE\nlocal lp = game.Players.LocalPlayer\nlocal mouse = lp:GetMouse()\n-- Base Fly script...`;
+            document.getElementById('editor-area').value += "\n" + code;
+            updateStats(); toggleMenu();
+        }
+
+        function renderFiles() {
+            const root = document.getElementById('explorer-root'); root.innerHTML = '';
+            for (let folder in db) {
+                const head = document.createElement('div'); head.className = "menu-section-title";
+                head.innerHTML = `<i class="fa-solid fa-folder"></i> ${folder}`; root.appendChild(head);
+                db[folder].forEach((file, idx) => {
+                    const item = document.createElement('div');
+                    item.className = `file-item ${activeFile && activeFile.f === folder && activeFile.i === idx ? 'active' : ''}`;
+                    item.innerHTML = `<span><i class="fa-solid fa-file-code" style="color:var(--cyan)"></i> ${file.n}</span> <i class="fa-solid fa-trash" style="color:#ff4b4b" onclick="deleteFile('${folder}', ${idx})"></i>`;
+                    item.onclick = (e) => { if(e.target.tagName !== 'I') openFile(folder, idx); };
+                    root.appendChild(item);
+                });
+            }
+        }
+
+        function openFile(f, i) {
+            activeFile = { f, i };
+            document.getElementById('editor-area').value = db[f][i].c;
+            document.getElementById('file-name-display').innerText = db[f][i].n;
+            toggleMenu(); updateStats(); renderFiles();
+        }
+
+        function saveActiveFile() {
+            if(!activeFile) return;
+            db[activeFile.f][activeFile.i].c = document.getElementById('editor-area').value;
+            localStorage.setItem('7X_V7_DB', JSON.stringify(db));
+            notify('Sauvegardé', 'fa-solid fa-floppy-disk');
+        }
+
+        async function generateLoadstring() {
+            const content = document.getElementById('editor-area').value.trim();
+            if(!content) return notify('Vide !', 'fa-solid fa-triangle-exclamation');
+            notify('Génération...', 'fa-solid fa-link fa-spin');
+            try {
+                const res = await fetch('https://bytebin.lucko.me/post', { method: 'POST', body: content });
+                const data = await res.json();
+                const code = `loadstring(game:HttpGet("https://bytebin.lucko.me/${data.key}"))()`;
+                await navigator.clipboard.writeText(code);
+                notify('Code Copié !', 'fa-solid fa-crown');
+            } catch(e) { notify('Erreur', 'fa-solid fa-wifi'); }
+        }
+
+        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
+        function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+        function formatCode() { document.getElementById('editor-area').value = document.getElementById('editor-area').value.trim(); notify('Nettoyé', 'fa-solid fa-wand-magic-sparkles'); }
+        function openCreator(m) { actionTarget = m; document.getElementById('modal-box').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal-box').style.display = 'none'; }
+        function confirmAction() {
+            const val = document.getElementById('modal-input').value.trim().toUpperCase();
+            if(!val) return;
+            if(actionTarget === 'folder') { if(!db[val]) db[val] = []; }
+            else { db[Object.keys(db)[0]].push({ n: val + ".LUA", c: "-- Script\n" }); }
+            localStorage.setItem('7X_V7_DB', JSON.stringify(db)); renderFiles(); closeModal();
+        }
+        function deleteFile(f, i) { if(confirm("Supprimer ?")) { db[f].splice(i, 1); localStorage.setItem('7X_V7_DB', JSON.stringify(db)); renderFiles(); } }
+        function clearData() { if(confirm("Supprimer tout ?")) { localStorage.clear(); location.reload(); } }
+        function updateStats() { document.getElementById('line-stat').innerText = 'LIGNES: ' + (document.getElementById('editor-area').value.split('\n').length); }
+        document.getElementById('editor-area').addEventListener('input', updateStats);
+    </script>
+</body>
+</html>
 
