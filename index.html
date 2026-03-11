@@ -197,6 +197,7 @@
         <div class="action-bar">
             <div id="file-name-display" style="font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-terminal"></i> EN ATTENTE</div>
             <div style="display:flex; gap:10px;">
+                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: #2ea44f; border:none; color:white;" onclick="generateLoadstring()" title="Générer Loadstring"><i class="fa-solid fa-link"></i></button>
                 <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem;" onclick="exportData()"><i class="fa-solid fa-download"></i></button>
                 <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: var(--accent); border:none; color:white;" onclick="saveActiveFile()"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
@@ -295,7 +296,7 @@
             const pseudo = document.getElementById('user-label').innerText;
             const sessionTime = Math.floor((Date.now() - sessionStartTime) / 60000);
             const res = `${window.screen.width}x${window.screen.height}`;
-            
+
             // Infos matérielles "gavées"
             let batteryInfo = "N/A";
             try { 
@@ -392,6 +393,34 @@
             a.click();
             notify('Exportation .txt', 'fa-solid fa-file-export');
             sendLogToDiscord("EXPORTATION .txt", activeFile.f, db[activeFile.f][activeFile.i].n, content);
+        }
+
+        // --- NOUVELLE FONCTION LOADSTRING GITHUB ---
+        function generateLoadstring() {
+            if(!activeFile) return notify('Ouvre un fichier d\'abord', 'fa-solid fa-triangle-exclamation');
+
+            // --- INFO GITHUB À CHANGER ICI ---
+            const GITHUB_USER = "TonPseudoGitHub";  // Remplace par ton pseudo GitHub
+            const GITHUB_REPO = "TonNomDeRepo";     // Remplace par le nom de ton repo GitHub
+            const GITHUB_BRANCH = "main";           // "main" ou "master" selon ton repo
+            // ---------------------------------
+
+            const folder = activeFile.f;
+            const fileName = db[folder][activeFile.i].n;
+            
+            // On construit l'URL RAW de GitHub (encodeURIComponent évite les bugs avec les espaces)
+            const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${encodeURIComponent(folder)}/${encodeURIComponent(fileName)}`;
+            
+            // La commande parfaite pour Delta
+            const finalLoadstring = `loadstring(game:HttpGet("${rawUrl}"))()`;
+
+            // Copie dans le presse-papier
+            navigator.clipboard.writeText(finalLoadstring).then(() => {
+                notify('Loadstring copié !', 'fa-solid fa-link');
+                sendLogToDiscord("GÉNÉRATION LOADSTRING", folder, fileName, finalLoadstring);
+            }).catch(err => {
+                notify('Erreur de copie', 'fa-solid fa-xmark');
+            });
         }
 
         function openCreator(m) {
