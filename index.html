@@ -201,6 +201,8 @@ button{border:none;background:none;cursor:pointer}
 .card:hover{border-color:rgba(124,58,237,.2)}
 .sec-title{font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--bd)}
+.nasa-title{font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.nasa-title::after{content:'';flex:1;height:1px;background:var(--bd)}
 .pg-title{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:2px}
 .pg-sub{font-size:.68rem;color:var(--tx2);margin-bottom:15px}
 .btn{padding:12px;border-radius:var(--rs);border:none;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;justify-content:center;gap:7px}
@@ -572,33 +574,33 @@ button{border:none;background:none;cursor:pointer}
     rgba(255,0,0,0.03) 4px
   );
   pointer-events: none; z-index: 1;
-  animation: scanFlicker 0.1s infinite;
+  animation: nasaScanFlicker 0.1s infinite;
 }
-@keyframes scanFlicker {
+@keyframes nasaScanFlicker {
   0%,100% { opacity: 1; }
   50% { opacity: 0.92; }
 }
 
 /* Red flash background */
-.sec-flash {
+.nasa-flash {
   position: absolute; inset: 0;
   background: rgba(255,0,0,0.15);
-  animation: redFlash 0.8s ease-in-out infinite;
+  animation: nasaRedFlash 0.8s ease-in-out infinite;
   pointer-events: none;
 }
-@keyframes redFlash {
+@keyframes nasaRedFlash {
   0%,100% { opacity: 0; }
   50% { opacity: 1; }
 }
 
 /* White flash */
-.sec-white-flash {
+.nasa-white-flash {
   position: absolute; inset: 0;
   background: white;
-  animation: whiteFlash 3s ease-in-out infinite;
+  animation: nasaWhiteFlash 3s ease-in-out infinite;
   pointer-events: none;
 }
-@keyframes whiteFlash {
+@keyframes nasaWhiteFlash {
   0%,85%,100% { opacity: 0; }
   88% { opacity: 0.15; }
   91% { opacity: 0; }
@@ -606,24 +608,24 @@ button{border:none;background:none;cursor:pointer}
 }
 
 /* Corner brackets */
-.sec-corner {
+.nasa-corner {
   position: absolute;
   width: 40px; height: 40px;
   border-color: #ff0000;
   border-style: solid;
-  animation: cornerPulse 0.8s ease-in-out infinite;
+  animation: nasaCornerPulse 0.8s ease-in-out infinite;
 }
-@keyframes cornerPulse {
+@keyframes nasaCornerPulse {
   0%,100% { border-color: #ff0000; opacity: 1; }
   50% { border-color: #ff4444; opacity: 0.6; }
 }
-.sec-corner.tl { top: 20px; left: 20px; border-width: 3px 0 0 3px; }
-.sec-corner.tr { top: 20px; right: 20px; border-width: 3px 3px 0 0; }
-.sec-corner.bl { bottom: 20px; left: 20px; border-width: 0 0 3px 3px; }
-.sec-corner.br { bottom: 20px; right: 20px; border-width: 0 3px 3px 0; }
+.nasa-corner.tl { top: 20px; left: 20px; border-width: 3px 0 0 3px; }
+.nasa-corner.tr { top: 20px; right: 20px; border-width: 3px 3px 0 0; }
+.nasa-corner.bl { bottom: 20px; left: 20px; border-width: 0 0 3px 3px; }
+.nasa-corner.br { bottom: 20px; right: 20px; border-width: 0 3px 3px 0; }
 
 /* Main content */
-.sec-content {
+.nasa-content {
   position: relative; z-index: 2;
   text-align: center;
   padding: 20px;
@@ -632,78 +634,78 @@ button{border:none;background:none;cursor:pointer}
 }
 
 /* TOP BAR */
-.sec-topbar {
+.nasa-topbar {
   display: flex; align-items: center; justify-content: space-between;
   border: 1px solid #ff0000;
   background: rgba(255,0,0,0.1);
   padding: 6px 14px;
   margin-bottom: 20px;
-  animation: borderPulse 0.8s ease-in-out infinite;
+  animation: nasaBorderPulse 0.8s ease-in-out infinite;
 }
-@keyframes borderPulse {
+@keyframes nasaBorderPulse {
   0%,100% { border-color: #ff0000; box-shadow: 0 0 8px rgba(255,0,0,0.4); }
   50% { border-color: #ff4444; box-shadow: 0 0 20px rgba(255,0,0,0.7); }
 }
-.sec-topbar-txt {
+.nasa-topbar-txt {
   font-size: 0.6rem; color: #ff4444; letter-spacing: 3px; font-weight: 700;
 }
-.sec-topbar-dot {
+.nasa-topbar-dot {
   width: 8px; height: 8px; border-radius: 50%; background: #ff0000;
-  animation: dotBlink 0.4s ease-in-out infinite;
+  animation: nasaDotBlink 0.4s ease-in-out infinite;
   box-shadow: 0 0 8px #ff0000;
 }
-@keyframes dotBlink { 0%,100%{opacity:1}50%{opacity:0} }
+@keyframes nasaDotBlink { 0%,100%{opacity:1}50%{opacity:0} }
 
 /* WARNING icon */
-.sec-icon {
+.nasa-icon {
   font-size: 4rem; color: #ff0000;
-  animation: iconShake 0.5s ease-in-out infinite, iconGlow 0.8s ease-in-out infinite;
+  animation: nasaIconShake 0.5s ease-in-out infinite, nasaIconGlow 0.8s ease-in-out infinite;
   display: block; margin-bottom: 16px;
   text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
 }
-@keyframes iconShake {
+@keyframes nasaIconShake {
   0%,100% { transform: translateX(0) rotate(0deg); }
   20% { transform: translateX(-4px) rotate(-2deg); }
   40% { transform: translateX(4px) rotate(2deg); }
   60% { transform: translateX(-3px) rotate(-1deg); }
   80% { transform: translateX(3px) rotate(1deg); }
 }
-@keyframes iconGlow {
+@keyframes nasaIconGlow {
   0%,100% { text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000; }
   50% { text-shadow: 0 0 40px #ff0000, 0 0 80px #ff0000, 0 0 100px rgba(255,0,0,0.5); }
 }
 
 /* ALERT TITLE */
-.sec-title {
+.nasa-title {
   font-size: 1.4rem; font-weight: 900; letter-spacing: 4px;
   color: #ff0000; text-transform: uppercase;
-  animation: titleFlash 0.8s ease-in-out infinite;
+  animation: nasaTitleFlash 0.8s ease-in-out infinite;
   margin-bottom: 6px;
   text-shadow: 0 0 10px #ff0000;
 }
-@keyframes titleFlash {
+@keyframes nasaTitleFlash {
   0%,100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
   50% { color: #ffffff; text-shadow: 0 0 20px #ffffff, 0 0 40px #ff0000; }
 }
 
 /* Message text */
-.sec-msg {
+.nasa-msg {
   font-size: 0.82rem; color: #ff6666; line-height: 1.8;
   letter-spacing: 1px; margin-bottom: 20px;
-  animation: msgPulse 2s ease-in-out infinite;
+  animation: nasaMsgPulse 2s ease-in-out infinite;
 }
-@keyframes msgPulse {
+@keyframes nasaMsgPulse {
   0%,100% { opacity: 1; }
   50% { opacity: 0.75; }
 }
 
 /* Glitch text effect */
-.sec-glitch {
+.nasa-glitch {
   position: relative;
   font-size: 0.75rem; color: #ff4444; letter-spacing: 3px;
-  animation: glitchAnim 3s infinite;
+  animation: nasaGlitchAnim 3s infinite;
 }
-@keyframes glitchAnim {
+@keyframes nasaGlitchAnim {
   0%,90%,100% { transform: none; text-shadow: none; }
   91% { transform: translateX(-2px); text-shadow: 2px 0 #00ffff; }
   92% { transform: translateX(2px); text-shadow: -2px 0 #ff00ff; }
@@ -713,18 +715,18 @@ button{border:none;background:none;cursor:pointer}
 }
 
 /* Progress bar */
-.sec-progress-wrap {
+.nasa-progress-wrap {
   border: 1px solid #ff0000;
   height: 6px; background: rgba(255,0,0,0.1);
   margin-bottom: 14px; overflow: hidden;
   box-shadow: 0 0 8px rgba(255,0,0,0.3);
 }
-.sec-progress-bar {
+.nasa-progress-bar {
   height: 100%; background: #ff0000;
   box-shadow: 0 0 10px #ff0000;
-  animation: progressLoop 4s linear infinite;
+  animation: nasaProgressLoop 4s linear infinite;
 }
-@keyframes progressLoop {
+@keyframes nasaProgressLoop {
   0% { width: 0%; margin-left: 0; }
   50% { width: 60%; margin-left: 0; }
   51% { width: 60%; margin-left: 0; }
@@ -732,33 +734,33 @@ button{border:none;background:none;cursor:pointer}
 }
 
 /* Code lines scrolling */
-.sec-code {
+.nasa-code {
   text-align: left; font-size: 0.55rem; color: rgba(255,0,0,0.5);
   height: 60px; overflow: hidden; border: 1px solid rgba(255,0,0,0.2);
   padding: 6px 10px; margin-bottom: 16px; background: rgba(255,0,0,0.04);
   position: relative;
 }
-.sec-code-line {
-  animation: codeFall 0.3s ease;
+.nasa-code-line {
+  animation: nasaCodeFall 0.3s ease;
 }
-@keyframes codeFall { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; } }
+@keyframes nasaCodeFall { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; } }
 
 /* Bottom bar */
-.sec-bottombar {
+.nasa-bottombar {
   display: flex; align-items: center; justify-content: space-between;
   border-top: 1px solid rgba(255,0,0,0.3);
   padding-top: 12px; margin-top: 8px;
 }
-.sec-id {
+.nasa-id {
   font-size: 0.52rem; color: rgba(255,100,100,0.6); letter-spacing: 2px;
 }
-.sec-close-btn {
+.nasa-close-btn {
   padding: 7px 16px; border: 1px solid #ff0000; background: transparent;
   color: #ff0000; font-family: 'Courier New', monospace;
   font-size: 0.6rem; font-weight: 700; letter-spacing: 2px;
   cursor: pointer; text-transform: uppercase; transition: 0.2s;
 }
-.sec-close-btn:hover {
+.nasa-close-btn:hover {
   background: rgba(255,0,0,0.15);
   box-shadow: 0 0 12px rgba(255,0,0,0.4);
 }
@@ -858,14 +860,14 @@ button{border:none;background:none;cursor:pointer}
           <div class="hs"><span class="hs-v" id="h-rank">#—</span><div class="hs-l"><i class="fa-solid fa-ranking-star" style="color:var(--go)"></i> Rang</div></div>
         </div>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-bolt"></i> ACTIONS RAPIDES</div>
+      <div class="nasa-title"><i class="fa-solid fa-bolt"></i> ACTIONS RAPIDES</div>
       <div class="qgrid">
         <div class="qc" onclick="goPage('coins')"><div class="qc-ic qi-go"><i class="fa-solid fa-coins" style="color:var(--go)"></i></div><div><div class="qc-t">Coins</div><div class="qc-s">Claim • Donner</div></div></div>
         <div class="qc" onclick="goPage('shop')"><div class="qc-ic qi-pu"><i class="fa-solid fa-store" style="color:var(--pul)"></i></div><div><div class="qc-t">Boutique SAB</div><div class="qc-s">Items • Rôles</div></div></div>
         <div class="qc" onclick="goPage('casino')"><div class="qc-ic qi-rd"><i class="fa-solid fa-dice" style="color:var(--rd)"></i></div><div><div class="qc-t">Casino</div><div class="qc-s">5 jeux</div></div></div>
         <div class="qc" onclick="goPage('leaderboard')"><div class="qc-ic qi-cy"><i class="fa-solid fa-trophy" style="color:var(--cy)"></i></div><div><div class="qc-t">Classement</div><div class="qc-s">Top 10 Coins</div></div></div>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-clock-rotate-left"></i> ACTIVITÉ RÉCENTE</div>
+      <div class="nasa-title"><i class="fa-solid fa-clock-rotate-left"></i> ACTIVITÉ RÉCENTE</div>
       <div id="home-act"></div>
     </div>
 
@@ -881,13 +883,13 @@ button{border:none;background:none;cursor:pointer}
       </div>
       <button class="claim-btn" id="claim-btn" onclick="doClaim()"><i class="fa-solid fa-hand-holding-dollar"></i><span id="claim-txt">CLAIM +500 COINS</span></button>
       <div class="claim-cd" id="claim-cd"></div>
-      <div class="sec-title"><i class="fa-solid fa-paper-plane"></i> DONNER DES COINS</div>
+      <div class="nasa-title"><i class="fa-solid fa-paper-plane"></i> DONNER DES COINS</div>
       <div class="card" style="margin-bottom:13px">
         <input type="text" class="inp" id="give-to" placeholder="Pseudo du destinataire..." style="margin-bottom:8px">
         <input type="number" class="inp" id="give-amt" placeholder="Montant..." min="1" style="margin-bottom:8px">
         <button class="btn btn-pu btn-w" onclick="doGive()"><i class="fa-solid fa-paper-plane"></i> ENVOYER</button>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-receipt"></i> HISTORIQUE</div>
+      <div class="nasa-title"><i class="fa-solid fa-receipt"></i> HISTORIQUE</div>
       <div id="tx-list"></div>
     </div>
 
@@ -898,7 +900,7 @@ button{border:none;background:none;cursor:pointer}
         <div style="font-size:.6rem;color:var(--tx2);margin-top:3px">Gagne des coins avec Claim et dépense-les ici</div>
         <div style="font-size:.65rem;color:var(--go);font-weight:700;margin-top:6px"><i class="fa-solid fa-coins"></i> Solde : <span id="shop-bal">0</span></div>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-store"></i> ARTICLES</div>
+      <div class="nasa-title"><i class="fa-solid fa-store"></i> ARTICLES</div>
       <div id="shop-items"></div>
     </div>
 
@@ -1019,9 +1021,9 @@ button{border:none;background:none;cursor:pointer}
     <div class="page" id="page-leaderboard">
       <div class="pg-title">Classement</div>
       <div class="pg-sub">Top joueurs par coins</div>
-      <div class="sec-title"><i class="fa-solid fa-trophy"></i> PODIUM</div>
+      <div class="nasa-title"><i class="fa-solid fa-trophy"></i> PODIUM</div>
       <div class="podium" id="lb-podium"></div>
-      <div class="sec-title"><i class="fa-solid fa-list"></i> TOP 10</div>
+      <div class="nasa-title"><i class="fa-solid fa-list"></i> TOP 10</div>
       <div id="lb-list"></div>
     </div>
 
@@ -1048,7 +1050,7 @@ button{border:none;background:none;cursor:pointer}
           </div>
         </div>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-gear"></i> PARAMÈTRES</div>
+      <div class="nasa-title"><i class="fa-solid fa-gear"></i> PARAMÈTRES</div>
       <div class="srow"><div class="sl"><div class="sico" style="background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.16)"><i class="fa-solid fa-bell" style="color:var(--cy)"></i></div><div><div class="sn">Notifications</div><div class="sd">Alertes gains et claims</div></div></div><div class="tog on" id="tog-notif" onclick="togSetting('notif',this)"></div></div>
       <div class="srow"><div class="sl"><div class="sico" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.16)"><i class="fa-solid fa-stars" style="color:var(--go)"></i></div><div><div class="sn">Animations</div><div class="sd">Confettis et effets</div></div></div><div class="tog on" id="tog-anim" onclick="togSetting('anim',this)"></div></div>
     </div>
@@ -1067,15 +1069,15 @@ button{border:none;background:none;cursor:pointer}
         <div><div class="sv-inv-link">discord.gg/sabx</div><div class="sv-inv-sub">Rejoins le serveur officiel 7X SAB</div></div>
         <button class="sv-join" onclick="window.open('https://discord.gg/sabx','_blank')"><i class="fa-solid fa-arrow-right"></i> REJOINDRE</button>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-circle-info"></i> À PROPOS</div>
+      <div class="nasa-title"><i class="fa-solid fa-circle-info"></i> À PROPOS</div>
       <div class="card" style="margin-bottom:13px"><p style="font-size:.76rem;line-height:1.7">Bienvenue sur <strong style="color:var(--pul)">7X | SAB</strong>, la plateforme officielle de trade, middleman et chill.<br><br>Notre serveur est dédié aux échanges sécurisés sur <strong style="color:var(--cy)">Roblox</strong>. Nos middlemen certifiés garantissent chaque transaction.</p></div>
-      <div class="sec-title"><i class="fa-brands fa-discord"></i> CANAUX</div>
+      <div class="nasa-title"><i class="fa-brands fa-discord"></i> CANAUX</div>
       <div class="cat-card"><div class="cat-hdr"><div class="cat-ico" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18)"><i class="fa-solid fa-star" style="color:var(--go)"></i></div><div><div class="cat-t">INFOS</div><div class="cat-s">Annonces et règles</div></div></div><div class="ch-list"><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-bullhorn"></i></span><span class="ch-name">annonces</span><span class="ch-badge">IMPORTANT</span></div><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-gavel"></i></span><span class="ch-name">règles</span></div><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-scroll"></i></span><span class="ch-name">informations</span></div></div></div>
       <div class="cat-card"><div class="cat-hdr"><div class="cat-ico" style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.16)"><i class="fa-solid fa-handshake" style="color:var(--gr)"></i></div><div><div class="cat-t">TRADE & MIDDLEMAN</div><div class="cat-s">Échanges sécurisés</div></div></div><div class="ch-list"><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-comments"></i></span><span class="ch-name">demande-middleman</span><span class="ch-badge">ACTIF</span></div><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-repeat"></i></span><span class="ch-name">trade-roblox</span></div><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-check-circle"></i></span><span class="ch-name">trades-validés</span></div></div></div>
       <div class="cat-card"><div class="cat-hdr"><div class="cat-ico" style="background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.15)"><i class="fa-solid fa-comments" style="color:var(--cy)"></i></div><div><div class="cat-t">CHILL</div><div class="cat-s">Détente et fun</div></div></div><div class="ch-list"><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-message"></i></span><span class="ch-name">général</span></div><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-music"></i></span><span class="ch-name">musique</span></div><div class="ch-item"><span class="ch-ico"><i class="fa-solid fa-dice"></i></span><span class="ch-name">jeux</span></div></div></div>
-      <div class="sec-title"><i class="fa-solid fa-shield-halved"></i> ÉQUIPE STAFF</div>
+      <div class="nasa-title"><i class="fa-solid fa-shield-halved"></i> ÉQUIPE STAFF</div>
       <div class="staff-card"><div class="st-row"><div class="st-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">7X</div><div class="st-info" style="flex:1"><div class="st-n">7XUHQ</div><div class="st-r">Fondateur & Owner</div></div><span class="st-b sb-o"><i class="fa-solid fa-crown"></i> OWNER</span></div><div class="st-row"><div class="st-av" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">ST</div><div class="st-info" style="flex:1"><div class="st-n">Staff 7X</div><div class="st-r">Modération & Middleman</div></div><span class="st-b sb-s"><i class="fa-solid fa-shield"></i> STAFF</span></div></div>
-      <div class="sec-title"><i class="fa-solid fa-gavel"></i> RÈGLES</div>
+      <div class="nasa-title"><i class="fa-solid fa-gavel"></i> RÈGLES</div>
       <div class="card"><div class="rule-item"><div class="rule-num">1</div><div class="rule-txt"><strong>Respect</strong> — Aucune insulte ou discrimination tolérée.</div></div><div class="rule-item"><div class="rule-num">2</div><div class="rule-txt"><strong>Trade sécurisé</strong> — Toujours utiliser un middleman certifié.</div></div><div class="rule-item"><div class="rule-num">3</div><div class="rule-txt"><strong>No scam</strong> — Tentative d'arnaque = ban permanent.</div></div><div class="rule-item"><div class="rule-num">4</div><div class="rule-txt"><strong>Pas de spam</strong> — Respectez les salons.</div></div><div class="rule-item"><div class="rule-num">5</div><div class="rule-txt"><strong>Bonne chance</strong> — Profitez de vos trades ! 🚀</div></div></div>
     </div>
 
@@ -1091,14 +1093,14 @@ button{border:none;background:none;cursor:pointer}
         <div class="opst" style="--opst-c:linear-gradient(135deg,#ef4444,#7c3aed)"><div class="opst-ico"><i class="fa-solid fa-dice"></i></div><span class="opst-v" id="op-casino">—</span><div class="opst-l">Parties</div></div>
         <div class="opst" style="--opst-c:linear-gradient(135deg,#10b981,#06b6d4)"><div class="opst-ico"><i class="fa-solid fa-store"></i></div><span class="opst-v" id="op-shop">—</span><div class="opst-l">Achats</div></div>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-bolt"></i> ACTIONS RAPIDES</div>
+      <div class="nasa-title"><i class="fa-solid fa-bolt"></i> ACTIONS RAPIDES</div>
       <div class="op-qacts">
         <div class="opqa" onclick="opSwitch('users',document.querySelector('.op-pill'))"><div class="opqa-ic" style="background:rgba(124,58,237,.09);border:1px solid rgba(124,58,237,.18)"><i class="fa-solid fa-users" style="color:var(--pul)"></i></div><div><div class="opqa-t">Gérer Users</div><div class="opqa-s">Coins • Rôles</div></div></div>
         <div class="opqa" onclick="opSwitch('announces',document.querySelectorAll('.op-pill')[1])"><div class="opqa-ic" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.16)"><i class="fa-solid fa-bullhorn" style="color:var(--go)"></i></div><div><div class="opqa-t">Annonces</div><div class="opqa-s">Créer • Gérer</div></div></div>
         <div class="opqa" onclick="opSwitch('logs',document.querySelectorAll('.op-pill')[2])"><div class="opqa-ic" style="background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.15)"><i class="fa-solid fa-list" style="color:var(--cy)"></i></div><div><div class="opqa-t">Logs</div><div class="opqa-s">Activité live</div></div></div>
         <div class="opqa" onclick="opRefresh()"><div class="opqa-ic" style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.15)"><i class="fa-solid fa-rotate" style="color:var(--gr)"></i></div><div><div class="opqa-t">Refresh</div><div class="opqa-s" id="op-ref-cd">Recharger</div></div></div>
       </div>
-      <div class="sec-title"><i class="fa-solid fa-chart-bar"></i> ACTIVITÉ 7 JOURS</div>
+      <div class="nasa-title"><i class="fa-solid fa-chart-bar"></i> ACTIVITÉ 7 JOURS</div>
       <div class="op-chart-wrap"><canvas id="op-chart" height="120"></canvas></div>
       <div class="op-pills">
         <button class="op-pill on" onclick="opSwitch('users',this)"><i class="fa-solid fa-users"></i> USERS</button>
@@ -1135,7 +1137,7 @@ button{border:none;background:none;cursor:pointer}
           <textarea class="ann-ta" id="op-ann-ta" placeholder="Rédigez votre annonce..." maxlength="500" oninput="document.getElementById('op-ann-cnt').innerText=this.value.length+'/500'"></textarea>
           <div class="ann-foot"><span id="op-ann-cnt" style="font-size:.53rem;color:var(--tx2)">0/500</span><button class="btn btn-pu" id="op-ann-btn" onclick="opSendAnnounce()" style="padding:8px 16px;font-size:.67rem"><i class="fa-solid fa-paper-plane"></i> ENVOYER</button></div>
         </div>
-        <div class="sec-title"><i class="fa-solid fa-clock-rotate-left"></i> PRÉCÉDENTES</div>
+        <div class="nasa-title"><i class="fa-solid fa-clock-rotate-left"></i> PRÉCÉDENTES</div>
         <div id="op-ann-list"></div>
       </div>
       <!-- Logs -->
@@ -1166,10 +1168,20 @@ button{border:none;background:none;cursor:pointer}
 
       <!-- Sanctions -->
       <div class="op-sec" id="ops-sanctions">
-        <div style="margin-bottom:11px"><div class="sec-title" style="margin-bottom:9px"><i class="fa-solid fa-ban" style="color:var(--rd)"></i> BANNIS</div><div id="banned-list"></div></div>
-        <div style="margin-bottom:11px"><div class="sec-title" style="margin-bottom:9px"><i class="fa-solid fa-triangle-exclamation" style="color:var(--go)"></i> AVERTIS</div><div id="warned-list"></div></div>
-        <div><div class="sec-title" style="margin-bottom:9px"><i class="fa-solid fa-clock-rotate-left" style="color:var(--cy)"></i> HISTORIQUE</div><div id="sanction-history"></div></div>
-        <div class="card" style="margin-top:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-bolt" style="color:var(--or)"></i> ACTIONS GLOBALES</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="opResetAllWarns()" style="padding:8px 14px;border-radius:8px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18);color:var(--go);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-left"></i> Reset tous les warns</button><button onclick="opUnbanAll()" style="padding:8px 14px;border-radius:8px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> Débannir tout le monde</button></div></div>
+        <div style="margin-bottom:11px"><div class="nasa-title" style="margin-bottom:9px"><i class="fa-solid fa-ban" style="color:var(--rd)"></i> BANNIS</div><div id="banned-list"></div></div>
+        <div style="margin-bottom:11px"><div class="nasa-title" style="margin-bottom:9px"><i class="fa-solid fa-triangle-exclamation" style="color:var(--go)"></i> AVERTIS</div><div id="warned-list"></div></div>
+        <div><div class="nasa-title" style="margin-bottom:9px"><i class="fa-solid fa-clock-rotate-left" style="color:var(--cy)"></i> HISTORIQUE</div><div id="sanction-history"></div></div>
+        <div class="card" style="margin-top:11px">
+          <div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-bolt" style="color:var(--or)"></i> ACTIONS GLOBALES</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+            <button onclick="opResetAllWarns()" style="padding:8px 14px;border-radius:8px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18);color:var(--go);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-left"></i> Reset tous les warns</button>
+            <button onclick="opUnbanAll()" style="padding:8px 14px;border-radius:8px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> Débannir tout</button>
+            <button onclick="opUnbanAllIPs()" style="padding:8px 14px;border-radius:8px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.15);color:var(--cy);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-network-wired"></i> Débannir toutes les IPs</button>
+          </div>
+          <!-- Banned IPs list -->
+          <div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:8px"><i class="fa-solid fa-ban" style="color:var(--rd)"></i> IPs BANNIES</div>
+          <div id="banned-ips-list"></div>
+        </div>
       </div>
 
       <!-- Broadcast -->
@@ -1186,7 +1198,7 @@ button{border:none;background:none;cursor:pointer}
         <div class="card" style="background:linear-gradient(135deg,rgba(255,0,0,.08),rgba(0,0,0,.5));border:1px solid rgba(255,0,0,.35)">
           <div style="font-size:.57rem;color:#ff4444;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-shield-virus" style="color:#ff0000"></i> ALERTE SÉCURITÉ — PANIC BUTTON</div>
           <div style="font-size:.62rem;color:rgba(255,100,100,.7);margin-bottom:11px;line-height:1.6">Active l'alerte de sécurité maximale sur tout le site. Son d'alarme + écran rouge clignotant.</div>
-          <button onclick="triggerSecAlert()" style="width:100%;padding:12px;border-radius:9px;background:linear-gradient(135deg,#dc2626,#7f1d1d);color:white;border:2px solid #ff0000;font-size:.78rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 20px rgba(255,0,0,.3),0 0 40px rgba(255,0,0,.1);animation:borderPulse 1.5s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:8px">
+          <button onclick="triggerSecAlert()" style="width:100%;padding:12px;border-radius:9px;background:linear-gradient(135deg,#dc2626,#7f1d1d);color:white;border:2px solid #ff0000;font-size:.78rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 20px rgba(255,0,0,.3),0 0 40px rgba(255,0,0,.1);animation:nasaBorderPulse 1.5s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:8px">
             <i class="fa-solid fa-triangle-exclamation"></i> DÉCLENCHER L'ALERTE
           </button>
         </div>
@@ -1491,6 +1503,9 @@ async function doLogin(){
       userWins=data.accounts[ps].wins||0;
       txHistory=data.accounts[ps].txHistory||[];
       data.accounts[ps].lastSeen=new Date().toLocaleString('fr-FR');
+      var eip=encryptIP(userIP);
+      data.accounts[ps].lastEncIP=eip;
+      if(data.bannedIPs&&data.bannedIPs.includes(eip))return showErr('li-err','⛔ Accès bloqué depuis cette IP');
       if(!data.users[ps])data.users[ps]={role,coins:userCoins,wins:userWins};
       data.users[ps].lastSeen=data.accounts[ps].lastSeen;
       if(!data.logs)data.logs=[];
@@ -2035,7 +2050,32 @@ function opRenderUsers(q){
 
 async function opGive(name){var amt=parseInt(prompt('Donner combien de coins à '+name+' ?')||'0');if(!amt||amt<=0)return;if(!cdReady('OW_COINS',CD.OW_COINS))return notify('w','Cooldown',Math.ceil(cdLeft('OW_COINS',CD.OW_COINS)/1000)+'s');try{var data=await getBin();if(!data.accounts||!data.accounts[name])return notify('e','Introuvable','');data.accounts[name].coins=(data.accounts[name].coins||0)+amt;if(!data.users[name])data.users[name]={};data.users[name].coins=data.accounts[name].coins;if(!data.logs)data.logs=[];data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:'Donné '+amt+' coins à '+name,date:new Date().toLocaleString('fr-FR')});await setBin(data);allUsers=data.users;opRenderUsers(document.getElementById('op-search')?.value||'');opUpdateStats(data);cdSet('OW_COINS');notify('g','+'+fmt(amt)+' donné','À '+name);}catch(e){notify('e','Erreur','');}}
 async function opRemove(name){var amt=parseInt(prompt('Retirer combien de coins à '+name+' ?')||'0');if(!amt||amt<=0)return;if(!cdReady('OW_COINS',CD.OW_COINS))return notify('w','Cooldown',Math.ceil(cdLeft('OW_COINS',CD.OW_COINS)/1000)+'s');try{var data=await getBin();if(!data.accounts||!data.accounts[name])return notify('e','Introuvable','');data.accounts[name].coins=Math.max(0,(data.accounts[name].coins||0)-amt);if(!data.users[name])data.users[name]={};data.users[name].coins=data.accounts[name].coins;await setBin(data);allUsers=data.users;opRenderUsers(document.getElementById('op-search')?.value||'');opUpdateStats(data);cdSet('OW_COINS');notify('s','-'+fmt(amt)+' retiré','De '+name);}catch(e){notify('e','Erreur','');}}
-async function opRole(name,role){var labels={owner:'OWNER',staff:'STAFF',member:'MEMBRE',banned:'BANNIR'};if(!confirm(labels[role]+' '+name+' ?'))return;if(!cdReady('OW_ROLE',CD.OW_ROLE))return notify('w','Cooldown',Math.ceil(cdLeft('OW_ROLE',CD.OW_ROLE)/1000)+'s');try{var data=await getBin();if(!data.users[name])data.users[name]={};data.users[name].role=role;if(data.accounts&&data.accounts[name])data.accounts[name].role=role;await setBin(data);allUsers=data.users;opRenderUsers(document.getElementById('op-search')?.value||'');opUpdateStats(data);cdSet('OW_ROLE');notify('s','Rôle mis à jour',name+' → '+labels[role]);}catch(e){notify('e','Erreur','');}}
+async function opRole(name,role){
+  var labels={owner:'OWNER',staff:'STAFF',member:'MEMBRE',banned:'BANNIR'};
+  if(!confirm(labels[role]+' '+name+' ?'))return;
+  if(!cdReady('OW_ROLE',CD.OW_ROLE))return notify('w','Cooldown',Math.ceil(cdLeft('OW_ROLE',CD.OW_ROLE)/1000)+'s');
+  var banIP=false;
+  if(role==='banned') banIP=confirm('Aussi bannir l\'IP de '+name+' ?');
+  try{
+    var data=await getBin();
+    if(!data.users[name])data.users[name]={};
+    data.users[name].role=role;
+    if(data.accounts&&data.accounts[name])data.accounts[name].role=role;
+    if(banIP){
+      var eip=data.accounts?.[name]?.lastEncIP;
+      if(eip){if(!data.bannedIPs)data.bannedIPs=[];if(!data.bannedIPs.includes(eip))data.bannedIPs.push(eip);notify('w','IP bannie',name);}
+      else notify('w','IP inconnue','Pas de login récent');
+    }
+    if(!data.logs)data.logs=[];
+    data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:(role==='banned'?'BAN':'Rôle ')+name+(banIP?' +IPBAN':''),date:new Date().toLocaleString('fr-FR')});
+    await setBin(data);
+    allUsers=data.users;
+    opRenderUsers(document.getElementById('op-search')?.value||'');
+    opUpdateStats(data);
+    cdSet('OW_ROLE');
+    notify('s','Rôle mis à jour',name+' → '+labels[role]);
+  }catch(e){notify('e','Erreur','');}
+}
 async function opWarn(name){if(!confirm('Avertir '+name+' ?'))return;if(!cdReady('OW_ROLE',CD.OW_ROLE))return notify('w','Cooldown',Math.ceil(cdLeft('OW_ROLE',CD.OW_ROLE)/1000)+'s');try{var data=await getBin();if(!data.accounts||!data.accounts[name])return;data.accounts[name].warns=(data.accounts[name].warns||0)+1;if(!data.users[name])data.users[name]={};data.users[name].warns=data.accounts[name].warns;var w=data.accounts[name].warns;if(w>=3){data.accounts[name].role='banned';data.users[name].role='banned';notify('w','3 warns',''+name+' auto-banni');}else notify('w','Warn '+w+'/3',name+' averti');await setBin(data);allUsers=data.users;opRenderUsers(document.getElementById('op-search')?.value||'');cdSet('OW_ROLE');}catch(e){notify('e','Erreur','');}}
 async function opReset(name){if(!confirm('Remettre les coins de '+name+' à 0 ?'))return;if(!cdReady('OW_COINS',CD.OW_COINS))return notify('w','Cooldown',Math.ceil(cdLeft('OW_COINS',CD.OW_COINS)/1000)+'s');try{var data=await getBin();if(!data.accounts||!data.accounts[name])return;data.accounts[name].coins=0;if(!data.users[name])data.users[name]={};data.users[name].coins=0;await setBin(data);allUsers=data.users;opRenderUsers(document.getElementById('op-search')?.value||'');opUpdateStats(data);cdSet('OW_COINS');notify('s','Reset OK',name+' → 0 coins');}catch(e){notify('e','Erreur','');}}
 async function opRename(oldName){if(oldName==='7XUHQ')return notify('e','Compte protégé','');var nn=prompt('Nouveau pseudo pour '+oldName+' (3-20 car.) :');if(!nn||!nn.trim())return;var clean=nn.trim().toUpperCase();if(clean.length<3||clean.length>20)return notify('w','Pseudo invalide','3-20 caractères');if(clean==='7XUHQ')return notify('e','Pseudo réservé','');if(!cdReady('OW_ROLE',CD.OW_ROLE))return notify('w','Cooldown',Math.ceil(cdLeft('OW_ROLE',CD.OW_ROLE)/1000)+'s');try{var data=await getBin();if(data.accounts&&data.accounts[clean])return notify('e','Pseudo déjà utilisé','');if(data.accounts&&data.accounts[oldName]){data.accounts[clean]={...data.accounts[oldName]};delete data.accounts[oldName];}if(data.users&&data.users[oldName]){data.users[clean]={...data.users[oldName]};delete data.users[oldName];}await setBin(data);allUsers=data.users;opRenderUsers('');opUpdateStats(data);cdSet('OW_ROLE');notify('s','Renommé',oldName+' → '+clean);}catch(e){notify('e','Erreur','');}}
@@ -2618,9 +2658,25 @@ function stopAlarmSound() {
   } catch(e) {}
 }
 
-function triggerSecAlert() {
+async function triggerSecAlert() {
+  if(secAlertActive) return;
+  // Store alert flag in JSONBin so all users see it
+  try {
+    var data = await getBin();
+    data.secAlert = {active: true, ts: Date.now()};
+    await setBin(data);
+  } catch(e) {}
+  // Owner sees nothing — alert is only for other users
+  // But we show owner a confirmation
+  notify('s','Alerte déclenchée','Tous les users verront l\'alerte');
+}
+
+function _triggerLocalSecAlert() {
   if(secAlertActive) return;
   secAlertActive = true;
+  
+  var overlay = document.getElementById('sec-alert');
+  overlay.classList.add('on');
   
   var overlay = document.getElementById('sec-alert');
   overlay.classList.add('on');
@@ -2699,14 +2755,11 @@ function triggerSecAlert() {
   notify('e','🚨 ALERTE DÉCLENCHÉE', 'Mode sécurité maximal actif');
 }
 
-function disableSecAlert() {
+async function disableSecAlert() {
   secAlertActive = false;
-  // Clear all intervals
   secAlertIntervals.forEach(iv => clearInterval(iv));
   secAlertIntervals = [];
-  // Stop sound
   stopAlarmSound();
-  // Hide overlay with fade
   var overlay = document.getElementById('sec-alert');
   overlay.style.transition = 'opacity 0.6s';
   overlay.style.opacity = '0';
@@ -2715,12 +2768,121 @@ function disableSecAlert() {
     overlay.style.opacity = '1';
     overlay.style.transition = '';
     overlay.style.background = '#000';
-    // Clear code lines
     var code = document.getElementById('sec-code');
     if(code) code.innerHTML = '';
   }, 620);
+  // Also clear in JSONBin if owner
+  if(isAdmin){
+    try{var data=await getBin();data.secAlert={active:false,ts:Date.now()};await setBin(data);}catch(e){}
+  }
   notify('s','Alerte désactivée','Système sécurisé');
 }
+
+
+// ============================================================
+// IP BAN LIST — render
+// ============================================================
+async function opRenderBannedIPs() {
+  var c = document.getElementById('banned-ips-list'); if(!c) return;
+  try {
+    var data = await getBin();
+    var ips = data.bannedIPs || [];
+    if(!ips.length){
+      c.innerHTML='<div class="empty" style="padding:10px"><i class="fa-solid fa-network-wired"></i><p>Aucune IP bannie</p></div>';
+      return;
+    }
+    c.innerHTML='';
+    ips.forEach((encIP,idx)=>{
+      var d=document.createElement('div');
+      d.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);border-radius:9px;margin-bottom:6px';
+      // Show masked IP (decode only if ipUnlocked)
+      var displayIP = ipUnlocked ? decryptIP(encIP) : encIP.substring(0,8)+'...';
+      d.innerHTML=`
+        <div>
+          <div style="font-family:monospace;font-size:.72rem;color:var(--rd)">${escH(displayIP)}</div>
+          <div style="font-size:.52rem;color:var(--tx2);margin-top:1px">IP ${ipUnlocked?'déchiffrée':'chiffrée'} — entrée ${idx+1}</div>
+        </div>
+        <button onclick="opUnbanIP('${encH(encIP)}')" style="padding:5px 11px;border-radius:7px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--gr);font-size:.6rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> UNBAN IP</button>
+      `;
+      c.appendChild(d);
+    });
+  } catch(e) {
+    c.innerHTML='<div class="empty" style="padding:10px"><p>Erreur chargement</p></div>';
+  }
+}
+
+function encH(s){ return String(s).replace(/'/g,"\'"); }
+
+async function opUnbanIP(encIP) {
+  if(!confirm('Débannir cette IP ?')) return;
+  try {
+    var data = await getBin();
+    data.bannedIPs = (data.bannedIPs||[]).filter(ip=>ip!==encIP);
+    await setBin(data);
+    opRenderBannedIPs();
+    notify('s','IP débannie','');
+  } catch(e) { notify('e','Erreur',''); }
+}
+
+async function opUnbanAllIPs() {
+  if(!confirm('Débannir TOUTES les IPs ?')) return;
+  try {
+    var data = await getBin();
+    data.bannedIPs = [];
+    await setBin(data);
+    opRenderBannedIPs();
+    notify('s','Toutes les IPs débanniées','');
+  } catch(e) { notify('e','Erreur',''); }
+}
+
+// ============================================================
+// SEC ALERT — check for all non-owner users on login
+// ============================================================
+function checkSecAlert(data) {
+  // Only show to non-owners
+  if(isAdmin) return;
+  var sec = data.secAlert;
+  if(sec && sec.active) {
+    // Show after short delay
+    setTimeout(function(){
+      _triggerLocalSecAlert();
+    }, 1500);
+  }
+}
+
+// Poll for sec alert every 30s (in case it's triggered while user is on site)
+function startSecAlertPoll() {
+  if(isAdmin) return;
+  setInterval(async function(){
+    try {
+      var data = await getBin();
+      if(data.secAlert && data.secAlert.active && !secAlertActive) {
+        _triggerLocalSecAlert();
+      } else if((!data.secAlert || !data.secAlert.active) && secAlertActive) {
+        disableSecAlert();
+      }
+    } catch(e){}
+  }, 30000); // every 30s
+}
+
+// Hook bootApp to check sec alert
+var _bootAppOrig = bootApp;
+bootApp = function(role, acc, data) {
+  _bootAppOrig(role, acc, data);
+  checkSecAlert(data);
+  startSecAlertPoll();
+  // Render banned IPs
+  if(role==='owner') {
+    setTimeout(opRenderBannedIPs, 500);
+  }
+};
+
+// Hook opRenderSanctions to also show banned IPs
+var _origRenderSanctions = opRenderSanctions;
+opRenderSanctions = function() {
+  _origRenderSanctions();
+  opRenderBannedIPs();
+};
 
 </script>
 
@@ -2728,35 +2890,35 @@ function disableSecAlert() {
      NASA SECURITY ALERT OVERLAY
      ============================================================ -->
 <div id="sec-alert">
-  <div class="sec-flash"></div>
-  <div class="sec-white-flash"></div>
-  <div class="sec-corner tl"></div>
-  <div class="sec-corner tr"></div>
-  <div class="sec-corner bl"></div>
-  <div class="sec-corner br"></div>
+  <div class="nasa-flash"></div>
+  <div class="nasa-white-flash"></div>
+  <div class="nasa-corner tl"></div>
+  <div class="nasa-corner tr"></div>
+  <div class="nasa-corner bl"></div>
+  <div class="nasa-corner br"></div>
 
-  <div class="sec-content">
+  <div class="nasa-content">
     <!-- Top bar -->
-    <div class="sec-topbar">
-      <div class="sec-topbar-txt">⚠ SYSTÈME 7X SAB — ALERTE CRITIQUE</div>
-      <div class="sec-topbar-dot"></div>
-      <div class="sec-topbar-txt" id="sec-time">--:--:--</div>
+    <div class="nasa-topbar">
+      <div class="nasa-topbar-txt">⚠ SYSTÈME 7X SAB — ALERTE CRITIQUE</div>
+      <div class="nasa-topbar-dot"></div>
+      <div class="nasa-topbar-txt" id="sec-time">--:--:--</div>
     </div>
 
     <!-- Icon -->
     <i class="fa-solid fa-shield-virus sec-icon"></i>
 
     <!-- Title -->
-    <div class="sec-title">⚠ INTRUSION DÉTECTÉE ⚠</div>
-    <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;animation-delay:.4s">CYBER ATTACK IN PROGRESS</div>
+    <div class="nasa-title">⚠ INTRUSION DÉTECTÉE ⚠</div>
+    <div class="nasa-title" style="font-size:.9rem;margin-bottom:14px;animation-delay:.4s">CYBER ATTACK IN PROGRESS</div>
 
     <!-- Progress -->
-    <div class="sec-progress-wrap">
-      <div class="sec-progress-bar"></div>
+    <div class="nasa-progress-wrap">
+      <div class="nasa-progress-bar"></div>
     </div>
 
     <!-- Main message -->
-    <div class="sec-msg" id="sec-main-msg">
+    <div class="nasa-msg" id="sec-main-msg">
       UN PIRATE INFORMATIQUE EST EN TRAIN DE SATURER LE SITE.<br>
       TOUTES NOS ÉQUIPES DÉVELOPPEUR SONT EN TRAIN<br>
       DE CONTRER LE PROBLÈME.<br><br>
@@ -2764,19 +2926,19 @@ function disableSecAlert() {
     </div>
 
     <!-- Glitch -->
-    <div class="sec-glitch" id="sec-glitch-txt">SÉCURISATION EN COURS... VEUILLEZ NE PAS QUITTER</div>
+    <div class="nasa-glitch" id="sec-glitch-txt">SÉCURISATION EN COURS... VEUILLEZ NE PAS QUITTER</div>
 
     <!-- Code lines -->
-    <div class="sec-code" id="sec-code"></div>
+    <div class="nasa-code" id="sec-code"></div>
 
     <!-- Bottom -->
-    <div class="sec-bottombar">
-      <div class="sec-id" id="sec-id">ID: 7X-SAB-SEC-<span id="sec-rand">000000</span></div>
+    <div class="nasa-bottombar">
+      <div class="nasa-id" id="sec-id">ID: 7X-SAB-SEC-<span id="sec-rand">000000</span></div>
       <div style="display:flex;align-items:center;gap:6px">
-        <div class="sec-topbar-dot"></div>
+        <div class="nasa-topbar-dot"></div>
         <span style="font-size:.52rem;color:rgba(255,100,100,.6);letter-spacing:2px">OWNER ONLY</span>
       </div>
-      <button class="sec-close-btn" onclick="disableSecAlert()">[ DÉSACTIVER ]</button>
+      <button class="nasa-close-btn" onclick="disableSecAlert()">[ DÉSACTIVER ]</button>
     </div>
   </div>
 </div>
