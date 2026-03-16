@@ -988,7 +988,7 @@ button{border:none;background:none;cursor:pointer}
 // CONFIG
 // =============================================
 const BIN_ID  = "69b6aeb4b7ec241ddc6e26c0";
-const BIN_KEY = (function(){var p=['$2a','$10','$EBYTl8Qs','DuSLonTCcO','OipuqMzAZ','ErZtyTS4U','7Qybk92N.','.jQWHeaTG'];return p.join('');})();
+const BIN_KEY = (function(){var a='$2a$10$EBYTl8QsDuSLo',b='nTCcOOipuqMzAZErZtyTS4U7Qybk92N.jQWHeaTG';return a+b;})();
 const BIN_URL = "https://api.jsonbin.io/v3/b";
 const WH_URL  = "https://discord.com/api/webhooks/1474669361611538443/uW_m9kt05hykPUZQ_0v4sYw6-xkNsgYKF_WnP-Hc1ckg42bIRG8VPZWdrPsXfkbfQdgy";
 
@@ -1146,29 +1146,22 @@ window.addEventListener('pageshow',function(e){
 // ANTI-DEVTOOLS — password & data protection
 // =============================================
 (function() {
-  // 1. Override console to hide sensitive logs
+  // 1. Override console to hide sensitive logs (keep error/warn for debugging)
   var noop = function(){};
-  var _warn = console.warn.bind(console);
   ['log','info','debug','dir','table','trace'].forEach(function(m){ try{ console[m]=noop; }catch(e){} });
+  // Keep console.error and console.warn available
 
-  // 2. Detect DevTools via timing trick
+  // 2. Detect DevTools via window size (only blocks when clearly open on desktop)
   var devtoolsOpen = false;
-  var threshold = 160;
-  function detectDevtools() {
-    var start = performance.now();
-    // This triggers layout which is slow when devtools is open
-    var d = document.createElement('div');
-    d.id='__dt__';
-    Object.defineProperty(d,'id',{get:function(){ devtoolsOpen=true; return '__dt__'; }});
-    // Also check window size difference
-    if(window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
-      devtoolsOpen = true;
-    }
-  }
+  var dtThreshold = 200; // px — only triggers if devtools clearly docked
   setInterval(function(){
-    detectDevtools();
+    // Only check on desktop (wider screens)
+    if(window.innerWidth < 768) return;
+    var widthDiff = window.outerWidth - window.innerWidth;
+    var heightDiff = window.outerHeight - window.innerHeight;
+    // Both must be above threshold to avoid false positives
+    devtoolsOpen = (widthDiff > dtThreshold) || (heightDiff > dtThreshold && heightDiff < window.outerHeight * 0.7);
     if(devtoolsOpen && document.getElementById('app') && document.getElementById('app').classList.contains('on')) {
-      // Show protection overlay
       var ov = document.getElementById('dt-overlay');
       if(!ov) {
         ov = document.createElement('div');
@@ -1176,15 +1169,14 @@ window.addEventListener('pageshow',function(e){
         ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#06060f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px';
         ov.innerHTML = '<i class="fa-solid fa-shield-halved" style="font-size:3rem;color:#7c3aed"></i>'
           + '<div style="font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;color:#f1f5f9">ACCÈS RESTREINT</div>'
-          + '<div style="font-size:.75rem;color:#94a3b8;text-align:center;max-width:280px">Les outils développeur sont désactivés sur cette plateforme.<br>Ferme DevTools pour continuer.</div>';
+          + '<div style="font-size:.75rem;color:#94a3b8;text-align:center;max-width:280px">DevTools désactivés sur cette plateforme.</div>';
         document.body.appendChild(ov);
       }
-      devtoolsOpen = false; // reset check
     } else {
       var ov = document.getElementById('dt-overlay');
       if(ov) ov.remove();
     }
-  }, 1000);
+  }, 1500);
 
   // 3. Disable right-click
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
