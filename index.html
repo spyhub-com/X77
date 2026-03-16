@@ -172,156 +172,248 @@ input, textarea { outline: none; }
 @keyframes annScroll { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
 
 /* =============================================
-   LOGIN — HOLOGRAPHIC CARD
+   LOGIN — APPLE GLASS 3D
    ============================================= */
 #splash {
   position: fixed; inset: 0; z-index: 800;
   display: none; align-items: center; justify-content: center;
-  background: var(--bg);
-  overflow: hidden;
+  background: var(--bg); overflow: hidden;
 }
 #splash.show { display: flex; }
-.splash-bg {
+
+/* Soft ambient background */
+.splash-bg-static {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 50% at 30% 40%, rgba(124,58,237,0.15), transparent 60%),
-    radial-gradient(ellipse 50% 70% at 70% 60%, rgba(6,182,212,0.1), transparent 60%);
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(124,58,237,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(6,182,212,0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 55% 50%, rgba(245,158,11,0.05) 0%, transparent 60%);
 }
 .splash-grid {
   position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
-  background-size: 44px 44px;
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
-.holo-wrap { position: relative; z-index: 2; width: 90%; max-width: 400px; perspective: 1000px; }
+
+/* Floating orbs — slow, GPU only */
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); pointer-events: none;
+  animation: orbFloat ease-in-out infinite;
+  will-change: transform; transform: translateZ(0);
+}
+.orb-1 { width:300px;height:300px;top:-80px;left:-80px;background:rgba(124,58,237,0.12);animation-duration:12s;animation-delay:0s; }
+.orb-2 { width:250px;height:250px;bottom:-60px;right:-60px;background:rgba(6,182,212,0.1);animation-duration:15s;animation-delay:-5s; }
+.orb-3 { width:180px;height:180px;top:40%;right:10%;background:rgba(245,158,11,0.07);animation-duration:10s;animation-delay:-3s; }
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0) translateZ(0); }
+  50%      { transform: translateY(-30px) translateZ(0); }
+}
+
+/* 3D card wrapper */
+.holo-wrap {
+  position: relative; z-index: 10;
+  width: 90%; max-width: 390px;
+  perspective: 900px;
+  perspective-origin: 50% 45%;
+}
+
+/* Apple-style glass card */
 .holo-card {
-  background: rgba(10,10,22,0.92);
-  border: 1px solid rgba(124,58,237,0.4);
-  border-radius: 24px;
-  overflow: hidden;
-  backdrop-filter: blur(30px);
-  box-shadow:
-    0 0 0 1px rgba(6,182,212,0.06),
-    0 40px 100px rgba(0,0,0,0.8),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-  animation: cardFloat 8s ease-in-out infinite, borderFlow 4s linear infinite;
   position: relative;
+  /* Apple glass: semi-transparent + strong blur */
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-radius: 26px;
+  overflow: hidden;
+  /* Layered border — like apple's material */
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.06),
+    0 2px 0 rgba(255,255,255,0.06) inset,
+    0 -1px 0 rgba(0,0,0,0.4) inset,
+    0 30px 60px rgba(0,0,0,0.5),
+    0 8px 20px rgba(0,0,0,0.3);
+  /* 3D — start flat, JS handles tilt */
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
+  will-change: transform;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.4s ease;
 }
-.card-shine {
-  position: absolute; inset: 0; pointer-events: none; z-index: 5;
-  background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%);
-  animation: shineMove 6s ease infinite;
+
+/* Top highlight — Apple-style inner light */
+.holo-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), rgba(255,255,255,0.15), transparent);
+  z-index: 30; pointer-events: none; border-radius: 26px 26px 0 0;
 }
-@keyframes shineMove {
-  0% { transform: translateX(-100%) translateY(-100%); }
-  100% { transform: translateX(100%) translateY(100%); }
+/* Bottom inner shadow */
+.holo-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to top, rgba(0,0,0,0.15), transparent);
+  z-index: 30; pointer-events: none;
 }
+
+/* Specular highlight moves with mouse */
+.card-specular {
+  position: absolute; inset: 0; z-index: 20;
+  pointer-events: none; border-radius: 26px;
+  background: radial-gradient(circle at 50% 15%, rgba(255,255,255,0.07) 0%, transparent 60%);
+  transition: background 0.08s linear;
+}
+
+/* Subtle scan — very thin */
 .card-scan {
-  position: absolute; left: 0; right: 0; height: 40px; pointer-events: none; z-index: 4;
-  background: linear-gradient(180deg, transparent, rgba(124,58,237,0.05), transparent);
-  animation: scanDown 5s linear infinite;
+  position: absolute; left: 5%; right: 5%; height: 1px;
+  pointer-events: none; z-index: 25;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  border-radius: 1px;
+  animation: appleScan 7s ease-in-out infinite;
+  opacity: 0;
 }
-@keyframes scanDown { 0% { top: -10%; } 100% { top: 110%; } }
-.card-particles { position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
-.cp {
-  position: absolute; width: 3px; height: 3px; border-radius: 50%;
-  animation: cpFly 4s ease-out infinite; opacity: 0;
+@keyframes appleScan {
+  0%,100% { top: 5%;  opacity: 0; }
+  8%       { opacity: 0.6; }
+  48%      { opacity: 0.2; }
+  50%      { top: 95%; opacity: 0; }
 }
-@keyframes cpFly {
-  0% { transform: translateY(100%); opacity: 0; }
-  20% { opacity: 0.8; }
-  100% { transform: translateY(-80px) translateX(var(--cx, 0)); opacity: 0; }
+
+/* Border edge glow — very subtle */
+.card-edge {
+  position: absolute; inset: -1px; border-radius: 27px;
+  pointer-events: none; z-index: 26;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 15px rgba(124,58,237,0.1);
 }
 
 /* Card header */
-.card-header { padding: 28px 24px 20px; text-align: center; position: relative; z-index: 6; }
+.card-header {
+  padding: 32px 24px 20px; text-align: center;
+  position: relative; z-index: 6;
+}
 .card-logo {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 4rem; font-weight: 700; letter-spacing: -2px;
-  background: linear-gradient(135deg, var(--purple-light), var(--cyan), var(--gold), var(--cyan), var(--purple-light));
-  background-size: 300% auto;
+  font-size: 4.5rem; font-weight: 700; letter-spacing: -3px;
+  background: linear-gradient(160deg, #fff 0%, rgba(255,255,255,0.9) 40%, var(--purple-light) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  animation: shimmer 4s linear infinite;
-  display: block; margin-bottom: 2px;
+  display: block; margin-bottom: 4px;
+  filter: drop-shadow(0 2px 20px rgba(124,58,237,0.4));
 }
-.card-subtitle { font-size: 0.6rem; letter-spacing: 5px; text-transform: uppercase; color: var(--text2); }
-.card-server {
-  display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
-  padding: 5px 14px; border-radius: 20px;
-  background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-  font-size: 0.62rem; font-weight: 600; color: var(--gold);
+.card-subtitle {
+  font-size: 0.57rem; letter-spacing: 5px;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
 }
 
 /* Auth tabs */
-.auth-tabs { display: flex; border-bottom: 1px solid var(--border); position: relative; z-index: 6; }
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position: relative; z-index: 6;
+  background: rgba(0,0,0,0.1);
+}
 .auth-tab {
   flex: 1; padding: 13px; text-align: center;
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--text2); cursor: pointer; transition: 0.3s;
+  font-size: 0.67rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); cursor: pointer; transition: 0.25s;
   border-bottom: 2px solid transparent;
 }
-.auth-tab.active { color: var(--purple-light); border-bottom-color: var(--purple-light); }
+.auth-tab.active {
+  color: white;
+  border-bottom-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.03);
+}
 
 /* Form */
-.auth-form { padding: 20px 22px; position: relative; z-index: 6; }
-.field-wrap { position: relative; margin-bottom: 10px; }
+.auth-form { padding: 18px 22px; position: relative; z-index: 6; }
+.field-wrap { position: relative; margin-bottom: 9px; }
 .field {
   width: 100%; padding: 13px 16px; padding-right: 44px;
-  background: rgba(0,0,0,0.5); border: 1px solid var(--border);
-  border-radius: 12px; color: var(--text); font-size: 0.88rem;
-  text-align: center; transition: 0.3s; font-family: inherit;
+  /* Apple glass input */
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; color: white; font-size: 0.87rem;
+  text-align: center; transition: all 0.25s;
+  font-family: inherit;
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.2);
 }
-.field:focus { border-color: var(--purple-light); box-shadow: 0 0 0 3px var(--purple-glow); }
-.field::placeholder { color: var(--text3); }
-.field-icon { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(--text3); cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
-.field-icon:hover { color: var(--purple-light); }
-.str-bar { height: 3px; background: var(--bg3); border-radius: 3px; overflow: hidden; margin-top: -6px; margin-bottom: 10px; }
-.str-fill { height: 100%; border-radius: 3px; transition: 0.4s; width: 0; }
-.str-fill.weak { background: var(--red); width: 33%; }
-.str-fill.mid { background: var(--orange); width: 66%; }
-.str-fill.strong { background: var(--green); width: 100%; }
+.field:focus {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+  outline: none;
+}
+.field::placeholder { color: rgba(255,255,255,0.25); }
+.field-icon {
+  position: absolute; right: 13px; top: 50%;
+  transform: translateY(-50%); color: rgba(255,255,255,0.25);
+  cursor: pointer; font-size: 0.85rem; transition: color 0.2s;
+}
+.field-icon:hover { color: rgba(255,255,255,0.6); }
+.str-bar { height: 2px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; margin-top: -5px; margin-bottom: 9px; }
+.str-fill { height: 100%; border-radius: 2px; transition: 0.4s; width: 0; }
+.str-fill.weak   { background: var(--red);   width: 33%; }
+.str-fill.mid    { background: var(--orange); width: 66%; }
+.str-fill.strong { background: var(--green);  width: 100%; }
 .invite-note {
   display: flex; align-items: center; gap: 6px; padding: 8px 11px;
-  background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.15);
-  border-radius: 8px; font-size: 0.6rem; color: var(--cyan); margin-bottom: 10px;
+  background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.15);
+  border-radius: 8px; font-size: 0.6rem; color: rgba(6,182,212,0.9);
+  margin-bottom: 9px;
 }
 .auth-err {
   display: none; padding: 8px 11px; border-radius: 8px;
-  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
-  color: var(--red); font-size: 0.7rem; margin-bottom: 8px;
+  background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.2);
+  color: #fca5a5; font-size: 0.7rem; margin-bottom: 8px;
 }
 .auth-err.show { display: block; animation: shake 0.4s ease; }
 .auth-ok {
   display: none; padding: 8px 11px; border-radius: 8px;
-  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25);
-  color: var(--green); font-size: 0.7rem; margin-bottom: 8px;
+  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);
+  color: #6ee7b7; font-size: 0.7rem; margin-bottom: 8px;
 }
 .auth-ok.show { display: block; }
+
+/* Apple-style button */
 .btn-main {
   width: 100%; padding: 14px; border-radius: 12px; border: none;
-  background: linear-gradient(135deg, var(--purple), var(--purple-light));
-  color: white; font-family: inherit; font-size: 0.82rem;
-  font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-  cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.9);
+  color: #0a0a16; font-family: inherit; font-size: 0.82rem;
+  font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.25s;
+  position: relative; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,1) inset, 0 4px 16px rgba(0,0,0,0.3);
 }
-.btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--purple-glow); }
-.btn-main:active { transform: scale(0.97); }
-.btn-main::after {
-  content: ''; position: absolute; top: -50%; left: -60%;
-  width: 20%; height: 200%; background: rgba(255,255,255,0.1);
-  transform: rotate(30deg); transition: 0.5s;
+.btn-main:hover {
+  background: white;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255,255,255,1) inset, 0 8px 24px rgba(0,0,0,0.35);
 }
-.btn-main:hover::after { left: 120%; }
-.auth-link { text-align: center; margin-top: 10px; font-size: 0.6rem; color: var(--text2); }
-.auth-link span { color: var(--cyan); cursor: pointer; font-weight: 700; }
-.auth-link span:hover { text-decoration: underline; }
+.btn-main:active {
+  transform: scale(0.98) translateY(0);
+  background: rgba(255,255,255,0.85);
+}
+.auth-link { text-align: center; margin-top: 10px; font-size: 0.6rem; color: rgba(255,255,255,0.3); }
+.auth-link span { color: rgba(255,255,255,0.6); cursor: pointer; font-weight: 700; transition: color 0.2s; }
+.auth-link span:hover { color: white; }
 .card-footer {
-  padding: 12px 22px; border-top: 1px solid var(--border); text-align: center;
-  font-size: 0.57rem; color: var(--text3); position: relative; z-index: 6;
+  padding: 12px 22px; border-top: 1px solid rgba(255,255,255,0.06);
+  text-align: center; font-size: 0.54rem; color: rgba(255,255,255,0.2);
+  position: relative; z-index: 6;
   display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: rgba(0,0,0,0.1);
 }
 
+/* =============================================
+   MAIN APP
+/* =============================================
+   MAIN APP
 /* =============================================
    MAIN APP
    ============================================= */
@@ -1011,6 +1103,13 @@ input, textarea { outline: none; }
 .search-field::placeholder { color: var(--text3); }
 .gen-key-btn { width: 100%; padding: 11px; border-radius: 10px; border: none; background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: white; font-family: inherit; font-size: 0.74rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px; }
 .gen-key-btn:hover { box-shadow: 0 5px 18px var(--purple-glow); }
+
+.shop-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+}
 </style>
 </head>
 <body>
@@ -1053,28 +1152,23 @@ input, textarea { outline: none; }
 </div>
 
 <!-- ============================================================
-     LOGIN
+     LOGIN — 3D CARD
      ============================================================ -->
 <div id="splash">
-  <div class="splash-bg"></div>
+  <div class="splash-bg-static"></div>
   <div class="splash-grid"></div>
-  <div class="holo-wrap">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="holo-wrap" id="holo-wrap">
     <div class="holo-card" id="holo-card">
-      <div class="card-shine"></div>
+      <div class="card-specular" id="card-specular"></div>
       <div class="card-scan"></div>
-      <div class="card-particles">
-        <span class="cp" style="left:20%;--cx:-25px;animation-delay:0s;background:var(--purple-light)"></span>
-        <span class="cp" style="left:40%;--cx:15px;animation-delay:0.8s;background:var(--cyan)"></span>
-        <span class="cp" style="left:60%;--cx:-10px;animation-delay:1.6s;background:var(--gold)"></span>
-        <span class="cp" style="left:80%;--cx:20px;animation-delay:2.4s;background:var(--purple-light)"></span>
-      </div>
+      <div class="card-edge"></div>
       <div class="card-header">
         <span class="card-logo">7X</span>
         <div class="card-subtitle">SAB PLATFORM</div>
-        <div class="card-server">
-          <span>🇫🇷</span>
-          <span>7X | SAB — Trade • Middleman • Chill • Shop</span>
-        </div>
+        
       </div>
       <div class="auth-tabs">
         <div class="auth-tab active" id="tab-login" onclick="switchAuth('login')">
@@ -1154,7 +1248,7 @@ input, textarea { outline: none; }
     </div>
     <div class="header-right">
       <div class="coin-chip" onclick="goTo('coins')" id="hdr-coin-chip">
-        <span class="coin-chip-icon">🪙</span>
+        <span class="coin-chip-icon"><i class="fa-solid fa-coins" style="color:var(--gold)"></i></span>
         <span class="coin-chip-val" id="hdr-coins">0</span>
       </div>
     </div>
@@ -1168,19 +1262,19 @@ input, textarea { outline: none; }
       <div class="hero-card">
         <div class="hero-hi">BIENVENUE SUR 7X SAB</div>
         <div class="hero-name" id="hero-name">Galaxie</div>
-        <div class="role-badge member" id="hero-role">🔵 MEMBRE</div>
+        <div class="role-badge member" id="hero-role"><i class="fa-solid fa-user"></i> MEMBRE</div>
         <div class="hero-stats">
           <div class="hstat">
             <span class="hstat-val" id="home-coins">0</span>
-            <div class="hstat-lbl">🪙 Coins</div>
+            <div class="hstat-lbl"><i class="fa-solid fa-coins" style="color:var(--gold)"></i> Coins</div>
           </div>
           <div class="hstat">
             <span class="hstat-val" id="home-wins">0</span>
-            <div class="hstat-lbl">🎰 Wins</div>
+            <div class="hstat-lbl"><i class="fa-solid fa-trophy" style="color:var(--gold)"></i> Wins</div>
           </div>
           <div class="hstat">
             <span class="hstat-val" id="home-rank">#—</span>
-            <div class="hstat-lbl">🏆 Rang</div>
+            <div class="hstat-lbl"><i class="fa-solid fa-ranking-star" style="color:var(--gold)"></i> Rang</div>
           </div>
         </div>
       </div>
@@ -1188,19 +1282,19 @@ input, textarea { outline: none; }
       <div class="section-title"><i class="fa-solid fa-bolt"></i> ACTIONS RAPIDES</div>
       <div class="quick-grid">
         <div class="qcard" onclick="goTo('coins')">
-          <div class="qcard-icon qi-gold">🪙</div>
+          <div class="qcard-icon qi-gold"><i class="fa-solid fa-coins" style="color:var(--gold)"></i></div>
           <div><div class="qcard-title">Coins</div><div class="qcard-sub">Claim • Donner</div></div>
         </div>
         <div class="qcard" onclick="goTo('shop')">
-          <div class="qcard-icon qi-purple">🛒</div>
+          <div class="qcard-icon qi-purple"><i class="fa-solid fa-store" style="color:var(--purple-light)"></i></div>
           <div><div class="qcard-title">Boutique SAB</div><div class="qcard-sub">Items • Rôles</div></div>
         </div>
         <div class="qcard" onclick="goTo('casino')">
-          <div class="qcard-icon qi-red">🎰</div>
+          <div class="qcard-icon qi-red"><i class="fa-solid fa-dice" style="color:var(--red)"></i></div>
           <div><div class="qcard-title">Casino</div><div class="qcard-sub">5 jeux disponibles</div></div>
         </div>
         <div class="qcard" onclick="goTo('leaderboard')">
-          <div class="qcard-icon qi-cyan">🏆</div>
+          <div class="qcard-icon qi-cyan"><i class="fa-solid fa-trophy" style="color:var(--cyan)"></i></div>
           <div><div class="qcard-title">Classement</div><div class="qcard-sub">Top 10 Coins</div></div>
         </div>
       </div>
@@ -1215,7 +1309,7 @@ input, textarea { outline: none; }
       <div class="page-sub">Gagne, dépense et transfère</div>
 
       <div class="balance-card">
-        <div class="bal-icon">🪙</div>
+        <div class="bal-icon"><i class="fa-solid fa-coins" style="color:var(--gold);font-size:2rem;animation:coinBounce 2s ease infinite;display:block;margin-bottom:6px"></i></div>
         <div class="bal-label">SOLDE ACTUEL</div>
         <span class="bal-amount" id="coins-main">0</span>
         <div class="bal-sub" id="coins-sub-info">0 transactions</div>
@@ -1245,7 +1339,7 @@ input, textarea { outline: none; }
       <div class="shop-banner">
         <div class="shop-banner-title">💎 BOUTIQUE OFFICIELLE 7X SAB</div>
         <div style="font-size:0.6rem;color:var(--text2);margin-top:3px">Gagne des coins avec Claim et dépense-les ici</div>
-        <div class="shop-banner-bal">💰 Ton solde : <span id="shop-bal">0</span> 🪙</div>
+        <div class="shop-banner-bal"><i class="fa-solid fa-coins" style="color:var(--gold)"></i> Ton solde : <span id="shop-bal">0</span></div>
       </div>
       <div class="section-title"><i class="fa-solid fa-store"></i> ARTICLES</div>
       <div id="shop-items"></div>
@@ -1283,7 +1377,7 @@ input, textarea { outline: none; }
       <!-- COINFLIP -->
       <div class="game-panel show" id="game-coinflip">
         <div class="cf-arena">
-          <div class="coin3d" id="cf-coin">🪙</div>
+          <div class="coin3d" id="cf-coin"><i class="fa-solid fa-coins"></i></div>
           <div class="cf-result" id="cf-result">Choisissez Face ou Pile</div>
           <div class="cf-btns">
             <button class="cf-btn cf-heads" onclick="playCF('heads')">🟡 FACE ×2</button>
@@ -1296,9 +1390,9 @@ input, textarea { outline: none; }
       <div class="game-panel" id="game-slots">
         <div class="slots-machine">
           <div class="slots-reels">
-            <div class="reel" id="r0">🍒</div>
-            <div class="reel" id="r1">🍒</div>
-            <div class="reel" id="r2">🍒</div>
+            <div class="reel" id="r0"><i class="fa-solid fa-circle" style="color:#ef4444"></i></div>
+            <div class="reel" id="r1"><i class="fa-solid fa-circle" style="color:#ef4444"></i></div>
+            <div class="reel" id="r2"><i class="fa-solid fa-circle" style="color:#ef4444"></i></div>
           </div>
           <div class="slots-result" id="slots-res">Appuyez sur SPIN !</div>
           <button class="spin-btn" id="spin-btn" onclick="playSlots()">
@@ -1307,15 +1401,15 @@ input, textarea { outline: none; }
         </div>
         <div class="pay-table">
           <div style="font-size:0.6rem;font-weight:800;color:var(--text);margin-bottom:7px">GAINS</div>
-          <div class="pay-row"><span>💎💎💎</span><span class="pay-mult">×50</span></div>
-          <div class="pay-row"><span>👑👑👑</span><span class="pay-mult">×25</span></div>
-          <div class="pay-row"><span>7️⃣7️⃣7️⃣</span><span class="pay-mult">×15</span></div>
-          <div class="pay-row"><span>⭐⭐⭐</span><span class="pay-mult">×10</span></div>
-          <div class="pay-row"><span>🍀🍀🍀</span><span class="pay-mult">×8</span></div>
-          <div class="pay-row"><span>🍇🍇🍇</span><span class="pay-mult">×5</span></div>
-          <div class="pay-row"><span>🍊🍊🍊</span><span class="pay-mult">×4</span></div>
-          <div class="pay-row"><span>🍋🍋🍋</span><span class="pay-mult">×3</span></div>
-          <div class="pay-row"><span>🍒🍒🍒</span><span class="pay-mult">×2</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-gem" style="color:#06b6d4"></i><i class="fa-solid fa-gem" style="color:#06b6d4"></i><i class="fa-solid fa-gem" style="color:#06b6d4"></i></span><span class="pay-mult">×50</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-crown" style="color:#ffd700"></i><i class="fa-solid fa-crown" style="color:#ffd700"></i><i class="fa-solid fa-crown" style="color:#ffd700"></i></span><span class="pay-mult">×25</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-7" style="color:#ef4444;font-size:1.1em"></i><i class="fa-solid fa-7" style="color:#ef4444;font-size:1.1em"></i><i class="fa-solid fa-7" style="color:#ef4444;font-size:1.1em"></i></span><span class="pay-mult">×15</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-star" style="color:#fbbf24"></i><i class="fa-solid fa-star" style="color:#fbbf24"></i><i class="fa-solid fa-star" style="color:#fbbf24"></i></span><span class="pay-mult">×10</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-clover" style="color:#10b981"></i><i class="fa-solid fa-clover" style="color:#10b981"></i><i class="fa-solid fa-clover" style="color:#10b981"></i></span><span class="pay-mult">×8</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-circle" style="color:#7c3aed;font-size:0.9em"></i><i class="fa-solid fa-circle" style="color:#7c3aed;font-size:0.9em"></i><i class="fa-solid fa-circle" style="color:#7c3aed;font-size:0.9em"></i></span><span class="pay-mult">×5</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-circle" style="color:#f97316;font-size:0.9em"></i><i class="fa-solid fa-circle" style="color:#f97316;font-size:0.9em"></i><i class="fa-solid fa-circle" style="color:#f97316;font-size:0.9em"></i></span><span class="pay-mult">×4</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-lemon" style="color:#fbbf24"></i><i class="fa-solid fa-lemon" style="color:#fbbf24"></i><i class="fa-solid fa-lemon" style="color:#fbbf24"></i></span><span class="pay-mult">×3</span></div>
+          <div class="pay-row"><span><i class="fa-solid fa-circle" style="color:#ef4444;font-size:0.9em"></i><i class="fa-solid fa-circle" style="color:#ef4444;font-size:0.9em"></i><i class="fa-solid fa-circle" style="color:#ef4444;font-size:0.9em"></i></span><span class="pay-mult">×2</span></div>
           <div class="pay-row"><span>2 identiques</span><span class="pay-mult">×1.5</span></div>
         </div>
       </div>
@@ -1326,15 +1420,15 @@ input, textarea { outline: none; }
           <div class="wheel-container">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="roulette-wheel"></div>
-            <div class="wheel-center" id="wheel-center">🎡</div>
+            <div class="wheel-center" id="wheel-center"><i class="fa-solid fa-rotate" style="color:var(--gold)"></i></div>
           </div>
           <div class="r-result" id="r-result">Choisissez votre pari</div>
           <div class="r-bets">
-            <button class="r-bet rouge" onclick="pickRBet('rouge',this)">🔴 ROUGE ×2</button>
-            <button class="r-bet noir" onclick="pickRBet('noir',this)">⚫ NOIR ×2</button>
-            <button class="r-bet zero" onclick="pickRBet('zero',this)">🟢 ZÉRO ×14</button>
-            <button class="r-bet pair" onclick="pickRBet('pair',this)">🔵 PAIR ×2</button>
-            <button class="r-bet impair" onclick="pickRBet('impair',this)">🟣 IMPAIR ×2</button>
+            <button class="r-bet rouge" onclick="pickRBet('rouge',this)"><i class="fa-solid fa-circle" style="color:#ef4444"></i> ROUGE ×2</button>
+            <button class="r-bet noir" onclick="pickRBet('noir',this)"><i class="fa-solid fa-circle" style="color:#1e293b"></i> NOIR ×2</button>
+            <button class="r-bet zero" onclick="pickRBet('zero',this)"><i class="fa-solid fa-circle" style="color:#10b981"></i> ZÉRO ×14</button>
+            <button class="r-bet pair" onclick="pickRBet('pair',this)"><i class="fa-solid fa-equals"></i> PAIR ×2</button>
+            <button class="r-bet impair" onclick="pickRBet('impair',this)"><i class="fa-solid fa-not-equal"></i> IMPAIR ×2</button>
           </div>
           <button class="spin-r-btn" onclick="playRoulette()">
             <i class="fa-solid fa-rotate"></i> LANCER !
@@ -1409,9 +1503,9 @@ input, textarea { outline: none; }
           <div class="p-role-line" id="p-role" style="color:var(--cyan)">MEMBRE</div>
           <div class="p-joined" id="p-joined">Inscrit le —</div>
           <div class="p-stats">
-            <div class="pst"><span class="pst-v" id="ps-coins">0</span><div class="pst-l">🪙 Coins</div></div>
-            <div class="pst"><span class="pst-v" id="ps-wins">0</span><div class="pst-l">🎰 Wins</div></div>
-            <div class="pst"><span class="pst-v" id="ps-days">0</span><div class="pst-l">📅 Jours</div></div>
+            <div class="pst"><span class="pst-v" id="ps-coins">0</span><div class="pst-l"><i class="fa-solid fa-coins" style="color:var(--gold)"></i> Coins</div></div>
+            <div class="pst"><span class="pst-v" id="ps-wins">0</span><div class="pst-l"><i class="fa-solid fa-trophy" style="color:var(--gold)"></i> Wins</div></div>
+            <div class="pst"><span class="pst-v" id="ps-days">0</span><div class="pst-l"><i class="fa-solid fa-calendar" style="color:var(--cyan)"></i> Jours</div></div>
           </div>
           <div style="font-size:0.57rem;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px">BIO</div>
           <textarea class="bio-field" id="bio-txt" placeholder="Décrivez-vous..." maxlength="200" rows="3"></textarea>
@@ -1448,7 +1542,7 @@ input, textarea { outline: none; }
       <span class="nav-label">Accueil</span>
     </div>
     <div class="nav-btn" id="nav-coins" onclick="goTo('coins')">
-      <span class="nav-icon">🪙</span>
+      <span class="nav-icon"><i class="fa-solid fa-coins"></i></span>
       <span class="nav-label">Coins</span>
     </div>
     <div class="nav-btn" id="nav-shop" onclick="goTo('shop')">
@@ -1456,7 +1550,7 @@ input, textarea { outline: none; }
       <span class="nav-label">Shop</span>
     </div>
     <div class="nav-btn" id="nav-casino" onclick="goTo('casino')">
-      <span class="nav-icon">🎰</span>
+      <span class="nav-icon"><i class="fa-solid fa-dice"></i></span>
       <span class="nav-label">Casino</span>
     </div>
     <div class="nav-btn" id="nav-leaderboard" onclick="goTo('leaderboard')">
@@ -1577,19 +1671,30 @@ const CLAIM_AMT  = 500;
 
 // Shop items
 const SHOP = [
-  { id:'dragon-regu',  emoji:'🐱', name:'Dragon Regu',          price:799000, desc:'Dragon régulier • Roblox SAB',           rarity:'Légendaire', rc:'#ffd700' },
-  { id:'hydra',        emoji:'🐲', name:'Hydra Dragon Caleloni', price:500000, desc:'Hydra Dragon • Ultra rare',              rarity:'Mythique',   rc:'#ff1493' },
-  { id:'paypal-20',    emoji:'💸', name:'20€ PayPal',            price:160000, desc:'20€ PayPal direct',                     rarity:'Épique',     rc:'#a855f7' },
-  { id:'bacuro',       emoji:'🧠', name:'BACURO 900M',           price:80000,  desc:'BACURO 900 millions • Roblox',          rarity:'Épique',     rc:'#a855f7' },
-  { id:'secret-300m',  emoji:'🔒', name:'Secret + 300M',         price:60000,  desc:'Surprise + 300 millions',              rarity:'Rare',       rc:'#3b82f6' },
-  { id:'secret-0',     emoji:'❓', name:'Secret 0-100M',         price:10000,  desc:'Mystère entre 0 et 100 millions',      rarity:'Peu commun', rc:'#10b981' },
-  { id:'role-perso',   emoji:'🎭', name:'Rôle Personnalisable',  price:4000,   desc:'Ton propre rôle avec ton nom',         rarity:'Peu commun', rc:'#10b981' },
-  { id:'role-exclu',   emoji:'🎁', name:'Rôle Exclusif',         price:3000,   desc:'Rôle exclusif limité',                 rarity:'Peu commun', rc:'#10b981' },
-  { id:'role-vip',     emoji:'👑', name:'Rôle VIP',              price:1000,   desc:'Accès VIP au serveur 7X SAB',          rarity:'Commun',     rc:'#94a3b8' },
-  { id:'piece',        emoji:'🪙', name:'Pièce',                 price:500,    desc:'Une pièce symbolique',                 rarity:'Commun',     rc:'#94a3b8' },
+  { id:'dragon-regu',  icon:'<i class="fa-solid fa-dragon" style="color:#ffd700"></i>', name:'Dragon Regu',          price:799000, desc:'Dragon régulier • Roblox SAB',           rarity:'Légendaire', rc:'#ffd700' },
+  { id:'hydra',        icon:'<i class="fa-solid fa-dragon" style="color:#ff1493"></i>', name:'Hydra Dragon Caleloni', price:500000, desc:'Hydra Dragon • Ultra rare',              rarity:'Mythique',   rc:'#ff1493' },
+  { id:'paypal-20',    icon:'<i class="fa-brands fa-paypal" style="color:#003087"></i>', name:'20€ PayPal',            price:160000, desc:'20€ PayPal direct',                     rarity:'Épique',     rc:'#a855f7' },
+  { id:'bacuro',       icon:'<i class="fa-solid fa-brain" style="color:#a855f7"></i>', name:'BACURO 900M',           price:80000,  desc:'BACURO 900 millions • Roblox',          rarity:'Épique',     rc:'#a855f7' },
+  { id:'secret-300m',  icon:'<i class="fa-solid fa-lock" style="color:#3b82f6"></i>', name:'Secret + 300M',         price:60000,  desc:'Surprise + 300 millions',              rarity:'Rare',       rc:'#3b82f6' },
+  { id:'secret-0',     icon:'<i class="fa-solid fa-question" style="color:#10b981"></i>', name:'Secret 0-100M',         price:10000,  desc:'Mystère entre 0 et 100 millions',      rarity:'Peu commun', rc:'#10b981' },
+  { id:'role-perso',   icon:'<i class="fa-solid fa-masks-theater" style="color:#f59e0b"></i>', name:'Rôle Personnalisable',  price:4000,   desc:'Ton propre rôle avec ton nom',         rarity:'Peu commun', rc:'#10b981' },
+  { id:'role-exclu',   icon:'<i class="fa-solid fa-gift" style="color:#ec4899"></i>', name:'Rôle Exclusif',         price:3000,   desc:'Rôle exclusif limité',                 rarity:'Peu commun', rc:'#10b981' },
+  { id:'role-vip',     icon:'<i class="fa-solid fa-crown" style="color:#ffd700"></i>', name:'Rôle VIP',              price:1000,   desc:'Accès VIP au serveur 7X SAB',          rarity:'Commun',     rc:'#94a3b8' },
+  { id:'piece',        icon:'<i class="fa-solid fa-coins" style="color:#f59e0b"></i>', name:'Pièce',                 price:500,    desc:'Une pièce symbolique',                 rarity:'Commun',     rc:'#94a3b8' },
 ];
 
-const SLOTS_SYM = ['🍒','🍋','🍊','🍇','🍀','⭐','7️⃣','🍀','👑','💎'];
+const SLOTS_SYM = [
+  '<i class="fa-solid fa-circle" style="color:#ef4444"></i>',
+  '<i class="fa-solid fa-lemon" style="color:#fbbf24"></i>',
+  '<i class="fa-solid fa-circle" style="color:#f97316"></i>',
+  '<i class="fa-solid fa-circle" style="color:#7c3aed"></i>',
+  '<i class="fa-solid fa-clover" style="color:#10b981"></i>',
+  '<i class="fa-solid fa-star" style="color:#fbbf24"></i>',
+  '<i class="fa-solid fa-7" style="color:#ef4444"></i>',
+  '<i class="fa-solid fa-clover" style="color:#10b981"></i>',
+  '<i class="fa-solid fa-crown" style="color:#ffd700"></i>',
+  '<i class="fa-solid fa-gem" style="color:#06b6d4"></i>'
+];
 const SLOTS_W   = [25,20,18,15,10,6,3,1.5,1,0.5];
 const SLOTS_M   = [2,3,4,5,8,10,15,25,50]; // per index match
 
@@ -1636,24 +1741,30 @@ fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>userIP=d.ip
 // ============================================================
 // LOADING
 // ============================================================
-const LOAD_MSGS = ['INITIALISATION...','CONNEXION SÉCURISÉE...','CHARGEMENT INTERFACE...','VÉRIFICATION DONNÉES...','7X SAB PRÊT 🇫🇷'];
-let lIdx=0;
-const lInt=setInterval(()=>{
-  lIdx++;
-  if(lIdx<LOAD_MSGS.length) document.getElementById('loader-status').innerText=LOAD_MSGS[lIdx];
-  if(lIdx>=LOAD_MSGS.length) {
-    clearInterval(lInt);
-    setTimeout(()=>{
-      const l=document.getElementById('loader');
-      l.style.transition='opacity 0.6s';
-      l.style.opacity='0';
-      setTimeout(()=>{
-        l.style.display='none';
-        document.getElementById('splash').classList.add('show');
-      },600);
-    },300);
+
+// LOADER FIX
+(function startLoader(){
+  var msgs=['INITIALISATION...','CONNEXION...','CHARGEMENT...','VERIFICATION...','PRET!'];
+  var idx=0;
+  function step(){
+    idx++;
+    var s=document.getElementById('loader-status');
+    if(s&&idx<msgs.length) s.innerText=msgs[idx];
+    if(idx>=msgs.length){
+      var l=document.getElementById('loader');
+      if(l){l.style.opacity='0';l.style.transition='opacity 0.4s';}
+      setTimeout(function(){
+        if(l)l.style.display='none';
+        var sp=document.getElementById('splash');
+        if(sp){sp.style.display='flex';}
+      },450);
+      return;
+    }
+    setTimeout(step,450);
   }
-},440);
+  setTimeout(step,450);
+})();
+
 
 // ============================================================
 // HOLO CARD TILT
@@ -1827,7 +1938,7 @@ function bootApp(role, acc, data) {
 // ============================================================
 function setupUI(acc, data) {
   document.getElementById('hero-name').innerText = currentUser;
-  const roleTxt = {owner:'👑 OWNER',member:'🔵 MEMBRE',staff:'🛡️ STAFF'}[currentRole]||'🔵 MEMBRE';
+  const roleTxt = {owner:'<i class="fa-solid fa-crown"></i> OWNER',member:'<i class="fa-solid fa-user"></i> MEMBRE',staff:'<i class="fa-solid fa-shield"></i> STAFF'}[currentRole]||'<i class="fa-solid fa-user"></i> MEMBRE';
   const roleEl = document.getElementById('hero-role');
   roleEl.innerText = roleTxt;
   roleEl.className = 'role-badge ' + currentRole;
@@ -1959,7 +2070,7 @@ function doClaim() {
   localStorage.setItem(k, Date.now().toString());
   addCoins(CLAIM_AMT,'💰 Daily Claim');
   if(settings.anim) confetti();
-  notify('gold',`+${fmt(CLAIM_AMT)} 🪙 réclamé !','Daily Claim');
+  notify('gold', '+' + fmt(CLAIM_AMT) + ' 🪙 réclamé !', 'Daily Claim');
   updateClaimBtn();
   logAction('CLAIM',`Claimed ${CLAIM_AMT} coins`);
 }
@@ -2000,7 +2111,7 @@ function renderShop() {
     d.style.cssText=`--item-color:${item.rc}`;
     d.querySelector?.('.shop-item::before')?.style?.setProperty?.('background',item.rc);
     d.innerHTML=`
-      <span class="shop-emoji">${item.emoji}</span>
+      <div class="shop-icon">${item.icon||item.emoji}</div>
       <div class="shop-info">
         <div class="shop-name">${item.name}</div>
         <div class="shop-desc">${item.desc}</div>
@@ -2065,7 +2176,7 @@ function playCF(choice) {
     coin.classList.remove('flipping');
     const outcome=Math.random()<0.5?'heads':'tails';
     const won=outcome===choice;
-    coin.innerText=outcome==='heads'?'🟡':'⚫';
+    coin.innerHTML=outcome==='heads'?'<i class="fa-solid fa-coins" style="color:#ffd700"></i>':'<i class="fa-solid fa-circle" style="color:#475569"></i>';
     if(won) {
       addCoins(bet,'🪙 CoinFlip WIN');
       res.innerHTML=`<span style="color:var(--green)">✅ ${outcome==='heads'?'FACE':'PILE'} — +${fmt(bet)} 🪙</span>`;
@@ -2094,7 +2205,7 @@ function playSlots() {
   [0,1,2].forEach(i=>document.getElementById('r'+i).classList.add('spinning'));
   const picks=[weightedPick(),weightedPick(),weightedPick()];
   setTimeout(()=>{
-    [0,1,2].forEach(i=>{document.getElementById('r'+i).innerText=SLOTS_SYM[picks[i]];document.getElementById('r'+i).classList.remove('spinning');});
+    [0,1,2].forEach(i=>{document.getElementById('r'+i).innerHTML=SLOTS_SYM[picks[i]];document.getElementById('r'+i).classList.remove('spinning');});
     const [a,b,c]=picks; let mult=0, label='';
     if(a===b&&b===c){mult=SLOTS_M[a]||2;label=`TRIPLE ${SLOTS_SYM[a]}`;}
     else if(a===b||b===c||a===c){mult=1.5;label='PAIRE';}
@@ -2297,7 +2408,7 @@ function renderLBList(entries) {
       <div class="lb-av">${name.substring(0,2)}</div>
       <div class="lb-info">
         <div class="lb-name">${escH(name)}${name===currentUser?' <span style="font-size:0.5rem;color:var(--purple-light)">(vous)</span>':''}</div>
-        <div class="lb-wins">${info.wins||0} victoires casino</div>
+        <div class="lb-wins"><i class="fa-solid fa-trophy" style="color:var(--gold);font-size:0.5rem"></i> ${info.wins||0} victoires</div>
       </div>
       <div class="lb-coins">🪙 ${fmt(info.coins||0)}</div>
     `;
@@ -2458,7 +2569,7 @@ function renderUsers(users) {
   entries.forEach(([name,info])=>{
     const d=document.createElement('div');d.className='user-row';
     const rp={owner:'rp-owner',member:'rp-member',staff:'rp-staff',banned:'rp-banned'}[info.role]||'rp-member';
-    const rl={owner:'👑 OWNER',member:'🔵 MEMBRE',staff:'🛡️ STAFF',banned:'🔴 BANNI'}[info.role]||'MEMBRE';
+    const rl={owner:'<i class="fa-solid fa-crown"></i> OWNER',member:'<i class="fa-solid fa-user"></i> MEMBRE',staff:'<i class="fa-solid fa-shield"></i> STAFF',banned:'<i class="fa-solid fa-ban"></i> BANNI'}[info.role]||'MEMBRE';
     const banned=info.role==='banned';
     d.innerHTML=`
       <div class="user-row-left">
@@ -2712,6 +2823,76 @@ window.addEventListener('resize',()=>{
   const cv=document.getElementById('confetti-canvas');
   cv.width=window.innerWidth; cv.height=window.innerHeight;
 });
+// APPLE GLASS 3D TILT — spring physics
+(function init3D(){
+  const wrap = document.getElementById('holo-wrap');
+  const card = document.getElementById('holo-card');
+  const spec = document.getElementById('card-specular');
+  if(!wrap || !card) return;
+
+  let tx=0, ty=0;   // target rotation
+  let cx=0, cy=0;   // current rotation
+  let vx=0, vy=0;   // velocity (spring)
+  let rafId=null;
+  const STIFF=0.08, DAMP=0.75, MAX_ROT=16;
+
+  function tick(){
+    // Spring physics
+    const ax = (tx - cx) * STIFF;
+    const ay = (ty - cy) * STIFF;
+    vx = (vx + ax) * DAMP;
+    vy = (vy + ay) * DAMP;
+    cx += vx;
+    cy += vy;
+
+    card.style.transform =
+      `perspective(900px) rotateX(${cx}deg) rotateY(${cy}deg) scale3d(1.015,1.015,1.015)`;
+
+    // Stop when settled
+    const moving = Math.abs(vx)>0.001 || Math.abs(vy)>0.001
+                || Math.abs(tx-cx)>0.01 || Math.abs(ty-cy)>0.01;
+    if(moving) rafId = requestAnimationFrame(tick);
+    else { rafId = null; }
+  }
+
+  function startTick(){
+    if(!rafId) rafId = requestAnimationFrame(tick);
+  }
+
+  function onMove(clientX, clientY){
+    const sp = document.getElementById('splash');
+    if(!sp || !sp.classList.contains('show')) return;
+    const r = wrap.getBoundingClientRect();
+    const dx = (clientX - r.left - r.width  / 2) / (r.width  / 2);
+    const dy = (clientY - r.top  - r.height / 2) / (r.height / 2);
+    ty =  Math.max(-MAX_ROT, Math.min(MAX_ROT, dx * MAX_ROT));
+    tx = Math.max(-MAX_ROT, Math.min(MAX_ROT, -dy * MAX_ROT));
+    // Specular follows mouse
+    if(spec){
+      const px = ((clientX - r.left) / r.width  * 100).toFixed(1);
+      const py = ((clientY - r.top)  / r.height * 100).toFixed(1);
+      spec.style.background =
+        `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.09) 0%, transparent 55%)`;
+    }
+    startTick();
+  }
+
+  function onLeave(){
+    tx=0; ty=0;
+    if(spec) spec.style.background =
+      'radial-gradient(circle at 50% 15%, rgba(255,255,255,0.07) 0%, transparent 60%)';
+    startTick();
+  }
+
+  document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  document.addEventListener('touchmove', e => {
+    e.preventDefault();
+    onMove(e.touches[0].clientX, e.touches[0].clientY);
+  }, {passive:false});
+  document.addEventListener('touchend', onLeave, {passive:true});
+  wrap.addEventListener('mouseleave', onLeave);
+  document.addEventListener('mouseleave', onLeave);
+})();
 </script>
 </body>
 </html>
