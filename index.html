@@ -553,7 +553,7 @@ button{border:none;background:none;cursor:pointer}
 #sec-alert {
   display: none;
   position: fixed; inset: 0; z-index: 99998;
-  background: #000;
+  background: var(--bg);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -570,8 +570,8 @@ button{border:none;background:none;cursor:pointer}
     0deg,
     transparent,
     transparent 2px,
-    rgba(255,0,0,0.03) 2px,
-    rgba(255,0,0,0.03) 4px
+    rgba(124,58,237,0.03) 2px,
+    rgba(124,58,237,0.03) 4px
   );
   pointer-events: none; z-index: 1;
   animation: nasaScanFlicker 0.1s infinite;
@@ -584,40 +584,29 @@ button{border:none;background:none;cursor:pointer}
 /* Red flash background */
 .nasa-flash {
   position: absolute; inset: 0;
-  background: rgba(255,0,0,0.15);
-  animation: nasaRedFlash 0.8s ease-in-out infinite;
+  background: rgba(124,58,237,0.08);
+  animation: nasaRedFlash 2s ease-in-out infinite;
   pointer-events: none;
 }
 @keyframes nasaRedFlash {
-  0%,100% { opacity: 0; }
-  50% { opacity: 1; }
+  0%,100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
 }
 
 /* White flash */
-.nasa-white-flash {
-  position: absolute; inset: 0;
-  background: white;
-  animation: nasaWhiteFlash 3s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes nasaWhiteFlash {
-  0%,85%,100% { opacity: 0; }
-  88% { opacity: 0.15; }
-  91% { opacity: 0; }
-  94% { opacity: 0.08; }
-}
+.nasa-white-flash { display: none; }
 
 /* Corner brackets */
 .nasa-corner {
   position: absolute;
   width: 40px; height: 40px;
-  border-color: #ff0000;
+  border-color: var(--pul);
   border-style: solid;
   animation: nasaCornerPulse 0.8s ease-in-out infinite;
 }
 @keyframes nasaCornerPulse {
-  0%,100% { border-color: #ff0000; opacity: 1; }
-  50% { border-color: #ff4444; opacity: 0.6; }
+  0%,100% { border-color: var(--pul); opacity: 1; }
+  50% { border-color: var(--pul); opacity: 0.6; }
 }
 .nasa-corner.tl { top: 20px; left: 20px; border-width: 3px 0 0 3px; }
 .nasa-corner.tr { top: 20px; right: 20px; border-width: 3px 3px 0 0; }
@@ -636,32 +625,32 @@ button{border:none;background:none;cursor:pointer}
 /* TOP BAR */
 .nasa-topbar {
   display: flex; align-items: center; justify-content: space-between;
-  border: 1px solid #ff0000;
-  background: rgba(255,0,0,0.1);
+  border: 1px solid rgba(124,58,237,0.4);
+  background: rgba(124,58,237,0.08);
   padding: 6px 14px;
   margin-bottom: 20px;
   animation: nasaBorderPulse 0.8s ease-in-out infinite;
 }
 @keyframes nasaBorderPulse {
-  0%,100% { border-color: #ff0000; box-shadow: 0 0 8px rgba(255,0,0,0.4); }
-  50% { border-color: #ff4444; box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+  0%,100% { border-color: var(--pul); box-shadow: 0 0 8px var(--pug); }
+  50% { border-color: var(--pul); box-shadow: 0 0 20px var(--pug); }
 }
 .nasa-topbar-txt {
-  font-size: 0.6rem; color: #ff4444; letter-spacing: 3px; font-weight: 700;
+  font-size: 0.6rem; color: var(--pul); letter-spacing: 3px; font-weight: 700;
 }
 .nasa-topbar-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #ff0000;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--pul);
   animation: nasaDotBlink 0.4s ease-in-out infinite;
-  box-shadow: 0 0 8px #ff0000;
+  box-shadow: 0 0 8px var(--pug);
 }
 @keyframes nasaDotBlink { 0%,100%{opacity:1}50%{opacity:0} }
 
 /* WARNING icon */
 .nasa-icon {
-  font-size: 4rem; color: #ff0000;
+  font-size: 4rem; color: var(--pul);
   animation: nasaIconShake 0.5s ease-in-out infinite, nasaIconGlow 0.8s ease-in-out infinite;
   display: block; margin-bottom: 16px;
-  text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+  text-shadow: 0 0 20px var(--pug), 0 0 40px var(--pug);
 }
 @keyframes nasaIconShake {
   0%,100% { transform: translateX(0) rotate(0deg); }
@@ -671,26 +660,22 @@ button{border:none;background:none;cursor:pointer}
   80% { transform: translateX(3px) rotate(1deg); }
 }
 @keyframes nasaIconGlow {
-  0%,100% { text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000; }
-  50% { text-shadow: 0 0 40px #ff0000, 0 0 80px #ff0000, 0 0 100px rgba(255,0,0,0.5); }
+  0%,100% { text-shadow: 0 0 20px var(--pug), 0 0 40px var(--pug); }
+  50% { text-shadow: 0 0 40px var(--pug), 0 0 80px var(--pug), 0 0 100px var(--cyg); }
 }
 
 /* ALERT TITLE */
 .nasa-title {
   font-size: 1.4rem; font-weight: 900; letter-spacing: 4px;
-  color: #ff0000; text-transform: uppercase;
-  animation: nasaTitleFlash 0.8s ease-in-out infinite;
+  color: var(--pul); text-transform: uppercase;
   margin-bottom: 6px;
-  text-shadow: 0 0 10px #ff0000;
-}
-@keyframes nasaTitleFlash {
-  0%,100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
-  50% { color: #ffffff; text-shadow: 0 0 20px #ffffff, 0 0 40px #ff0000; }
+  text-shadow: 0 0 16px var(--pug);
+  font-family: 'Rajdhani', sans-serif;
 }
 
 /* Message text */
 .nasa-msg {
-  font-size: 0.82rem; color: #ff6666; line-height: 1.8;
+  font-size: 0.82rem; color: var(--tx2); line-height: 1.8;
   letter-spacing: 1px; margin-bottom: 20px;
   animation: nasaMsgPulse 2s ease-in-out infinite;
 }
@@ -702,7 +687,7 @@ button{border:none;background:none;cursor:pointer}
 /* Glitch text effect */
 .nasa-glitch {
   position: relative;
-  font-size: 0.75rem; color: #ff4444; letter-spacing: 3px;
+  font-size: 0.75rem; color: var(--pul); letter-spacing: 3px;
   animation: nasaGlitchAnim 3s infinite;
 }
 @keyframes nasaGlitchAnim {
@@ -716,13 +701,13 @@ button{border:none;background:none;cursor:pointer}
 
 /* Progress bar */
 .nasa-progress-wrap {
-  border: 1px solid #ff0000;
-  height: 6px; background: rgba(255,0,0,0.1);
+  border: 1px solid rgba(124,58,237,0.4);
+  height: 6px; background: rgba(124,58,237,0.08);
   margin-bottom: 14px; overflow: hidden;
   box-shadow: 0 0 8px rgba(255,0,0,0.3);
 }
 .nasa-progress-bar {
-  height: 100%; background: #ff0000;
+  height: 100%; background: var(--pul);
   box-shadow: 0 0 10px #ff0000;
   animation: nasaProgressLoop 4s linear infinite;
 }
@@ -735,7 +720,7 @@ button{border:none;background:none;cursor:pointer}
 
 /* Code lines scrolling */
 .nasa-code {
-  text-align: left; font-size: 0.55rem; color: rgba(255,0,0,0.5);
+  text-align: left; font-size: 0.55rem; color: rgba(124,58,237,0.5);
   height: 60px; overflow: hidden; border: 1px solid rgba(255,0,0,0.2);
   padding: 6px 10px; margin-bottom: 16px; background: rgba(255,0,0,0.04);
   position: relative;
@@ -752,11 +737,11 @@ button{border:none;background:none;cursor:pointer}
   padding-top: 12px; margin-top: 8px;
 }
 .nasa-id {
-  font-size: 0.52rem; color: rgba(255,100,100,0.6); letter-spacing: 2px;
+  font-size: 0.52rem; color: var(--tx2); letter-spacing: 2px;
 }
 .nasa-close-btn {
-  padding: 7px 16px; border: 1px solid #ff0000; background: transparent;
-  color: #ff0000; font-family: 'Courier New', monospace;
+  padding: 7px 16px; border: 1px solid rgba(124,58,237,0.4); background: transparent;
+  color: var(--pul); font-family: 'Courier New', monospace;
   font-size: 0.6rem; font-weight: 700; letter-spacing: 2px;
   cursor: pointer; text-transform: uppercase; transition: 0.2s;
 }
@@ -1195,10 +1180,10 @@ button{border:none;background:none;cursor:pointer}
         <div class="card" style="margin-bottom:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-coins" style="color:var(--go)"></i> DONNER COINS À TOUS</div><div style="display:flex;gap:7px;margin-bottom:8px"><input type="number" id="bc-coins" class="inp" placeholder="Montant..." min="1" style="flex:1"><button onclick="opGiveAll()" style="padding:10px 14px;border-radius:9px;background:linear-gradient(135deg,var(--go),#d97706);color:#000;border:none;font-size:.7rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-hand-holding-dollar"></i> DONNER</button></div><div style="font-size:.57rem;color:var(--tx2)">Distribue coins à tous les membres actifs (pas les bannis)</div></div>
         <div class="card" style="margin-bottom:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-wrench" style="color:var(--rd)"></i> MODE MAINTENANCE</div><div style="font-size:.65rem;color:var(--tx2);margin-bottom:9px">Active un message de maintenance sur l'annonce bar</div><div style="display:flex;gap:6px"><button onclick="opMaintenance(true)" style="flex:1;padding:9px;border-radius:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--rd);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-lock"></i> ACTIVER</button><button onclick="opMaintenance(false)" style="flex:1;padding:9px;border-radius:8px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> DÉSACTIVER</button></div></div>
         <!-- 🚨 ALERTE SÉCURITÉ NASA -->
-        <div class="card" style="background:linear-gradient(135deg,rgba(255,0,0,.08),rgba(0,0,0,.5));border:1px solid rgba(255,0,0,.35)">
+        <div class="card" style="background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(0,0,0,.3));border:1px solid rgba(124,58,237,.25)">
           <div style="font-size:.57rem;color:#ff4444;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-shield-virus" style="color:#ff0000"></i> ALERTE SÉCURITÉ — PANIC BUTTON</div>
-          <div style="font-size:.62rem;color:rgba(255,100,100,.7);margin-bottom:11px;line-height:1.6">Active l'alerte de sécurité maximale sur tout le site. Son d'alarme + écran rouge clignotant.</div>
-          <button onclick="triggerSecAlert()" style="width:100%;padding:12px;border-radius:9px;background:linear-gradient(135deg,#dc2626,#7f1d1d);color:white;border:2px solid #ff0000;font-size:.78rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 20px rgba(255,0,0,.3),0 0 40px rgba(255,0,0,.1);animation:nasaBorderPulse 1.5s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:8px">
+          <div style="font-size:.62rem;color:var(--tx2);margin-bottom:11px;line-height:1.6">Active l'alerte de sécurité maximale sur tout le site. Son d'alarme + écran rouge clignotant.</div>
+          <button onclick="triggerSecAlert()" style="width:100%;padding:12px;border-radius:9px;background:linear-gradient(135deg,var(--pu),var(--pul));color:white;border:1px solid rgba(124,58,237,.4);font-size:.78rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 20px var(--pug);display:flex;align-items:center;justify-content:center;gap:8px">
             <i class="fa-solid fa-triangle-exclamation"></i> DÉCLENCHER L'ALERTE
           </button>
         </div>
@@ -2704,7 +2689,7 @@ function _triggerLocalSecAlert() {
     var line = document.createElement('div');
     line.className = 'sec-code-line';
     var prefix = Math.random() > 0.5 ? '[!] ' : '[>] ';
-    var color = Math.random() > 0.7 ? '#ff6666' : 'rgba(255,80,80,0.6)';
+    var color = Math.random() > 0.7 ? 'var(--pul)' : 'rgba(168,85,247,0.6)';
     line.style.color = color;
     line.innerText = prefix + HACK_LINES[lineIdx % HACK_LINES.length];
     lineIdx++;
@@ -2906,7 +2891,7 @@ opRenderSanctions = function() {
     </div>
 
     <!-- Icon -->
-    <i class="fa-solid fa-shield-virus sec-icon"></i>
+    <i class="fa-solid fa-shield-virus nasa-icon"></i>
 
     <!-- Title -->
     <div class="nasa-title">⚠ INTRUSION DÉTECTÉE ⚠</div>
@@ -2922,7 +2907,7 @@ opRenderSanctions = function() {
       UN PIRATE INFORMATIQUE EST EN TRAIN DE SATURER LE SITE.<br>
       TOUTES NOS ÉQUIPES DÉVELOPPEUR SONT EN TRAIN<br>
       DE CONTRER LE PROBLÈME.<br><br>
-      <strong style="color:#ffffff">MERCI DE PATIENTER.</strong>
+      <strong style="color:var(--pul)">MERCI DE PATIENTER.</strong>
     </div>
 
     <!-- Glitch -->
@@ -2938,7 +2923,7 @@ opRenderSanctions = function() {
         <div class="nasa-topbar-dot"></div>
         <span style="font-size:.52rem;color:rgba(255,100,100,.6);letter-spacing:2px">OWNER ONLY</span>
       </div>
-      <button class="nasa-close-btn" onclick="disableSecAlert()">[ DÉSACTIVER ]</button>
+      <!-- close button removed — only owner can disable -->
     </div>
   </div>
 </div>
