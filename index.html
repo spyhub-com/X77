@@ -479,10 +479,10 @@ input, textarea { outline: none; }
 /* =============================================
    PAGES
    ============================================= */
-.pages-wrap { flex: 1; overflow: hidden; position: relative; min-height: 0; }
+.pages-wrap { flex: 1; overflow: hidden; position: relative; min-height: 0; height: 0; }
 .page {
   position: absolute; inset: 0;
-  overflow-y: auto; padding: 14px 14px 20px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 14px 20px;
   display: none; animation: fadeIn 0.25s ease;
 }
 .page.show { display: block; }
@@ -2342,6 +2342,13 @@ fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>userIP=d.ip
 // LOADING
 // ============================================================
 
+// CLEAR SESSION ON FRESH PAGE LOAD
+// Use sessionStorage: cleared when tab closes, not persistent like localStorage
+if(!sessionStorage.getItem('7X_SAB_SESSION_ACTIVE')) {
+  // Fresh load — don't auto-login
+  sessionStorage.setItem('7X_SAB_SESSION_ACTIVE','1');
+}
+
 // LOADER FIX
 (function startLoader(){
   var msgs=['INITIALISATION...','CONNEXION...','CHARGEMENT...','VERIFICATION...','PRET!'];
@@ -2518,6 +2525,8 @@ function bootApp(role, acc, data) {
   document.getElementById('splash').style.transition='opacity 0.5s';
   setTimeout(()=>{ document.getElementById('splash').style.display='none'; },500);
   document.getElementById('app').classList.add('show');
+  sessionStorage.setItem('7X_SAB_LOGGED_USER', currentUser);
+  sessionStorage.setItem('7X_SAB_LOGGED_ROLE', currentRole);
 
   if(isAdmin) document.getElementById('admin-icon-btn').style.display='flex';
 
@@ -3043,6 +3052,9 @@ function doLogout() {
   currentUser=''; currentRole='member'; isAdmin=false;
   userCoins=0; userWins=0; txHistory=[];
   clearInterval(claimTimer);
+  sessionStorage.removeItem('7X_SAB_LOGGED_USER');
+  sessionStorage.removeItem('7X_SAB_LOGGED_ROLE');
+  sessionStorage.removeItem('7X_SAB_SESSION_ACTIVE');
   document.getElementById('app').classList.remove('show');
   document.getElementById('admin-icon-btn').style.display='none';
   const sp=document.getElementById('splash');
@@ -4188,6 +4200,9 @@ function opRenderUsers(q) {
           ? `<button class="action-pill ap-staff" onclick="opRole('${name}','staff')"><i class="fa-solid fa-shield"></i> STAFF</button>`
           : `<button class="action-pill ap-member" onclick="opRole('${name}','member')"><i class="fa-solid fa-user"></i> MEMBRE</button>`
         }
+        <button class="action-pill" style="background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.2)" onclick="opResetCoins('${name}')"><i class="fa-solid fa-rotate-left"></i> RESET</button>
+        <button class="action-pill" style="background:rgba(6,182,212,0.08);color:var(--cyan);border:1px solid rgba(6,182,212,0.18)" onclick="opNotifUser('${name}')"><i class="fa-solid fa-bell"></i> NOTIF</button>
+        <button class="action-pill" style="background:rgba(239,68,68,0.06);color:#f87171;border:1px solid rgba(239,68,68,0.15)" onclick="opDeleteUser('${name}')"><i class="fa-solid fa-trash"></i> SUPPR</button>
       </div>` : '<div style="font-size:0.56rem;color:var(--text3);padding:4px 0">Compte protégé</div>'}
     `;
     c.appendChild(d);
@@ -4382,6 +4397,9 @@ function opRenderLogs() {
 const _origBootAppNew = bootApp;
 bootApp = function(role, acc, data) {
   _origBootAppNew(role, acc, data);
+  // Check inbox for private messages from owner
+  if(role !== 'owner') checkInbox(currentUser);
+
   if(role==='owner') {
     const navOwner = document.getElementById('nav-owner');
     if(navOwner) navOwner.style.display='';
@@ -4392,6 +4410,115 @@ bootApp = function(role, acc, data) {
     opUpdateStats(data);
   }
 };
+
+
+// ============================================================
+// OWNER PAGE — NEW ACTIONS
+// ============================================================
+
+// Reset coins to 0
+async function opResetCoins(name) {
+  if(!confirm('Remettre les coins de ' + name + ' à 0 ?')) return;
+  if(!cdReady('OW_REMOVE', CD.OW_REMOVE)) {
+    return notify('warn','⏳ Cooldown', Math.ceil(cdLeft('OW_REMOVE',CD.OW_REMOVE)/1000)+'s');
+  }
+  try {
+    const data = await getBin();
+    if(!data.accounts||!data.accounts[name]) return notify('error','❌ Introuvable','');
+    data.accounts[name].coins = 0;
+    if(!data.users[name]) data.users[name]={};
+    data.users[name].coins = 0;
+    if(!data.logs) data.logs=[];
+    data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:`Reset coins de ${name} à 0`,date:new Date().toLocaleString('fr-FR')});
+    await setBin(data);
+    opAllUsers = data.users; opAllLogs = data.logs;
+    opRenderUsers(document.getElementById('op-search')?.value||'');
+    opUpdateStats(data);
+    cdSet('OW_REMOVE');
+    notify('success','✅ Coins remis à 0', name);
+  } catch(e) { notify('error','❌ Erreur réseau',''); }
+}
+
+// Delete account
+async function opDeleteUser(name) {
+  if(name === '7XUHQ') return notify('error','❌ Impossible','Compte owner protégé');
+  if(!confirm('Supprimer le compte de ' + name + ' ?')) return;
+  if(!confirm('DERNIERE CONFIRMATION - Supprimer ' + name + ' ?')) return;
+  try {
+    const data = await getBin();
+    if(data.accounts) delete data.accounts[name];
+    if(data.users)    delete data.users[name];
+    if(!data.logs) data.logs=[];
+    data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:`Compte supprimé: ${name}`,date:new Date().toLocaleString('fr-FR')});
+    await setBin(data);
+    opAllUsers = data.users||{}; opAllLogs = data.logs;
+    opRenderUsers(document.getElementById('op-search')?.value||'');
+    opUpdateStats(data);
+    notify('success','🗑️ Compte supprimé', name);
+  } catch(e) { notify('error','❌ Erreur réseau',''); }
+}
+
+// Send private notification to user (stored in their account, shown on next login)
+async function opNotifUser(name) {
+  const msg = prompt('Message à envoyer à ' + name + ' (visible à sa prochaine connexion) :');
+  if(!msg||!msg.trim()) return;
+  if(!cdReady('OW_ROLE', CD.OW_ROLE)) {
+    return notify('warn','⏳ Cooldown', Math.ceil(cdLeft('OW_ROLE',CD.OW_ROLE)/1000)+'s');
+  }
+  try {
+    const data = await getBin();
+    if(!data.accounts||!data.accounts[name]) return notify('error','❌ Introuvable','');
+    if(!data.accounts[name].inbox) data.accounts[name].inbox=[];
+    data.accounts[name].inbox.unshift({
+      id: Date.now(), msg: msg.trim(), from:'OWNER', date:new Date().toLocaleString('fr-FR'), read:false
+    });
+    if(!data.logs) data.logs=[];
+    data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:`Notif envoyée à ${name}: "${msg.trim().substring(0,40)}"`,date:new Date().toLocaleString('fr-FR')});
+    await setBin(data);
+    cdSet('OW_ROLE');
+    notify('success','📨 Notif envoyée', 'À ' + name);
+  } catch(e) { notify('error','❌ Erreur réseau',''); }
+}
+
+// Check inbox on login (called in bootApp)
+async function checkInbox(username) {
+  try {
+    const data = await getBin();
+    const inbox = data.accounts?.[username]?.inbox || [];
+    const unread = inbox.filter(m=>!m.read);
+    if(!unread.length) return;
+    // Mark as read
+    unread.forEach(m=>m.read=true);
+    await setBin(data);
+    // Show each message
+    unread.forEach((m,i) => {
+      setTimeout(()=>{
+        showOwnerMessage(m);
+      }, i*500);
+    });
+  } catch(e) {}
+}
+
+function showOwnerMessage(msg) {
+  const popup = document.createElement('div');
+  popup.style.cssText='position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);animation:fadeIn 0.3s ease';
+  popup.innerHTML=`
+    <div style="width:90%;max-width:380px;background:var(--bg2);border:1px solid rgba(124,58,237,0.35);border-radius:20px;overflow:hidden;animation:slideUp 0.4s ease">
+      <div style="padding:16px 18px;background:linear-gradient(135deg,rgba(124,58,237,0.12),transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px">
+        <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--purple),var(--purple-light));display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:white;flex-shrink:0"><i class="fa-solid fa-crown"></i></div>
+        <div>
+          <div style="font-weight:800;font-size:0.88rem;color:white">Message du Owner</div>
+          <div style="font-size:0.55rem;color:var(--text2);margin-top:2px">${msg.date}</div>
+        </div>
+      </div>
+      <div style="padding:18px;font-size:0.84rem;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word">${escH(msg.msg)}</div>
+      <div style="padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+        <button onclick="this.closest('div[style]').remove()" style="padding:9px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--purple-light));color:white;font-weight:700;font-size:0.72rem;cursor:pointer;letter-spacing:1px">✓ LU</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popup);
+}
 
 </script>
 
