@@ -544,6 +544,225 @@ button{border:none;background:none;cursor:pointer}
 .le-u{font-size:.7rem;font-weight:700}
 .le-a{font-size:.58rem;color:var(--tx2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .le-t{font-size:.52rem;color:var(--tx3);flex-shrink:0}
+
+/* =============================================
+   NASA SECURITY ALERT OVERLAY
+   ============================================= */
+#sec-alert {
+  display: none;
+  position: fixed; inset: 0; z-index: 99998;
+  background: #000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+}
+#sec-alert.on { display: flex; }
+
+/* Scanlines overlay */
+#sec-alert::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,0,0,0.03) 2px,
+    rgba(255,0,0,0.03) 4px
+  );
+  pointer-events: none; z-index: 1;
+  animation: scanFlicker 0.1s infinite;
+}
+@keyframes scanFlicker {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.92; }
+}
+
+/* Red flash background */
+.sec-flash {
+  position: absolute; inset: 0;
+  background: rgba(255,0,0,0.15);
+  animation: redFlash 0.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes redFlash {
+  0%,100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* White flash */
+.sec-white-flash {
+  position: absolute; inset: 0;
+  background: white;
+  animation: whiteFlash 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes whiteFlash {
+  0%,85%,100% { opacity: 0; }
+  88% { opacity: 0.15; }
+  91% { opacity: 0; }
+  94% { opacity: 0.08; }
+}
+
+/* Corner brackets */
+.sec-corner {
+  position: absolute;
+  width: 40px; height: 40px;
+  border-color: #ff0000;
+  border-style: solid;
+  animation: cornerPulse 0.8s ease-in-out infinite;
+}
+@keyframes cornerPulse {
+  0%,100% { border-color: #ff0000; opacity: 1; }
+  50% { border-color: #ff4444; opacity: 0.6; }
+}
+.sec-corner.tl { top: 20px; left: 20px; border-width: 3px 0 0 3px; }
+.sec-corner.tr { top: 20px; right: 20px; border-width: 3px 3px 0 0; }
+.sec-corner.bl { bottom: 20px; left: 20px; border-width: 0 0 3px 3px; }
+.sec-corner.br { bottom: 20px; right: 20px; border-width: 0 3px 3px 0; }
+
+/* Main content */
+.sec-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 20px;
+  max-width: 700px;
+  width: 95%;
+}
+
+/* TOP BAR */
+.sec-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1px solid #ff0000;
+  background: rgba(255,0,0,0.1);
+  padding: 6px 14px;
+  margin-bottom: 20px;
+  animation: borderPulse 0.8s ease-in-out infinite;
+}
+@keyframes borderPulse {
+  0%,100% { border-color: #ff0000; box-shadow: 0 0 8px rgba(255,0,0,0.4); }
+  50% { border-color: #ff4444; box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+}
+.sec-topbar-txt {
+  font-size: 0.6rem; color: #ff4444; letter-spacing: 3px; font-weight: 700;
+}
+.sec-topbar-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #ff0000;
+  animation: dotBlink 0.4s ease-in-out infinite;
+  box-shadow: 0 0 8px #ff0000;
+}
+@keyframes dotBlink { 0%,100%{opacity:1}50%{opacity:0} }
+
+/* WARNING icon */
+.sec-icon {
+  font-size: 4rem; color: #ff0000;
+  animation: iconShake 0.5s ease-in-out infinite, iconGlow 0.8s ease-in-out infinite;
+  display: block; margin-bottom: 16px;
+  text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+}
+@keyframes iconShake {
+  0%,100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-4px) rotate(-2deg); }
+  40% { transform: translateX(4px) rotate(2deg); }
+  60% { transform: translateX(-3px) rotate(-1deg); }
+  80% { transform: translateX(3px) rotate(1deg); }
+}
+@keyframes iconGlow {
+  0%,100% { text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000; }
+  50% { text-shadow: 0 0 40px #ff0000, 0 0 80px #ff0000, 0 0 100px rgba(255,0,0,0.5); }
+}
+
+/* ALERT TITLE */
+.sec-title {
+  font-size: 1.4rem; font-weight: 900; letter-spacing: 4px;
+  color: #ff0000; text-transform: uppercase;
+  animation: titleFlash 0.8s ease-in-out infinite;
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px #ff0000;
+}
+@keyframes titleFlash {
+  0%,100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+  50% { color: #ffffff; text-shadow: 0 0 20px #ffffff, 0 0 40px #ff0000; }
+}
+
+/* Message text */
+.sec-msg {
+  font-size: 0.82rem; color: #ff6666; line-height: 1.8;
+  letter-spacing: 1px; margin-bottom: 20px;
+  animation: msgPulse 2s ease-in-out infinite;
+}
+@keyframes msgPulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* Glitch text effect */
+.sec-glitch {
+  position: relative;
+  font-size: 0.75rem; color: #ff4444; letter-spacing: 3px;
+  animation: glitchAnim 3s infinite;
+}
+@keyframes glitchAnim {
+  0%,90%,100% { transform: none; text-shadow: none; }
+  91% { transform: translateX(-2px); text-shadow: 2px 0 #00ffff; }
+  92% { transform: translateX(2px); text-shadow: -2px 0 #ff00ff; }
+  93% { transform: none; }
+  96% { transform: translateX(1px); text-shadow: -1px 0 #00ffff; }
+  97% { transform: none; }
+}
+
+/* Progress bar */
+.sec-progress-wrap {
+  border: 1px solid #ff0000;
+  height: 6px; background: rgba(255,0,0,0.1);
+  margin-bottom: 14px; overflow: hidden;
+  box-shadow: 0 0 8px rgba(255,0,0,0.3);
+}
+.sec-progress-bar {
+  height: 100%; background: #ff0000;
+  box-shadow: 0 0 10px #ff0000;
+  animation: progressLoop 4s linear infinite;
+}
+@keyframes progressLoop {
+  0% { width: 0%; margin-left: 0; }
+  50% { width: 60%; margin-left: 0; }
+  51% { width: 60%; margin-left: 0; }
+  100% { width: 0%; margin-left: 100%; }
+}
+
+/* Code lines scrolling */
+.sec-code {
+  text-align: left; font-size: 0.55rem; color: rgba(255,0,0,0.5);
+  height: 60px; overflow: hidden; border: 1px solid rgba(255,0,0,0.2);
+  padding: 6px 10px; margin-bottom: 16px; background: rgba(255,0,0,0.04);
+  position: relative;
+}
+.sec-code-line {
+  animation: codeFall 0.3s ease;
+}
+@keyframes codeFall { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; } }
+
+/* Bottom bar */
+.sec-bottombar {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid rgba(255,0,0,0.3);
+  padding-top: 12px; margin-top: 8px;
+}
+.sec-id {
+  font-size: 0.52rem; color: rgba(255,100,100,0.6); letter-spacing: 2px;
+}
+.sec-close-btn {
+  padding: 7px 16px; border: 1px solid #ff0000; background: transparent;
+  color: #ff0000; font-family: 'Courier New', monospace;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 2px;
+  cursor: pointer; text-transform: uppercase; transition: 0.2s;
+}
+.sec-close-btn:hover {
+  background: rgba(255,0,0,0.15);
+  box-shadow: 0 0 12px rgba(255,0,0,0.4);
+}
+
 </style>
 </head>
 <body>
@@ -615,7 +834,7 @@ button{border:none;background:none;cursor:pointer}
   <!-- Header -->
   <div class="app-header">
     <div class="hdr-l">
-      <div class="hdr-btn" id="admin-btn" style="display:none" onclick="openAdmin()"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="hdr-btn" id="admin-btn" style="display:none" onclick="goPage('owner')"><i class="fa-solid fa-shield-halved"></i></div>
       <div style="width:36px"></div>
     </div>
     <div class="hdr-logo">7X SAB</div>
@@ -962,7 +1181,15 @@ button{border:none;background:none;cursor:pointer}
           <div class="ann-foot"><span id="bc-cnt" style="font-size:.53rem;color:var(--tx2)">0/500</span><button class="btn btn-pu" onclick="opBroadcast()" style="padding:8px 16px;font-size:.67rem"><i class="fa-solid fa-satellite-dish"></i> DIFFUSER</button></div>
         </div>
         <div class="card" style="margin-bottom:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-coins" style="color:var(--go)"></i> DONNER COINS À TOUS</div><div style="display:flex;gap:7px;margin-bottom:8px"><input type="number" id="bc-coins" class="inp" placeholder="Montant..." min="1" style="flex:1"><button onclick="opGiveAll()" style="padding:10px 14px;border-radius:9px;background:linear-gradient(135deg,var(--go),#d97706);color:#000;border:none;font-size:.7rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-hand-holding-dollar"></i> DONNER</button></div><div style="font-size:.57rem;color:var(--tx2)">Distribue coins à tous les membres actifs (pas les bannis)</div></div>
-        <div class="card"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-wrench" style="color:var(--rd)"></i> MODE MAINTENANCE</div><div style="font-size:.65rem;color:var(--tx2);margin-bottom:9px">Active un message de maintenance sur l'annonce bar</div><div style="display:flex;gap:6px"><button onclick="opMaintenance(true)" style="flex:1;padding:9px;border-radius:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--rd);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-lock"></i> ACTIVER</button><button onclick="opMaintenance(false)" style="flex:1;padding:9px;border-radius:8px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> DÉSACTIVER</button></div></div>
+        <div class="card" style="margin-bottom:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-wrench" style="color:var(--rd)"></i> MODE MAINTENANCE</div><div style="font-size:.65rem;color:var(--tx2);margin-bottom:9px">Active un message de maintenance sur l'annonce bar</div><div style="display:flex;gap:6px"><button onclick="opMaintenance(true)" style="flex:1;padding:9px;border-radius:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--rd);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-lock"></i> ACTIVER</button><button onclick="opMaintenance(false)" style="flex:1;padding:9px;border-radius:8px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> DÉSACTIVER</button></div></div>
+        <!-- 🚨 ALERTE SÉCURITÉ NASA -->
+        <div class="card" style="background:linear-gradient(135deg,rgba(255,0,0,.08),rgba(0,0,0,.5));border:1px solid rgba(255,0,0,.35)">
+          <div style="font-size:.57rem;color:#ff4444;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-shield-virus" style="color:#ff0000"></i> ALERTE SÉCURITÉ — PANIC BUTTON</div>
+          <div style="font-size:.62rem;color:rgba(255,100,100,.7);margin-bottom:11px;line-height:1.6">Active l'alerte de sécurité maximale sur tout le site. Son d'alarme + écran rouge clignotant.</div>
+          <button onclick="triggerSecAlert()" style="width:100%;padding:12px;border-radius:9px;background:linear-gradient(135deg,#dc2626,#7f1d1d);color:white;border:2px solid #ff0000;font-size:.78rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 20px rgba(255,0,0,.3),0 0 40px rgba(255,0,0,.1);animation:borderPulse 1.5s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:8px">
+            <i class="fa-solid fa-triangle-exclamation"></i> DÉCLENCHER L'ALERTE
+          </button>
+        </div>
       </div>
 
     </div>
@@ -2269,19 +2496,290 @@ async function opMaintenance(enable) {
 }
 
 // ============================================================
-// HOOK opRefresh to load new sections
+// opRefresh — full dashboard reload
 // ============================================================
-var _origOpRefresh = opRefresh;
-opRefresh = async function() {
-  await _origOpRefresh();
-  // Load extra sections after data is fetched
-  setTimeout(()=>{
+async function opRefresh() {
+  if(!cdReady('OW_REF', CD.OW_REF)) {
+    notify('w','Cooldown', Math.ceil(cdLeft('OW_REF',CD.OW_REF)/1000)+'s restant');
+    return;
+  }
+  document.getElementById('op-ref-cd').innerText = 'Chargement...';
+  try {
+    var data = await getBin();
+    opData = data;
+    allUsers = data.users || {};
+    allLogs = data.logs || [];
+    allAnnounces = data.announces || [];
+    // Update all sections
+    opUpdateStats(data);
+    opBuildChart(data);
+    opRenderUsers('');
+    opRenderAnnounces();
+    opRenderLogs();
+    opRenderStats(data);
     opRenderSanctions();
     renderIPStats();
     if(ipUnlocked) renderIPList();
-  },300);
-};
+    cdSet('OW_REF');
+    document.getElementById('op-ref-cd').innerText = 'Recharger';
+    notify('s','Dashboard rechargé','');
+  } catch(e) {
+    notify('e','Erreur réseau','Réessayez');
+    document.getElementById('op-ref-cd').innerText = 'Erreur';
+  }
+}
+
+
+// openAdmin — redirects to owner page
+function openAdmin() { goPage('owner'); }
+
+// ============================================================
+// NASA SECURITY ALERT SYSTEM 🚨
+// ============================================================
+var secAlertActive = false;
+var secAlertIntervals = [];
+var secAudioCtx = null;
+
+// Fake hacker code lines
+var HACK_LINES = [
+  'SCANNING PORT 443... [BREACH DETECTED]',
+  'BYPASSING FIREWALL... [SUCCESS]',
+  'INJECTING PAYLOAD... 7x_SAB_EXPLOIT_v2.1',
+  'DDOS FLOOD: 2,847,291 req/s',
+  'CRACKING ENCRYPTION... [0x4F3A2B1C]',
+  'ROOT ACCESS ATTEMPT... [BLOCKED]',
+  'SQL INJECTION: users.accounts [DETECTED]',
+  'BUFFER OVERFLOW IN PROGRESS...',
+  'CRYPTO MINER DEPLOYED: 847 MH/s',
+  'EXFILTRATING DATA... 2.4GB / 7.8GB',
+  'BOTNET ACTIVATED: 12,847 NODES',
+  'MITM ATTACK: INTERCEPT MODE ON',
+  'KERNEL EXPLOIT CVE-2024-7X... [PATCHING]',
+  'FIREWALL RULE BYPASS... [COUNTERED]',
+  'PACKET FLOOD: 99.7% CAPACITY',
+  'ANOMALY DETECTED: 47.213.xxx.xxx',
+  'INTRUSION SIGNATURE: APT-7XSAB-001',
+  'DEFENSIVE MEASURE DEPLOYED...',
+  'EMERGENCY PROTOCOL INITIATED',
+  'CONTACTING BACKUP SERVERS...',
+];
+
+// Alarm sound using Web Audio API
+function playAlarmSound() {
+  try {
+    if(!secAudioCtx) secAudioCtx = new(window.AudioContext||window.webkitAudioContext)();
+    var ctx = secAudioCtx;
+    
+    function beep(freq, start, duration, vol) {
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.type = 'square';
+      o.frequency.setValueAtTime(freq, ctx.currentTime + start);
+      g.gain.setValueAtTime(0, ctx.currentTime + start);
+      g.gain.linearRampToValueAtTime(vol||0.3, ctx.currentTime + start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + start);
+      o.stop(ctx.currentTime + start + duration + 0.05);
+    }
+    
+    // Alarm pattern: high-low-high rapid beeps
+    var t = 0;
+    for(var i = 0; i < 8; i++) {
+      beep(1200, t, 0.15, 0.25);
+      beep(800, t + 0.18, 0.12, 0.2);
+      t += 0.35;
+    }
+    // Deep rumble
+    beep(80, 0, 2.5, 0.15);
+    beep(100, 0.1, 2.3, 0.12);
+    
+    // Voice synthesis
+    if('speechSynthesis' in window) {
+      setTimeout(function() {
+        var msg = new SpeechSynthesisUtterance(
+          'ALERTE DE SÉCURITÉ MAXIMALE. Un pirate informatique est en train de saturer le site. Toutes nos équipes développeur sont en train de contrer le problème. Merci de patienter. ALERTE DE SÉCURITÉ MAXIMALE.'
+        );
+        msg.lang = 'fr-FR';
+        msg.rate = 0.85;
+        msg.pitch = 0.7;
+        msg.volume = 1;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(msg);
+      }, 500);
+    }
+  } catch(e) {}
+}
+
+function stopAlarmSound() {
+  try {
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    if(secAudioCtx) { secAudioCtx.close(); secAudioCtx = null; }
+  } catch(e) {}
+}
+
+function triggerSecAlert() {
+  if(secAlertActive) return;
+  secAlertActive = true;
+  
+  var overlay = document.getElementById('sec-alert');
+  overlay.classList.add('on');
+  
+  // Update clock
+  function updateClock() {
+    var now = new Date();
+    var t = now.toTimeString().slice(0,8);
+    var el = document.getElementById('sec-time');
+    if(el) el.innerText = t;
+  }
+  updateClock();
+  var clockIv = setInterval(updateClock, 1000);
+  secAlertIntervals.push(clockIv);
+  
+  // Random ID
+  var randEl = document.getElementById('sec-rand');
+  if(randEl) randEl.innerText = Math.floor(Math.random()*900000+100000);
+  
+  // Scrolling code lines
+  var codeEl = document.getElementById('sec-code');
+  var lineIdx = 0;
+  function addCodeLine() {
+    if(!codeEl || !secAlertActive) return;
+    var line = document.createElement('div');
+    line.className = 'sec-code-line';
+    var prefix = Math.random() > 0.5 ? '[!] ' : '[>] ';
+    var color = Math.random() > 0.7 ? '#ff6666' : 'rgba(255,80,80,0.6)';
+    line.style.color = color;
+    line.innerText = prefix + HACK_LINES[lineIdx % HACK_LINES.length];
+    lineIdx++;
+    // Keep max 6 lines
+    while(codeEl.children.length >= 6) codeEl.removeChild(codeEl.firstChild);
+    codeEl.appendChild(line);
+    codeEl.scrollTop = codeEl.scrollHeight;
+  }
+  addCodeLine();
+  var codeIv = setInterval(addCodeLine, 600);
+  secAlertIntervals.push(codeIv);
+  
+  // Play alarm
+  playAlarmSound();
+  // Repeat alarm every 3s
+  var alarmIv = setInterval(function(){
+    if(secAlertActive) playAlarmSound();
+  }, 3200);
+  secAlertIntervals.push(alarmIv);
+  
+  // Glitch text rotation
+  var glitchTexts = [
+    'SÉCURISATION EN COURS... VEUILLEZ NE PAS QUITTER',
+    'CONTRE-MESURES DÉPLOYÉES... ANALYSE EN COURS',
+    'TRAÇAGE DE L\'ATTAQUANT... 47.213.xxx.xxx',
+    'BACKUP SERVERS ONLINE... FAILOVER ACTIF',
+    'ISOLATION DU VECTEUR... NEUTRALISATION',
+  ];
+  var glitchIdx = 0;
+  var glitchEl = document.getElementById('sec-glitch-txt');
+  var glitchIv = setInterval(function(){
+    if(!glitchEl || !secAlertActive) return;
+    glitchIdx = (glitchIdx+1) % glitchTexts.length;
+    glitchEl.innerText = glitchTexts[glitchIdx];
+  }, 2000);
+  secAlertIntervals.push(glitchIv);
+  
+  // Screen color cycle
+  var colors = ['#000','#050000','#0a0000','#050000','#000'];
+  var colorIdx = 0;
+  var colorIv = setInterval(function(){
+    if(!secAlertActive) return;
+    overlay.style.background = colors[colorIdx % colors.length];
+    colorIdx++;
+  }, 400);
+  secAlertIntervals.push(colorIv);
+  
+  notify('e','🚨 ALERTE DÉCLENCHÉE', 'Mode sécurité maximal actif');
+}
+
+function disableSecAlert() {
+  secAlertActive = false;
+  // Clear all intervals
+  secAlertIntervals.forEach(iv => clearInterval(iv));
+  secAlertIntervals = [];
+  // Stop sound
+  stopAlarmSound();
+  // Hide overlay with fade
+  var overlay = document.getElementById('sec-alert');
+  overlay.style.transition = 'opacity 0.6s';
+  overlay.style.opacity = '0';
+  setTimeout(function(){
+    overlay.classList.remove('on');
+    overlay.style.opacity = '1';
+    overlay.style.transition = '';
+    overlay.style.background = '#000';
+    // Clear code lines
+    var code = document.getElementById('sec-code');
+    if(code) code.innerHTML = '';
+  }, 620);
+  notify('s','Alerte désactivée','Système sécurisé');
+}
 
 </script>
+
+<!-- ============================================================
+     NASA SECURITY ALERT OVERLAY
+     ============================================================ -->
+<div id="sec-alert">
+  <div class="sec-flash"></div>
+  <div class="sec-white-flash"></div>
+  <div class="sec-corner tl"></div>
+  <div class="sec-corner tr"></div>
+  <div class="sec-corner bl"></div>
+  <div class="sec-corner br"></div>
+
+  <div class="sec-content">
+    <!-- Top bar -->
+    <div class="sec-topbar">
+      <div class="sec-topbar-txt">⚠ SYSTÈME 7X SAB — ALERTE CRITIQUE</div>
+      <div class="sec-topbar-dot"></div>
+      <div class="sec-topbar-txt" id="sec-time">--:--:--</div>
+    </div>
+
+    <!-- Icon -->
+    <i class="fa-solid fa-shield-virus sec-icon"></i>
+
+    <!-- Title -->
+    <div class="sec-title">⚠ INTRUSION DÉTECTÉE ⚠</div>
+    <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;animation-delay:.4s">CYBER ATTACK IN PROGRESS</div>
+
+    <!-- Progress -->
+    <div class="sec-progress-wrap">
+      <div class="sec-progress-bar"></div>
+    </div>
+
+    <!-- Main message -->
+    <div class="sec-msg" id="sec-main-msg">
+      UN PIRATE INFORMATIQUE EST EN TRAIN DE SATURER LE SITE.<br>
+      TOUTES NOS ÉQUIPES DÉVELOPPEUR SONT EN TRAIN<br>
+      DE CONTRER LE PROBLÈME.<br><br>
+      <strong style="color:#ffffff">MERCI DE PATIENTER.</strong>
+    </div>
+
+    <!-- Glitch -->
+    <div class="sec-glitch" id="sec-glitch-txt">SÉCURISATION EN COURS... VEUILLEZ NE PAS QUITTER</div>
+
+    <!-- Code lines -->
+    <div class="sec-code" id="sec-code"></div>
+
+    <!-- Bottom -->
+    <div class="sec-bottombar">
+      <div class="sec-id" id="sec-id">ID: 7X-SAB-SEC-<span id="sec-rand">000000</span></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="sec-topbar-dot"></div>
+        <span style="font-size:.52rem;color:rgba(255,100,100,.6);letter-spacing:2px">OWNER ONLY</span>
+      </div>
+      <button class="sec-close-btn" onclick="disableSecAlert()">[ DÉSACTIVER ]</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
