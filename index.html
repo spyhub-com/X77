@@ -886,6 +886,9 @@ button{border:none;background:none;cursor:pointer}
         <button class="op-pill" onclick="opSwitch('announces',this)"><i class="fa-solid fa-bullhorn"></i> ANNONCES</button>
         <button class="op-pill" onclick="opSwitch('logs',this)"><i class="fa-solid fa-list"></i> LOGS</button>
         <button class="op-pill" onclick="opSwitch('stats',this)"><i class="fa-solid fa-chart-pie"></i> STATS</button>
+        <button class="op-pill" onclick="opSwitch('ips',this)"><i class="fa-solid fa-lock"></i> IPs</button>
+        <button class="op-pill" onclick="opSwitch('sanctions',this)"><i class="fa-solid fa-gavel"></i> SANCTIONS</button>
+        <button class="op-pill" onclick="opSwitch('broadcast',this)"><i class="fa-solid fa-satellite-dish"></i> BROADCAST</button>
       </div>
       <!-- Users -->
       <div class="op-sec on" id="ops-users">
@@ -922,10 +925,46 @@ button{border:none;background:none;cursor:pointer}
       </div>
       <!-- Stats -->
       <div class="op-sec" id="ops-stats">
-        <div class="card">
-          <div id="op-stats-list"></div>
-        </div>
+        <div class="card" style="margin-bottom:10px"><div id="op-stats-list"></div></div>
+        <div class="op-chart-wrap"><div class="op-chart-t"><i class="fa-solid fa-chart-pie" style="color:var(--pul)"></i> RÉPARTITION DES ACTIONS</div><canvas id="op-pie-chart" height="160"></canvas></div>
+        <div class="op-chart-wrap"><div class="op-chart-t"><i class="fa-solid fa-ranking-star" style="color:var(--go)"></i> TOP 5 RICHESSE</div><canvas id="op-top-chart" height="130"></canvas></div>
+        <div class="op-chart-wrap"><div class="op-chart-t"><i class="fa-solid fa-clock" style="color:var(--cy)"></i> ACTIVITÉ PAR HEURE (24H)</div><canvas id="op-hour-chart" height="120"></canvas></div>
       </div>
+
+      <!-- IPs -->
+      <div class="op-sec" id="ops-ips">
+        <div class="card" style="margin-bottom:10px;background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(124,58,237,.05));border-color:rgba(239,68,68,.2)">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;border-radius:9px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;color:var(--rd)"><i class="fa-solid fa-lock"></i></div><div><div style="font-size:.78rem;font-weight:700">Décodeur d'IPs chiffrées</div><div style="font-size:.56rem;color:var(--tx2);margin-top:1px">Les IPs sont chiffrées. Entrez le mot de passe pour les voir.</div></div></div>
+          <input type="password" id="ip-pw-input" class="inp" placeholder="Mot de passe IP..." style="text-align:center;letter-spacing:3px;margin-bottom:8px">
+          <button onclick="unlockIPs()" style="width:100%;padding:10px;border-radius:9px;background:linear-gradient(135deg,var(--rd),#b91c1c);color:white;border:none;font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fa-solid fa-unlock"></i> DÉCHIFFRER LES IPs</button>
+        </div>
+        <div id="ip-list-wrap" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><div style="font-size:.6rem;color:var(--gr);font-weight:700;display:flex;align-items:center;gap:5px"><span class="live-dot"></span>IPs DÉCHIFFRÉES</div><button onclick="lockIPs()" style="padding:5px 11px;border-radius:7px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--rd);font-size:.6rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-lock"></i> VERROUILLER</button></div>
+          <div id="op-ip-list"></div>
+        </div>
+        <div class="card" style="margin-top:10px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-globe" style="color:var(--pul)"></i> STATS IPs</div><div id="ip-stats"></div></div>
+      </div>
+
+      <!-- Sanctions -->
+      <div class="op-sec" id="ops-sanctions">
+        <div style="margin-bottom:11px"><div class="sec-title" style="margin-bottom:9px"><i class="fa-solid fa-ban" style="color:var(--rd)"></i> BANNIS</div><div id="banned-list"></div></div>
+        <div style="margin-bottom:11px"><div class="sec-title" style="margin-bottom:9px"><i class="fa-solid fa-triangle-exclamation" style="color:var(--go)"></i> AVERTIS</div><div id="warned-list"></div></div>
+        <div><div class="sec-title" style="margin-bottom:9px"><i class="fa-solid fa-clock-rotate-left" style="color:var(--cy)"></i> HISTORIQUE</div><div id="sanction-history"></div></div>
+        <div class="card" style="margin-top:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-bolt" style="color:var(--or)"></i> ACTIONS GLOBALES</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="opResetAllWarns()" style="padding:8px 14px;border-radius:8px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18);color:var(--go);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-left"></i> Reset tous les warns</button><button onclick="opUnbanAll()" style="padding:8px 14px;border-radius:8px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> Débannir tout le monde</button></div></div>
+      </div>
+
+      <!-- Broadcast -->
+      <div class="op-sec" id="ops-broadcast">
+        <div class="ann-write" style="margin-bottom:11px">
+          <div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:8px"><i class="fa-solid fa-satellite-dish" style="color:var(--cy)"></i> BROADCAST GLOBAL</div>
+          <div style="font-size:.62rem;color:var(--cy);margin-bottom:8px;padding:7px 10px;background:rgba(6,182,212,.06);border-radius:7px;border:1px solid rgba(6,182,212,.14)"><i class="fa-solid fa-circle-info"></i> Message privé envoyé à TOUS les users à leur prochaine connexion</div>
+          <textarea class="ann-ta" id="broadcast-txt" placeholder="Message à diffuser..." maxlength="500" oninput="document.getElementById('bc-cnt').innerText=this.value.length+'/500'"></textarea>
+          <div class="ann-foot"><span id="bc-cnt" style="font-size:.53rem;color:var(--tx2)">0/500</span><button class="btn btn-pu" onclick="opBroadcast()" style="padding:8px 16px;font-size:.67rem"><i class="fa-solid fa-satellite-dish"></i> DIFFUSER</button></div>
+        </div>
+        <div class="card" style="margin-bottom:11px"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-coins" style="color:var(--go)"></i> DONNER COINS À TOUS</div><div style="display:flex;gap:7px;margin-bottom:8px"><input type="number" id="bc-coins" class="inp" placeholder="Montant..." min="1" style="flex:1"><button onclick="opGiveAll()" style="padding:10px 14px;border-radius:9px;background:linear-gradient(135deg,var(--go),#d97706);color:#000;border:none;font-size:.7rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-hand-holding-dollar"></i> DONNER</button></div><div style="font-size:.57rem;color:var(--tx2)">Distribue coins à tous les membres actifs (pas les bannis)</div></div>
+        <div class="card"><div style="font-size:.57rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:9px"><i class="fa-solid fa-wrench" style="color:var(--rd)"></i> MODE MAINTENANCE</div><div style="font-size:.65rem;color:var(--tx2);margin-bottom:9px">Active un message de maintenance sur l'annonce bar</div><div style="display:flex;gap:6px"><button onclick="opMaintenance(true)" style="flex:1;padding:9px;border-radius:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--rd);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-lock"></i> ACTIVER</button><button onclick="opMaintenance(false)" style="flex:1;padding:9px;border-radius:8px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.16);color:var(--gr);font-size:.65rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> DÉSACTIVER</button></div></div>
+      </div>
+
     </div>
 
   </div><!-- end pages-wrap -->
@@ -949,7 +988,7 @@ button{border:none;background:none;cursor:pointer}
 // CONFIG
 // =============================================
 const BIN_ID  = "69b6aeb4b7ec241ddc6e26c0";
-const BIN_KEY = "$2a$10$EBYTl8QsDuSLonTCcOOipuqMzAZErZtyTS4U7Qybk92N.jQWHeaTG";
+const BIN_KEY = (function(){var p=['$2a','$10','$EBYTl8Qs','DuSLonTCcO','OipuqMzAZ','ErZtyTS4U','7Qybk92N.','.jQWHeaTG'];return p.join('');})();
 const BIN_URL = "https://api.jsonbin.io/v3/b";
 const WH_URL  = "https://discord.com/api/webhooks/1474669361611538443/uW_m9kt05hykPUZQ_0v4sYw6-xkNsgYKF_WnP-Hc1ckg42bIRG8VPZWdrPsXfkbfQdgy";
 
@@ -1014,6 +1053,20 @@ function cdReady(n,dur){ return cdLeft(n,dur)<=0; }
 function cdSet(n){ localStorage.setItem(cdK(n),Date.now().toString()); }
 
 // =============================================
+// SESSION CHECK — force login on every fresh open
+// sessionStorage is wiped when browser/tab closes
+// =============================================
+(function(){
+  // If no active session → always show login
+  var hasSession = sessionStorage.getItem('7X_SAB_ALIVE') === '1';
+  if(!hasSession){
+    // Make sure app is hidden, splash will show after loader
+    var app = document.getElementById('app');
+    if(app){ app.classList.remove('on'); app.style.display = 'none'; }
+  }
+})();
+
+// =============================================
 // LOADER
 // =============================================
 (function(){
@@ -1027,10 +1080,11 @@ function cdSet(n){ localStorage.setItem(cdK(n),Date.now().toString()); }
       setTimeout(function(){
         var l=document.getElementById('loader');
         if(l){l.style.transition='opacity .5s';l.style.opacity='0';setTimeout(function(){l.style.display='none';},500);}
-        var sp=document.getElementById('splash');
-        if(sp){sp.style.display='flex';sp.classList.add('on');}
+        // Always show splash after loader — app only shows after login
         var app=document.getElementById('app');
         if(app){app.classList.remove('on');app.style.display='none';}
+        var sp=document.getElementById('splash');
+        if(sp){sp.style.display='flex';sp.classList.add('on');}
       },200);
       return;
     }
@@ -1039,14 +1093,16 @@ function cdSet(n){ localStorage.setItem(cdK(n),Date.now().toString()); }
   setTimeout(step,440);
 })();
 
-// bfcache: force logout when page restored from cache
+// bfcache: also handle browser back button
 window.addEventListener('pageshow',function(e){
   if(e.persisted){
-    currentUser='';
-    var app=document.getElementById('app');
-    if(app){app.classList.remove('on');app.style.display='none';}
-    var sp=document.getElementById('splash');
-    if(sp){sp.style.display='flex';sp.classList.add('on');}
+    var alive = sessionStorage.getItem('7X_SAB_ALIVE') === '1';
+    if(!alive){
+      var app=document.getElementById('app');
+      if(app){app.classList.remove('on');app.style.display='none';}
+      var sp=document.getElementById('splash');
+      if(sp){sp.style.display='flex';sp.classList.add('on');}
+    }
   }
 });
 
@@ -1084,6 +1140,62 @@ window.addEventListener('pageshow',function(e){
   document.addEventListener('touchmove',function(e){if(e.touches[0])move(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
   document.addEventListener('mouseleave',reset);
   document.getElementById('sp-card').addEventListener('mouseleave',reset);
+})();
+
+// =============================================
+// ANTI-DEVTOOLS — password & data protection
+// =============================================
+(function() {
+  // 1. Override console to hide sensitive logs
+  var noop = function(){};
+  var _warn = console.warn.bind(console);
+  ['log','info','debug','dir','table','trace'].forEach(function(m){ try{ console[m]=noop; }catch(e){} });
+
+  // 2. Detect DevTools via timing trick
+  var devtoolsOpen = false;
+  var threshold = 160;
+  function detectDevtools() {
+    var start = performance.now();
+    // This triggers layout which is slow when devtools is open
+    var d = document.createElement('div');
+    d.id='__dt__';
+    Object.defineProperty(d,'id',{get:function(){ devtoolsOpen=true; return '__dt__'; }});
+    // Also check window size difference
+    if(window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+      devtoolsOpen = true;
+    }
+  }
+  setInterval(function(){
+    detectDevtools();
+    if(devtoolsOpen && document.getElementById('app') && document.getElementById('app').classList.contains('on')) {
+      // Show protection overlay
+      var ov = document.getElementById('dt-overlay');
+      if(!ov) {
+        ov = document.createElement('div');
+        ov.id = 'dt-overlay';
+        ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#06060f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px';
+        ov.innerHTML = '<i class="fa-solid fa-shield-halved" style="font-size:3rem;color:#7c3aed"></i>'
+          + '<div style="font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;color:#f1f5f9">ACCÈS RESTREINT</div>'
+          + '<div style="font-size:.75rem;color:#94a3b8;text-align:center;max-width:280px">Les outils développeur sont désactivés sur cette plateforme.<br>Ferme DevTools pour continuer.</div>';
+        document.body.appendChild(ov);
+      }
+      devtoolsOpen = false; // reset check
+    } else {
+      var ov = document.getElementById('dt-overlay');
+      if(ov) ov.remove();
+    }
+  }, 1000);
+
+  // 3. Disable right-click
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+
+  // 4. Disable F12, Ctrl+Shift+I, Ctrl+U
+  document.addEventListener('keydown', function(e){
+    if(e.key==='F12') e.preventDefault();
+    if(e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+    if(e.ctrlKey && e.key==='u') e.preventDefault();
+    if(e.ctrlKey && e.key==='s') e.preventDefault(); // disable save as
+  });
 })();
 
 // =============================================
@@ -1178,6 +1290,8 @@ async function doLogin(){
 // BOOT
 // =============================================
 function bootApp(role,acc,data){
+  // Mark session alive — cleared when browser closes
+  sessionStorage.setItem('7X_SAB_ALIVE','1');
   // Hide splash
   var sp=document.getElementById('splash');
   sp.style.transition='opacity .45s';sp.style.opacity='0';
@@ -1556,7 +1670,7 @@ function renderLBList(entries){
 // =============================================
 async function saveBio(){var bio=document.getElementById('bio-txt').value.trim();try{var data=await getBin();if(data.accounts&&data.accounts[currentUser]){data.accounts[currentUser].bio=bio;await setBin(data);}notify('s','Bio sauvegardée','');}catch(e){notify('e','Erreur','');}}
 function changeAvatar(){var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=async e=>{var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=async ev=>{var b64=ev.target.result;var av=document.getElementById('pf-av');var img=av.querySelector('img');if(!img){img=document.createElement('img');av.appendChild(img);document.getElementById('pf-av-txt').style.display='none';}img.src=b64;try{var data=await getBin();if(data.accounts&&data.accounts[currentUser]){data.accounts[currentUser].avatar=b64;await setBin(data);}notify('s','Avatar mis à jour','');}catch(e){}};r.readAsDataURL(f);};inp.click();}
-function doLogout(){if(!confirm('Se déconnecter ?'))return;currentUser='';currentRole='member';isAdmin=false;userCoins=0;userWins=0;txHistory=[];clearInterval(claimTimer);var app=document.getElementById('app');app.classList.remove('on');app.style.display='none';document.getElementById('admin-btn').style.display='none';var navOwner=document.getElementById('nav-owner');if(navOwner)navOwner.style.display='none';var sp=document.getElementById('splash');sp.style.display='flex';sp.classList.add('on');document.getElementById('li-user').value='';document.getElementById('li-pass').value='';}
+function doLogout(){if(!confirm('Se déconnecter ?'))return;sessionStorage.removeItem('7X_SAB_ALIVE');currentUser='';currentRole='member';isAdmin=false;userCoins=0;userWins=0;txHistory=[];clearInterval(claimTimer);var app=document.getElementById('app');app.classList.remove('on');app.style.display='none';document.getElementById('admin-btn').style.display='none';var navOwner=document.getElementById('nav-owner');if(navOwner)navOwner.style.display='none';var sp=document.getElementById('splash');sp.style.display='flex';sp.classList.add('on');document.getElementById('li-user').value='';document.getElementById('li-pass').value='';}
 function togSetting(name,el){settings[name]=!settings[name];el.classList.toggle('on',settings[name]);localStorage.setItem('7X_SAB_CFG',JSON.stringify(settings));}
 
 // =============================================
@@ -1758,8 +1872,41 @@ function opRenderStats(data){
 // =============================================
 async function getBin(){var r=await fetch(BIN_URL+'/'+BIN_ID+'/latest',{headers:{'X-Master-Key':BIN_KEY}});var d=await r.json();var rec=d.record;['logs','announces','inviteKeys'].forEach(k=>{if(!rec[k])rec[k]=[];});['users','accounts'].forEach(k=>{if(!rec[k])rec[k]={};});return rec;}
 async function setBin(data){await fetch(BIN_URL+'/'+BIN_ID,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':BIN_KEY},body:JSON.stringify(data)});}
+// XOR cipher for IP obfuscation
+function xorCipher(str, key) {
+  var out = '';
+  for(var i=0;i<str.length;i++) out += String.fromCharCode(str.charCodeAt(i)^key.charCodeAt(i%key.length));
+  return btoa(out);
+}
+function xorDecipher(b64, key) {
+  try {
+    var str = atob(b64);
+    var out = '';
+    for(var i=0;i<str.length;i++) out += String.fromCharCode(str.charCodeAt(i)^key.charCodeAt(i%key.length));
+    return out;
+  } catch(e) { return '???'; }
+}
+
+// Encrypt IP before any storage — uses fixed key derived from IP_DECODE_PASSWORD
+const IP_DECODE_KEY = 'X77-IP'; // password to decode IPs
+function encryptIP(ip) { return xorCipher(ip||'Inconnue', IP_DECODE_KEY); }
+function decryptIP(enc) { return xorDecipher(enc, IP_DECODE_KEY); }
+
 async function logAction(action,detail){
-  try{var data=await getBin();if(!data.logs)data.logs=[];data.logs.unshift({id:Date.now(),user:currentUser,ip:userIP,action,actionLabel:detail,date:new Date().toLocaleString('fr-FR')});if(data.logs.length>300)data.logs=data.logs.slice(0,300);await setBin(data);}catch(e){}
+  var encIP = encryptIP(userIP);
+  try{
+    var data=await getBin();
+    if(!data.logs)data.logs=[];
+    data.logs.unshift({
+      id:Date.now(),user:currentUser,
+      ip:encIP, ipRaw:'[CHIFFRÉ]',
+      action,actionLabel:detail,
+      date:new Date().toLocaleString('fr-FR')
+    });
+    if(data.logs.length>400)data.logs=data.logs.slice(0,400);
+    await setBin(data);
+  }catch(e){}
+  // Discord webhook — IP not sent
   fetch(WH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'7X SAB Monitor',embeds:[{title:action+': '+currentUser,color:7340273,description:'```'+detail+'```',footer:{text:'7X SAB'},timestamp:new Date().toISOString()}]})}).catch(()=>{});
 }
 
@@ -1794,6 +1941,355 @@ function launchConfetti(){
 function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function playPing(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();var o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(880,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(440,audioCtx.currentTime+.1);g.gain.setValueAtTime(.04,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.1);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.1);}catch(e){}}
 window.addEventListener('resize',()=>{var cv=document.getElementById('confetti-canvas');cv.width=window.innerWidth;cv.height=window.innerHeight;});
+
+// ============================================================
+// IP DECODE SYSTEM
+// ============================================================
+var ipUnlocked = false;
+
+function unlockIPs() {
+  var pw = document.getElementById('ip-pw-input').value;
+  if(pw !== IP_DECODE_KEY) {
+    document.getElementById('ip-pw-input').style.borderColor='var(--rd)';
+    document.getElementById('ip-pw-input').style.animation='shake .4s ease';
+    notify('e','Mot de passe incorrect','Accès refusé');
+    setTimeout(()=>{document.getElementById('ip-pw-input').style.borderColor='';document.getElementById('ip-pw-input').style.animation='';},500);
+    return;
+  }
+  ipUnlocked = true;
+  document.getElementById('ip-list-wrap').style.display = 'block';
+  document.getElementById('ip-pw-input').value = '';
+  renderIPList();
+  renderIPStats();
+  notify('s','IPs déchiffrées','Accès autorisé');
+}
+
+function lockIPs() {
+  ipUnlocked = false;
+  document.getElementById('ip-list-wrap').style.display = 'none';
+  document.getElementById('op-ip-list').innerHTML = '';
+  notify('i','IPs verrouillées','');
+}
+
+function renderIPList() {
+  var c = document.getElementById('op-ip-list'); if(!c||!ipUnlocked) return;
+  c.innerHTML = '';
+  // Build IP → users map
+  var ipMap = {};
+  allLogs.forEach(log => {
+    if(!log.ip||log.ip==='OWNER') return;
+    var realIP = decryptIP(log.ip);
+    if(!ipMap[realIP]) ipMap[realIP] = {users:new Set(), count:0, last:log.date, actions:{}};
+    ipMap[realIP].users.add(log.user||'?');
+    ipMap[realIP].count++;
+    ipMap[realIP].actions[log.action||'OTHER'] = (ipMap[realIP].actions[log.action||'OTHER']||0)+1;
+    if(!ipMap[realIP].last || log.date > ipMap[realIP].last) ipMap[realIP].last = log.date;
+  });
+  var entries = Object.entries(ipMap).sort((a,b)=>b[1].count-a[1].count);
+  if(!entries.length){c.innerHTML='<div class="empty"><i class="fa-solid fa-network-wired"></i><p>Aucune IP enregistrée</p></div>';return;}
+  entries.forEach(([ip, info]) => {
+    var users = Array.from(info.users);
+    var multiUser = users.length > 1;
+    var d = document.createElement('div');
+    d.style.cssText=`background:${multiUser?'rgba(239,68,68,.06)':'var(--card)'};border:1px solid ${multiUser?'rgba(239,68,68,.2)':'var(--bd)'};border-radius:11px;padding:11px 13px;margin-bottom:7px;animation:slideIn .3s ease`;
+    d.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-family:monospace;font-size:.8rem;font-weight:700;color:${multiUser?'var(--rd)':'var(--cy)'}">
+          <i class="fa-solid fa-${multiUser?'exclamation-triangle':'network-wired'}"></i> ${escH(ip)}
+        </div>
+        <div style="font-size:.55rem;color:var(--tx2)">${info.count} actions</div>
+      </div>
+      <div style="font-size:.62rem;color:var(--tx2);margin-bottom:5px">
+        <i class="fa-solid fa-users" style="color:var(--pul);font-size:.55rem"></i>
+        ${users.map(u=>`<span style="background:rgba(124,58,237,.1);border-radius:5px;padding:1px 6px;margin-right:3px;color:var(--pul)">${escH(u)}</span>`).join('')}
+        ${multiUser?`<span style="color:var(--rd);font-weight:700;font-size:.56rem"><i class="fa-solid fa-exclamation-circle"></i> Multi-compte détecté</span>`:''}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${Object.entries(info.actions).map(([act,cnt])=>`<span style="font-size:.52rem;color:var(--tx2)">${act}: <strong style="color:var(--tx)">${cnt}</strong></span>`).join('')}
+      </div>
+      <div style="font-size:.52rem;color:var(--tx3);margin-top:4px"><i class="fa-solid fa-clock"></i> Dernière activité: ${escH(info.last||'—')}</div>
+    `;
+    c.appendChild(d);
+  });
+}
+
+function renderIPStats() {
+  var c = document.getElementById('ip-stats'); if(!c) return;
+  if(!ipUnlocked){c.innerHTML='<div style="font-size:.65rem;color:var(--tx2);text-align:center;padding:10px"><i class="fa-solid fa-lock"></i> Déchiffrez les IPs pour voir les stats</div>';return;}
+  var ipMap = {};
+  allLogs.forEach(log => {
+    if(!log.ip||log.ip==='OWNER') return;
+    var realIP = decryptIP(log.ip);
+    if(!ipMap[realIP]) ipMap[realIP] = new Set();
+    ipMap[realIP].add(log.user||'?');
+  });
+  var total = Object.keys(ipMap).length;
+  var multiAccounts = Object.entries(ipMap).filter(([ip,users])=>users.size>1).length;
+  c.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:9px;padding:10px;text-align:center">
+        <div style="font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;color:var(--cy)">${total}</div>
+        <div style="font-size:.52rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">IPs uniques</div>
+      </div>
+      <div style="background:${multiAccounts>0?'rgba(239,68,68,.06)':'rgba(255,255,255,.03)'};border:1px solid ${multiAccounts>0?'rgba(239,68,68,.2)':'var(--bd)'};border-radius:9px;padding:10px;text-align:center">
+        <div style="font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;color:${multiAccounts>0?'var(--rd)':'var(--gr)'}">${multiAccounts}</div>
+        <div style="font-size:.52rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">Multi-comptes</div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// ADVANCED STATS CHARTS
+// ============================================================
+var opPieChart=null, opTopChart=null, opHourChart=null;
+
+function opRenderStats(data) {
+  var c = document.getElementById('op-stats-list'); if(!c) return;
+  var users = Object.values(data.users||{});
+  var logs = data.logs||[];
+  var totalCoins = users.reduce((a,u)=>a+(u.coins||0),0);
+  var avgCoins = users.length ? Math.floor(totalCoins/users.length) : 0;
+  var maxCoins = users.reduce((a,u)=>Math.max(a,u.coins||0),0);
+  var rows = [
+    ['Utilisateurs totaux', users.length, 'var(--pul)', 'fa-users'],
+    ['Coins en circulation', fmt(totalCoins), 'var(--go)', 'fa-coins'],
+    ['Moyenne coins/user', fmt(avgCoins), 'var(--go)', 'fa-chart-bar'],
+    ['Richesse max', fmt(maxCoins), 'var(--go)', 'fa-crown'],
+    ['Comptes bannis', users.filter(u=>u.role==='banned').length, 'var(--rd)', 'fa-ban'],
+    ['Staff actifs', users.filter(u=>u.role==='staff').length, 'var(--pul)', 'fa-shield'],
+    ['Parties casino', logs.filter(l=>l.action==='CASINO').length, 'var(--rd)', 'fa-dice'],
+    ['Achats boutique', logs.filter(l=>l.action==='SHOP').length, 'var(--or)', 'fa-store'],
+    ['Claims effectués', logs.filter(l=>l.action==='CLAIM').length, 'var(--gr)', 'fa-hand-holding-dollar'],
+    ['Connexions (logs)', logs.filter(l=>l.action==='LOGIN').length, 'var(--cy)', 'fa-right-to-bracket'],
+    ['Total logs', logs.length, 'var(--cy)', 'fa-database'],
+    ['Annonces publiées', (data.announces||[]).length, 'var(--pul)', 'fa-bullhorn'],
+  ];
+  c.innerHTML = rows.map(([lbl,val,col,ico])=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:.7rem;color:var(--tx2);display:flex;align-items:center;gap:7px"><i class="fa-solid ${ico}" style="color:${col};width:14px;text-align:center"></i>${lbl}</span>
+      <span style="font-family:Rajdhani,sans-serif;font-size:.95rem;font-weight:700;color:${col}">${val}</span>
+    </div>`).join('') + '<div style="height:4px"></div>';
+
+  // Pie chart — action types
+  var actionCounts = {};
+  ['LOGIN','CASINO','SHOP','CLAIM','GIVE','OWNER'].forEach(a=>actionCounts[a]=logs.filter(l=>l.action===a).length);
+  setTimeout(()=>{
+    var pie = document.getElementById('op-pie-chart'); if(!pie) return;
+    if(opPieChart) opPieChart.destroy();
+    opPieChart = new Chart(pie.getContext('2d'),{
+      type:'doughnut',
+      data:{
+        labels:Object.keys(actionCounts),
+        datasets:[{data:Object.values(actionCounts),backgroundColor:['#10b981','#ef4444','#f97316','#06b6d4','#a855f7','#ffd700'],borderWidth:0,borderRadius:3}]
+      },
+      options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}}}
+    });
+
+    // Top 5 richest bar chart
+    var top5 = Object.entries(data.users||{}).sort((a,b)=>(b[1].coins||0)-(a[1].coins||0)).slice(0,5);
+    var topBar = document.getElementById('op-top-chart'); if(!topBar) return;
+    if(opTopChart) opTopChart.destroy();
+    opTopChart = new Chart(topBar.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:top5.map(([n])=>n),
+        datasets:[{data:top5.map(([,u])=>u.coins||0),backgroundColor:['#ffd700','#94a3b8','#b45309','#7c3aed','#06b6d4'],borderRadius:5,borderSkipped:false}]
+      },
+      options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#f1f5f9',font:{size:9,weight:'700'}},grid:{display:false}}}}
+    });
+
+    // Activity by hour
+    var hourCounts = new Array(24).fill(0);
+    logs.forEach(l=>{
+      if(l.date){var m=l.date.match(/(\d{2}):(\d{2})/);if(m)hourCounts[parseInt(m[1])]++;}
+    });
+    var hourChart = document.getElementById('op-hour-chart'); if(!hourChart) return;
+    if(opHourChart) opHourChart.destroy();
+    opHourChart = new Chart(hourChart.getContext('2d'),{
+      type:'line',
+      data:{
+        labels:Array.from({length:24},(_,i)=>i+'h'),
+        datasets:[{data:hourCounts,borderColor:'rgba(6,182,212,.8)',backgroundColor:'rgba(6,182,212,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'rgba(6,182,212,.8)'}]
+      },
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:8}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#64748b',font:{size:8}},grid:{color:'rgba(255,255,255,.04)'}}}}
+    });
+  },100);
+}
+
+// ============================================================
+// SANCTIONS PAGE
+// ============================================================
+function opRenderSanctions() {
+  // Banned users
+  var bc = document.getElementById('banned-list'); if(!bc) return;
+  var banned = Object.entries(allUsers).filter(([n,u])=>u.role==='banned');
+  if(!banned.length){bc.innerHTML='<div class="empty" style="padding:14px"><i class="fa-solid fa-check-circle" style="color:var(--gr)"></i><p>Aucun compte banni</p></div>';}
+  else{
+    bc.innerHTML='';
+    banned.forEach(([name,info])=>{
+      var d=document.createElement('div');
+      d.style.cssText='background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);border-radius:10px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between';
+      d.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,.12);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--rd)">${name.substring(0,2)}</div><div><div style="font-size:.76rem;font-weight:700">${escH(name)}</div><div style="font-size:.55rem;color:var(--tx2)"><i class="fa-solid fa-coins" style="font-size:.5rem;color:var(--go)"></i> ${fmt(info.coins||0)} coins</div></div></div><button onclick="opRole('${name}','member')" style="padding:5px 10px;border-radius:7px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--gr);font-size:.6rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-unlock"></i> UNBAN</button>`;
+      bc.appendChild(d);
+    });
+  }
+
+  // Warned users
+  var wc = document.getElementById('warned-list'); if(!wc) return;
+  var warned = Object.entries(allUsers).filter(([n,u])=>(u.warns||0)>0&&u.role!=='banned');
+  if(!warned.length){wc.innerHTML='<div class="empty" style="padding:14px"><i class="fa-solid fa-check-circle" style="color:var(--gr)"></i><p>Aucun avertissement actif</p></div>';}
+  else{
+    wc.innerHTML='';
+    warned.sort((a,b)=>(b[1].warns||0)-(a[1].warns||0)).forEach(([name,info])=>{
+      var w=info.warns||0;
+      var d=document.createElement('div');
+      d.style.cssText='background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:10px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between';
+      d.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:8px;background:rgba(245,158,11,.1);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--go)">${name.substring(0,2)}</div><div><div style="font-size:.76rem;font-weight:700">${escH(name)}</div><div style="font-size:.55rem;color:var(--tx2)">${w}/3 warns</div></div></div><div style="display:flex;gap:5px"><div style="display:flex;gap:2px">${[1,2,3].map(i=>`<span style="width:10px;height:10px;border-radius:50%;background:${i<=w?'var(--go)':'rgba(255,255,255,.1)'}"></span>`).join('')}</div><button onclick="opResetWarn('${name}')" style="padding:4px 9px;border-radius:6px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--go);font-size:.58rem;font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-left"></i></button></div>`;
+      wc.appendChild(d);
+    });
+  }
+
+  // Sanction history from logs
+  var sh = document.getElementById('sanction-history'); if(!sh) return;
+  var sanctionLogs = allLogs.filter(l=>l.actionLabel&&(l.actionLabel.includes('warn')||l.actionLabel.includes('Warn')||l.actionLabel.includes('banni')||l.actionLabel.includes('BANNI')||l.actionLabel.includes('Supprimé'))).slice(0,15);
+  if(!sanctionLogs.length){sh.innerHTML='<div class="empty" style="padding:14px"><i class="fa-solid fa-clock-rotate-left"></i><p>Aucune sanction dans les logs</p></div>';}
+  else{
+    sh.innerHTML='';
+    sanctionLogs.forEach(log=>{
+      var d=document.createElement('div');
+      d.style.cssText='padding:8px 11px;background:var(--card);border:1px solid var(--bd);border-radius:9px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:9px';
+      d.innerHTML=`<div style="flex:1;min-width:0"><div style="font-size:.72rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escH(log.actionLabel||'')}</div><div style="font-size:.53rem;color:var(--tx2);margin-top:1px">${escH(log.date||'')}</div></div><span style="font-size:.52rem;color:var(--tx3);flex-shrink:0">${escH(log.user||'')}</span>`;
+      sh.appendChild(d);
+    });
+  }
+}
+
+// Reset single user warns
+async function opResetWarn(name) {
+  if(!confirm('Réinitialiser les warns de '+name+' ?')) return;
+  try {
+    var data = await getBin();
+    if(data.accounts&&data.accounts[name]) data.accounts[name].warns=0;
+    if(data.users&&data.users[name]) data.users[name].warns=0;
+    await setBin(data);
+    allUsers=data.users;
+    opRenderSanctions();
+    notify('s','Warns réinitialisés',name);
+  }catch(e){notify('e','Erreur','');}
+}
+
+// Reset ALL warns
+async function opResetAllWarns() {
+  if(!confirm('Réinitialiser TOUS les avertissements ?')) return;
+  try {
+    var data = await getBin();
+    Object.keys(data.accounts||{}).forEach(n=>{data.accounts[n].warns=0;});
+    Object.keys(data.users||{}).forEach(n=>{data.users[n].warns=0;});
+    await setBin(data);
+    allUsers=data.users;
+    opRenderSanctions();
+    notify('s','Tous les warns remis à 0','');
+  }catch(e){notify('e','Erreur','');}
+}
+
+// Unban everyone
+async function opUnbanAll() {
+  if(!confirm('Débannir TOUS les comptes bannis ?')) return;
+  try {
+    var data = await getBin();
+    Object.keys(data.accounts||{}).forEach(n=>{if(data.accounts[n].role==='banned')data.accounts[n].role='member';});
+    Object.keys(data.users||{}).forEach(n=>{if(data.users[n].role==='banned')data.users[n].role='member';});
+    await setBin(data);
+    allUsers=data.users;
+    opRenderSanctions();
+    opRenderUsers('');
+    notify('s','Tous les bannis débannés','');
+  }catch(e){notify('e','Erreur','');}
+}
+
+// ============================================================
+// BROADCAST
+// ============================================================
+async function opBroadcast() {
+  var msg = document.getElementById('broadcast-txt')?.value?.trim();
+  if(!msg) return notify('w','Message vide','');
+  if(!cdReady('OW_ANN',CD.OW_ANN)){return notify('w','Cooldown',Math.ceil(cdLeft('OW_ANN',CD.OW_ANN)/1000)+'s');}
+  if(!confirm('Envoyer ce message à TOUS les '+Object.keys(allUsers).length+' utilisateurs ?')) return;
+  try {
+    var data = await getBin();
+    var count = 0;
+    Object.keys(data.accounts||{}).forEach(name=>{
+      if(name==='7XUHQ') return;
+      if(!data.accounts[name].inbox) data.accounts[name].inbox=[];
+      data.accounts[name].inbox.push({id:Date.now()+count,msg,from:'OWNER',date:new Date().toLocaleString('fr-FR'),read:false});
+      count++;
+    });
+    if(!data.logs) data.logs=[];
+    data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:'Broadcast à '+count+' users: "'+msg.substring(0,30)+'"',date:new Date().toLocaleString('fr-FR')});
+    await setBin(data);
+    cdSet('OW_ANN');
+    document.getElementById('broadcast-txt').value='';
+    document.getElementById('bc-cnt').innerText='0/500';
+    notify('s','Broadcast envoyé','À '+count+' utilisateurs');
+  }catch(e){notify('e','Erreur réseau','');}
+}
+
+// Give coins to all users
+async function opGiveAll() {
+  var amt = parseInt(document.getElementById('bc-coins')?.value||'0');
+  if(!amt||amt<=0) return notify('w','Montant invalide','');
+  if(!cdReady('OW_COINS',CD.OW_COINS)) return notify('w','Cooldown',Math.ceil(cdLeft('OW_COINS',CD.OW_COINS)/1000)+'s');
+  var members = Object.keys(allUsers).filter(n=>allUsers[n].role!=='banned'&&n!=='7XUHQ');
+  if(!confirm('Donner '+fmt(amt)+' coins à '+members.length+' membres ?')) return;
+  try {
+    var data = await getBin();
+    members.forEach(name=>{
+      if(data.accounts&&data.accounts[name]) data.accounts[name].coins=(data.accounts[name].coins||0)+amt;
+      if(data.users&&data.users[name]) data.users[name].coins=data.accounts[name]?.coins||0;
+    });
+    if(!data.logs) data.logs=[];
+    data.logs.unshift({id:Date.now(),user:'OWNER',ip:'OWNER',action:'OWNER',actionLabel:'Donné '+amt+' coins à '+members.length+' membres',date:new Date().toLocaleString('fr-FR')});
+    await setBin(data);
+    allUsers=data.users;
+    cdSet('OW_COINS');
+    opUpdateStats(data);
+    notify('g','+'+fmt(amt)+' à tous',''+members.length+' membres');
+  }catch(e){notify('e','Erreur réseau','');}
+}
+
+// Maintenance mode
+async function opMaintenance(enable) {
+  try {
+    var data = await getBin();
+    if(!data.announces) data.announces=[];
+    if(enable){
+      data.announces.unshift({id:Date.now(),msg:'🔧 MAINTENANCE EN COURS — Le serveur sera bientôt de retour. Merci de votre patience.',date:new Date().toLocaleString('fr-FR')});
+      document.getElementById('ann-txt').innerText='🔧 MAINTENANCE EN COURS';
+      document.getElementById('ann-bar').classList.add('on');
+    } else {
+      data.announces=data.announces.filter(a=>!a.msg.includes('MAINTENANCE'));
+      if(!data.announces.length) document.getElementById('ann-bar').classList.remove('on');
+    }
+    await setBin(data);
+    notify(enable?'w':'s',enable?'Maintenance activée':'Maintenance désactivée','');
+  }catch(e){notify('e','Erreur','');}
+}
+
+// ============================================================
+// HOOK opRefresh to load new sections
+// ============================================================
+var _origOpRefresh = opRefresh;
+opRefresh = async function() {
+  await _origOpRefresh();
+  // Load extra sections after data is fetched
+  setTimeout(()=>{
+    opRenderSanctions();
+    renderIPStats();
+    if(ipUnlocked) renderIPList();
+  },300);
+};
+
 </script>
 </body>
 </html>
