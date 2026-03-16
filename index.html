@@ -479,11 +479,10 @@ input, textarea { outline: none; }
 /* =============================================
    PAGES
    ============================================= */
-.pages-wrap { flex: 1; overflow: hidden; position: relative; min-height: 0; height: 0; }
+.pages-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; min-height: 0; }
 .page {
-  position: absolute; inset: 0;
-  overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 14px 20px;
-  display: none; animation: fadeIn 0.25s ease;
+  display: none; padding: 14px 14px 72px; animation: fadeIn 0.25s ease;
+  min-height: 100%;
 }
 .page.show { display: block; }
 .page-title { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 2px; }
@@ -2076,9 +2075,26 @@ input, textarea { outline: none; }
 
       <!-- USERS section -->
       <div class="owner-sub-section on" id="ops-users">
+        <!-- Search + filters -->
         <div class="owner-search">
-          <input type="text" class="owner-search-input" id="op-search" placeholder="Rechercher un utilisateur..." oninput="opRenderUsers(this.value)">
+          <input type="text" class="owner-search-input" id="op-search" placeholder="🔍 Rechercher par pseudo..." oninput="opRenderUsers(this.value)">
           <button class="owner-search-btn" onclick="opRefresh()"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+        <!-- Role filter pills -->
+        <div style="display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;padding-bottom:3px">
+          <button class="owner-pill on" id="filter-all" onclick="opSetFilter('all',this)" style="font-size:0.58rem;padding:5px 11px">TOUS</button>
+          <button class="owner-pill" id="filter-member" onclick="opSetFilter('member',this)" style="font-size:0.58rem;padding:5px 11px;color:var(--cyan)">🔵 MEMBRES</button>
+          <button class="owner-pill" id="filter-staff" onclick="opSetFilter('staff',this)" style="font-size:0.58rem;padding:5px 11px;color:var(--purple-light)">🛡️ STAFF</button>
+          <button class="owner-pill" id="filter-banned" onclick="opSetFilter('banned',this)" style="font-size:0.58rem;padding:5px 11px;color:var(--red)">🔴 BANNIS</button>
+        </div>
+        <!-- Sort row -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span id="op-user-count" style="font-size:0.6rem;color:var(--text2)">— utilisateurs</span>
+          <select id="op-sort" onchange="opRenderUsers(document.getElementById('op-search').value)" style="background:rgba(0,0,0,0.35);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:0.6rem;padding:4px 8px;font-family:inherit;outline:none;cursor:pointer">
+            <option value="coins">Trier: Coins ↓</option>
+            <option value="name">Trier: Pseudo A-Z</option>
+            <option value="wins">Trier: Victoires ↓</option>
+          </select>
         </div>
         <div id="op-users-list"></div>
       </div>
@@ -2342,13 +2358,6 @@ fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>userIP=d.ip
 // LOADING
 // ============================================================
 
-// CLEAR SESSION ON FRESH PAGE LOAD
-// Use sessionStorage: cleared when tab closes, not persistent like localStorage
-if(!sessionStorage.getItem('7X_SAB_SESSION_ACTIVE')) {
-  // Fresh load — don't auto-login
-  sessionStorage.setItem('7X_SAB_SESSION_ACTIVE','1');
-}
-
 // LOADER FIX
 (function startLoader(){
   var msgs=['INITIALISATION...','CONNEXION...','CHARGEMENT...','VERIFICATION...','PRET!'];
@@ -2361,9 +2370,16 @@ if(!sessionStorage.getItem('7X_SAB_SESSION_ACTIVE')) {
       var l=document.getElementById('loader');
       if(l){l.style.opacity='0';l.style.transition='opacity 0.4s';}
       setTimeout(function(){
-        if(l)l.style.display='none';
+        if(l){l.style.display='none';l.remove();}
         var sp=document.getElementById('splash');
-        if(sp){sp.style.display='flex';}
+        if(sp){
+          sp.style.removeProperty('display');
+          sp.style.display='flex';
+          sp.classList.add('show');
+        }
+        // Make sure app is hidden
+        var app=document.getElementById('app');
+        if(app){app.classList.remove('show');app.style.display='none';}
       },450);
       return;
     }
@@ -2521,12 +2537,21 @@ async function doLogin() {
 }
 
 function bootApp(role, acc, data) {
-  document.getElementById('splash').style.opacity='0';
-  document.getElementById('splash').style.transition='opacity 0.5s';
-  setTimeout(()=>{ document.getElementById('splash').style.display='none'; },500);
-  document.getElementById('app').classList.add('show');
-  sessionStorage.setItem('7X_SAB_LOGGED_USER', currentUser);
-  sessionStorage.setItem('7X_SAB_LOGGED_ROLE', currentRole);
+  const sp = document.getElementById('splash');
+  if(sp){
+    sp.style.transition='opacity 0.45s ease';
+    sp.style.opacity='0';
+    setTimeout(()=>{
+      sp.style.display='none';
+      sp.classList.remove('show');
+    }, 460);
+  }
+  const appEl = document.getElementById('app');
+  if(appEl){
+    appEl.style.removeProperty('display');
+    appEl.classList.add('show');
+  }
+
 
   if(isAdmin) document.getElementById('admin-icon-btn').style.display='flex';
 
@@ -3052,13 +3077,14 @@ function doLogout() {
   currentUser=''; currentRole='member'; isAdmin=false;
   userCoins=0; userWins=0; txHistory=[];
   clearInterval(claimTimer);
-  sessionStorage.removeItem('7X_SAB_LOGGED_USER');
-  sessionStorage.removeItem('7X_SAB_LOGGED_ROLE');
-  sessionStorage.removeItem('7X_SAB_SESSION_ACTIVE');
-  document.getElementById('app').classList.remove('show');
+
+  const appLogout = document.getElementById('app');
+  if(appLogout){ appLogout.classList.remove('show'); appLogout.style.display='none'; }
   document.getElementById('admin-icon-btn').style.display='none';
-  const sp=document.getElementById('splash');
-  sp.style.display='flex'; sp.style.opacity='1'; sp.classList.add('show');
+  const navOwnerLogout = document.getElementById('nav-owner');
+  if(navOwnerLogout) navOwnerLogout.style.display='none';
+  const spLogout=document.getElementById('splash');
+  if(spLogout){ spLogout.style.display='flex'; spLogout.style.opacity='1'; spLogout.classList.add('show'); }
   document.getElementById('li-user').value=''; document.getElementById('li-pass').value='';
 }
 function toggleSetting(name, el) {
@@ -4151,13 +4177,30 @@ function opBuildChart(data) {
 }
 
 // ---- USERS render ----
+let opRoleFilter = 'all';
+function opSetFilter(role, el) {
+  opRoleFilter = role;
+  document.querySelectorAll('[id^="filter-"]').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  opRenderUsers(document.getElementById('op-search')?.value || '');
+}
 function opRenderUsers(q) {
   const c = document.getElementById('op-users-list');
   if(!c) return;
-  const entries = Object.entries(opAllUsers)
-    .filter(([n]) => !q || n.toLowerCase().includes(q.toLowerCase()))
-    .sort((a,b) => (b[1].coins||0)-(a[1].coins||0));
-
+  const sortBy = document.getElementById('op-sort')?.value || 'coins';
+  let entries = Object.entries(opAllUsers)
+    .filter(([n, u]) => {
+      const matchQ = !q || n.toLowerCase().includes(q.toLowerCase());
+      const matchRole = opRoleFilter === 'all' || u.role === opRoleFilter;
+      return matchQ && matchRole;
+    });
+  // Sort
+  if(sortBy === 'coins') entries.sort((a,b) => (b[1].coins||0)-(a[1].coins||0));
+  else if(sortBy === 'name') entries.sort((a,b) => a[0].localeCompare(b[0]));
+  else if(sortBy === 'wins') entries.sort((a,b) => (b[1].wins||0)-(a[1].wins||0));
+  // Update count
+  const countEl = document.getElementById('op-user-count');
+  if(countEl) countEl.innerText = entries.length + ' utilisateur' + (entries.length > 1 ? 's' : '');
   if(!entries.length) {
     c.innerHTML='<div class="empty-state"><i class="fa-solid fa-users"></i><p>Aucun utilisateur trouvé</p></div>';
     return;
@@ -4201,7 +4244,8 @@ function opRenderUsers(q) {
           : `<button class="action-pill ap-member" onclick="opRole('${name}','member')"><i class="fa-solid fa-user"></i> MEMBRE</button>`
         }
         <button class="action-pill" style="background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.2)" onclick="opResetCoins('${name}')"><i class="fa-solid fa-rotate-left"></i> RESET</button>
-        <button class="action-pill" style="background:rgba(6,182,212,0.08);color:var(--cyan);border:1px solid rgba(6,182,212,0.18)" onclick="opNotifUser('${name}')"><i class="fa-solid fa-bell"></i> NOTIF</button>
+        <button class="action-pill" style="background:rgba(245,158,11,0.08);color:var(--gold);border:1px solid rgba(245,158,11,0.18)" onclick="opRenameUser('${name}')"><i class="fa-solid fa-pen"></i> RENOMMER</button>
+        <button class="action-pill" style="background:rgba(6,182,212,0.08);color:var(--cyan);border:1px solid rgba(6,182,212,0.18)" onclick="opViewPurchases('${name}')"><i class="fa-solid fa-bag-shopping"></i> ACHATS</button>
         <button class="action-pill" style="background:rgba(239,68,68,0.06);color:#f87171;border:1px solid rgba(239,68,68,0.15)" onclick="opDeleteUser('${name}')"><i class="fa-solid fa-trash"></i> SUPPR</button>
       </div>` : '<div style="font-size:0.56rem;color:var(--text3);padding:4px 0">Compte protégé</div>'}
     `;
@@ -4518,6 +4562,96 @@ function showOwnerMessage(msg) {
     </div>
   `;
   document.body.appendChild(popup);
+}
+
+
+// ============================================================
+// RENAME USER
+// ============================================================
+async function opRenameUser(oldName) {
+  if(oldName === '7XUHQ') return notify('error','❌ Impossible','Compte owner protégé');
+  const newName = prompt('Nouveau pseudo pour ' + oldName + ' (3-20 caractères, MAJUSCULES) :');
+  if(!newName || !newName.trim()) return;
+  const clean = newName.trim().toUpperCase();
+  if(clean.length < 3 || clean.length > 20) return notify('warn','⚠️ Pseudo invalide','Entre 3 et 20 caractères');
+  if(clean === '7XUHQ') return notify('error','❌ Pseudo réservé','');
+  if(!cdReady('OW_ROLE', CD.OW_ROLE)) {
+    return notify('warn','⏳ Cooldown', Math.ceil(cdLeft('OW_ROLE',CD.OW_ROLE)/1000)+'s');
+  }
+  try {
+    const data = await getBin();
+    if(!data.accounts) data.accounts = {};
+    if(!data.users) data.users = {};
+    if(data.accounts[clean] || data.users[clean]) return notify('error','❌ Pseudo déjà utilisé','Choisis un autre pseudo');
+    // Copy account data to new name
+    if(data.accounts[oldName]) {
+      data.accounts[clean] = { ...data.accounts[oldName] };
+      delete data.accounts[oldName];
+    }
+    if(data.users[oldName]) {
+      data.users[clean] = { ...data.users[oldName] };
+      delete data.users[oldName];
+    }
+    // Log
+    if(!data.logs) data.logs = [];
+    data.logs.unshift({
+      id: Date.now(), user: 'OWNER', ip: 'OWNER', action: 'OWNER',
+      actionLabel: 'Renommé ' + oldName + ' → ' + clean,
+      date: new Date().toLocaleString('fr-FR')
+    });
+    await setBin(data);
+    opAllUsers = data.users; opAllLogs = data.logs;
+    opRenderUsers(document.getElementById('op-search')?.value || '');
+    opUpdateStats(data);
+    cdSet('OW_ROLE');
+    notify('success','✅ Renommé', oldName + ' → ' + clean);
+  } catch(e) { notify('error','❌ Erreur réseau','Réessayez'); }
+}
+
+// ============================================================
+// VIEW USER PURCHASES
+// ============================================================
+async function opViewPurchases(name) {
+  try {
+    const data = await getBin();
+    const acc = data.accounts?.[name];
+    if(!acc) return notify('error','❌ Introuvable','');
+    // Build purchase list from txHistory
+    const txList = (acc.txHistory || []).filter(tx => tx.reason && tx.reason.includes('🛒'));
+    const shopBuys = acc.shopBuys || 0;
+    // Create popup
+    const popup = document.createElement('div');
+    popup.style.cssText = 'position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);animation:fadeIn 0.25s ease';
+    const listHTML = txList.length
+      ? txList.map(tx => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+            <div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text)">${escH(tx.reason.replace('🛒 ',''))}</div>
+              <div style="font-size:0.55rem;color:var(--text2);margin-top:2px">${tx.date}</div>
+            </div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:0.88rem;font-weight:700;color:var(--red)">-${fmt(tx.amount)} 🪙</div>
+          </div>`).join('')
+      : '<div style="text-align:center;padding:20px;font-size:0.7rem;color:var(--text2)"><i class="fa-solid fa-bag-shopping" style="font-size:1.5rem;opacity:0.2;display:block;margin-bottom:8px"></i>Aucun achat enregistré</div>';
+    popup.innerHTML = `
+      <div style="width:90%;max-width:400px;background:var(--bg2);border:1px solid rgba(124,58,237,0.3);border-radius:20px;overflow:hidden;animation:slideUp 0.35s ease;max-height:85vh;display:flex;flex-direction:column">
+        <div style="padding:16px 18px;background:linear-gradient(135deg,rgba(124,58,237,0.12),transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--purple-light));display:flex;align-items:center;justify-content:center;color:white;font-size:0.85rem"><i class="fa-solid fa-bag-shopping"></i></div>
+            <div>
+              <div style="font-weight:800;font-size:0.88rem">Achats de ${escH(name)}</div>
+              <div style="font-size:0.54rem;color:var(--text2);margin-top:1px">${shopBuys} achat${shopBuys>1?'s':''} au total · <span style="color:var(--gold)">${fmt(acc.coins||0)} 🪙 restants</span></div>
+            </div>
+          </div>
+          <button onclick="this.closest('div[style]').remove()" style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="overflow-y:auto;padding:4px 18px 16px;flex:1">
+          ${listHTML}
+        </div>
+      </div>
+    `;
+    document.body.appendChild(popup);
+    popup.addEventListener('click', e => { if(e.target === popup) popup.remove(); });
+  } catch(e) { notify('error','❌ Erreur réseau',''); }
 }
 
 </script>
