@@ -2,87 +2,81 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axtra Credits - Récupération</title>
+    <title>Axtra Credits</title>
     <style>
-        body { background: #0d0d0d; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: #151515; padding: 40px; border-radius: 15px; border: 2px solid #00c3ff; text-align: center; box-shadow: 0 0 20px #00c3ff44; width: 320px; }
-        h2 { color: #00c3ff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: white; border-radius: 8px; text-align: center; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #00c3ff; }
-        button { width: 100%; background: #00c3ff; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; }
-        button:hover { background: #0088cc; box-shadow: 0 0 15px #00c3ff; }
-        #status { margin-top: 20px; font-size: 14px; font-weight: bold; min-height: 20px; }
+        body { background: #0d0d0d; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { background: #151515; padding: 30px; border-radius: 10px; border: 1px solid #00c3ff; text-align: center; box-shadow: 0 0 15px #00c3ff; }
+        input { padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #00c3ff; color: white; border-radius: 5px; width: 250px; text-align: center; }
+        button { background: #00c3ff; color: #000; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 5px; width: 100%; }
+        #res { margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div class="card">
+    <div class="box">
         <h2>Axtra Credits</h2>
         <p>Quelle est votre ID Discord ?</p>
-        <input type="text" id="userId" placeholder="Entrez votre ID ici">
-        <button onclick="claim()">Valider</button>
-        <div id="status"></div>
+        <input type="text" id="uid" placeholder="ID Discord">
+        <br>
+        <button onclick="claim()">VALIDER</button>
+        <p id="res"></p>
     </div>
 
     <script>
+        // Tes clés JSONBin directement dans le script
         const BIN_ID = "69c3d98bb7ec241ddca074ea";
-        const API_KEY = "$2a$10$EBYT18QsDuSLonTCcO0ipuqMzAZErZtyTS4U7Qybk92N.jQWHeaTG";
+        const KEY = "$2a$10$EBYT18QsDuSLonTCcO0ipuqMzAZErZtyTS4U7Qybk92N.jQWHeaTG";
 
         async function claim() {
-            const id = document.getElementById('userId').value;
-            const status = document.getElementById('status');
-            if (!id) return status.innerText = "❌ Entre une ID valide";
-
-            status.innerText = "⏳ Connexion à JSONBin...";
-            status.style.color = "white";
+            const id = document.getElementById('uid').value;
+            const r = document.getElementById('res');
+            if(!id) return r.innerText = "❌ Met ton ID !";
+            
+            r.innerText = "⏳ Connexion...";
+            r.style.color = "white";
 
             try {
-                // 1. Récupérer les données actuelles
-                const getRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': API_KEY }
+                // 1. On récupère les données
+                const resp = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": KEY }
                 });
-                const data = await getRes.json();
+                const data = await resp.json();
                 let db = data.record;
-
                 if (!db.users) db.users = {};
-                const now = Date.now();
-                const cooldown = 24 * 60 * 60 * 1000;
 
-                // 2. Vérifier le temps
-                if (db.users[id] && (now - db.users[id].lastReset < cooldown)) {
-                    status.innerText = "❌ Déjà réclamé aujourd'hui !";
-                    status.style.color = "#ff4444";
+                const now = Date.now();
+                // 2. Vérif 24h
+                if (db.users[id] && (now - db.users[id].lastReset < 86400000)) {
+                    r.innerText = "❌ Déjà réclamé aujourd'hui !";
+                    r.style.color = "red";
                     return;
                 }
 
-                // 3. Mettre à jour localement
-                db.users[id] = {
-                    credits: (db.users[id]?.credits || 0) + 10,
-                    lastReset: now
+                // 3. Update local
+                db.users[id] = { 
+                    credits: (db.users[id]?.credits || 0) + 10, 
+                    lastReset: now 
                 };
 
-                // 4. Envoyer la mise à jour à JSONBin
-                const putRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                // 4. Sauvegarde sur JSONBin
+                const save = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-Master-Key": KEY 
                     },
                     body: JSON.stringify(db)
                 });
 
-                if (putRes.ok) {
-                    status.innerText = "✅ 10 Crédits ajoutés avec succès !";
-                    status.style.color = "#00ffaa";
+                if(save.ok) {
+                    r.innerText = "✅ 10 Crédits ajoutés !";
+                    r.style.color = "#00ffaa";
                 } else {
-                    status.innerText = "❌ Erreur de sauvegarde";
-                    status.style.color = "#ff4444";
+                    r.innerText = "❌ Erreur JSONBin";
+                    r.style.color = "red";
                 }
-
-            } catch (err) {
-                status.innerText = "❌ Erreur réseau ou API Key";
-                status.style.color = "#ff4444";
+            } catch(e) {
+                r.innerText = "❌ Erreur Réseau (CORS)";
+                r.style.color = "red";
             }
         }
     </script>
