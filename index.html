@@ -1,115 +1,98 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Axtra Credits</title>
-<style>
-body {
-    background: #0f0f0f;
-    color: #00ffff;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin:0;
-}
-.container {
-    text-align: center;
-    background: #111;
-    padding: 30px 50px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px #00ffff;
-}
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: #00ffff;
-    color: #000;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    margin-top: 20px;
-}
-.hidden { display: none; }
-button {
-    padding: 10px 20px;
-    background: #111;
-    border: 2px solid #00ffff;
-    border-radius: 8px;
-    color: #00ffff;
-    cursor: pointer;
-    margin-top: 20px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axtra Credits</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background: #151515;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #00c3ff;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 195, 255, 0.2);
+        }
+        input {
+            padding: 10px;
+            margin: 15px 0;
+            background: #222;
+            border: 1px solid #00c3ff;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            width: 80%;
+        }
+        button {
+            background: #00c3ff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover { background: #0088cc; }
+        #reponse { margin-top: 15px; font-weight: bold; }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1>Axtra Credits</h1>
-    <div id="login">
-        <a href="#" class="btn" id="loginBtn">Connexion avec Discord</a>
+
+    <div class="box">
+        <h2>Quelle est votre ID Discord ?</h2>
+        <input type="text" id="discordId" placeholder="Ex: 123456789012345678">
+        <br>
+        <button onclick="donnerCredits()">Valider</button>
+        <p id="reponse"></p>
     </div>
-    <div id="credits" class="hidden">
-        <p>Salut <span id="username"></span> !</p>
-        <p>Crédits actuels : <span id="credit-count">0</span></p>
-        <p id="message"></p>
-        <button id="getCreditsBtn">Récupérer 10 crédits</button>
-        <button id="logout">Se déconnecter</button>
-    </div>
-</div>
 
-<script>
-// Simulé pour front-end autonome (sans backend)
-let user = null;
+    <script>
+        async function donnerCredits() {
+            const id = document.getElementById('discordId').value;
+            const reponseTexte = document.getElementById('reponse');
 
-const loginDiv = document.getElementById("login");
-const creditsDiv = document.getElementById("credits");
-const usernameEl = document.getElementById("username");
-const creditCountEl = document.getElementById("credit-count");
-const messageEl = document.getElementById("message");
-const logoutBtn = document.getElementById("logout");
-const getCreditsBtn = document.getElementById("getCreditsBtn");
-const loginBtn = document.getElementById("loginBtn");
+            if (!id) {
+                reponseTexte.innerText = "❌ Met ton ID d'abord !";
+                reponseTexte.style.color = "red";
+                return;
+            }
 
-function updateUI() {
-    if(user){
-        loginDiv.classList.add("hidden");
-        creditsDiv.classList.remove("hidden");
-        usernameEl.textContent = user.username;
-        creditCountEl.textContent = user.credits;
-        messageEl.textContent = user.message;
-    } else {
-        loginDiv.classList.remove("hidden");
-        creditsDiv.classList.add("hidden");
-    }
-}
+            reponseTexte.innerText = "⏳ Vérification...";
+            reponseTexte.style.color = "white";
 
-// Simule connexion Discord
-loginBtn.onclick = () => {
-    user = { username: "Shadow123", credits: 0, lastReset: 0, message: "Bienvenue !" };
-    updateUI();
-};
-
-// Récupérer 10 crédits toutes les 24h
-getCreditsBtn.onclick = () => {
-    const now = Date.now();
-    if(!user.lastReset || now - user.lastReset >= 24*60*60*1000){
-        user.credits += 10;
-        user.lastReset = now;
-        user.message = "✅ Vous avez récupéré vos 10 crédits !";
-    } else {
-        const remaining = 24*60*60*1000 - (now - user.lastReset);
-        const hours = Math.floor(remaining/(1000*60*60));
-        const minutes = Math.floor((remaining%(1000*60*60))/(1000*60));
-        user.message = `⏳ Vous devez attendre ${hours}h ${minutes}m avant de récupérer vos crédits.`;
-    }
-    updateUI();
-};
-
-// Déconnexion
-logoutBtn.onclick = () => { user = null; updateUI(); };
-
-updateUI();
-</script>
+            try {
+                // On envoie l'ID à ton bot sur Katabump
+                const res = await fetch('/api/claim', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ discordId: id })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    reponseTexte.innerText = `✅ Succès ! 10 crédits ajoutés sur le compte.`;
+                    reponseTexte.style.color = "#00ffaa";
+                } else {
+                    reponseTexte.innerText = `❌ ${data.message}`;
+                    reponseTexte.style.color = "red";
+                }
+            } catch (err) {
+                reponseTexte.innerText = "❌ Le serveur (Katabump) est éteint.";
+                reponseTexte.style.color = "red";
+            }
+        }
+    </script>
 </body>
 </html>
