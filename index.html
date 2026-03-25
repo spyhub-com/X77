@@ -1,158 +1,115 @@
-const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const DiscordStrategy = require("passport-discord").Strategy;
-const axios = require("axios");
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// ---------------- CONFIGURATION ----------------
-const CLIENT_ID = "TON_CLIENT_ID_DISCORD";
-const CLIENT_SECRET = "TON_CLIENT_SECRET_DISCORD";
-const CALLBACK_URL = "http://localhost:3000/auth/discord/callback";
-
-const BIN_ID = "TON_BIN_ID_JSONBIN";
-const API_KEY = "TA_CLE_JSONBIN";
-
-// ---------------- SESSION ----------------
-app.use(session({
-    secret: "axtra-secret",
-    resave: false,
-    saveUninitialized: false
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
-
-passport.use(new DiscordStrategy({
-    clientID: CLIENT_ID,
-    clientSecret: CLIENT_SECRET,
-    callbackURL: CALLBACK_URL,
-    scope: ["identify"]
-}, (accessToken, refreshToken, profile, done) => done(null, profile)));
-
-// ---------------- AUTH ROUTES ----------------
-app.get("/auth/discord", passport.authenticate("discord"));
-app.get("/auth/discord/callback",
-    passport.authenticate("discord", { failureRedirect: "/" }),
-    (req, res) => res.redirect("/")
-);
-app.get("/auth/discord/logout", (req,res) => {
-    req.logout(() => { res.redirect("/"); });
-});
-
-// ---------------- JSONBIN FUNCTIONS ----------------
-async function getDB() {
-    try {
-        const res = await axios.get(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
-            { headers: { "X-Master-Key": API_KEY } });
-        return res.data.record;
-    } catch {
-        return { users: {} };
-    }
-}
-
-async function saveDB(data) {
-    try {
-        await axios.put(`https://api.jsonbin.io/v3/b/${BIN_ID}`, data,
-            { headers: { "X-Master-Key": API_KEY } });
-    } catch {}
-}
-
-function canGetCredits(lastReset) {
-    const now = new Date();
-    const last = new Date(lastReset);
-    return now.getTime() - last.getTime() >= 24*60*60*1000;
-}
-
-// ---------------- FRONT PAGE ----------------
-app.get("/", (req, res) => {
-    res.send(`<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <title>Axtra Credits</title>
 <style>
-body { background:#0f0f0f; color:#00ffff; font-family:Arial,sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; }
-.container { text-align:center; background:#111; padding:30px 50px; border-radius:15px; box-shadow:0 0 20px #00ffff; }
-.btn { display:inline-block; padding:10px 20px; background:#00ffff; color:#000; text-decoration:none; border-radius:8px; font-weight:bold; margin-top:20px; }
-.hidden { display:none; }
-button { padding:10px 20px; background:#111; border:2px solid #00ffff; border-radius:8px; color:#00ffff; cursor:pointer; margin-top:20px; }
+body {
+    background: #0f0f0f;
+    color: #00ffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin:0;
+}
+.container {
+    text-align: center;
+    background: #111;
+    padding: 30px 50px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ffff;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #00ffff;
+    color: #000;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.hidden { display: none; }
+button {
+    padding: 10px 20px;
+    background: #111;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    color: #00ffff;
+    cursor: pointer;
+    margin-top: 20px;
+}
 </style>
 </head>
 <body>
 <div class="container">
-<h1>Axtra Credits</h1>
-<div id="login">
-<a href="/auth/discord" class="btn">Connexion avec Discord</a>
+    <h1>Axtra Credits</h1>
+    <div id="login">
+        <a href="#" class="btn" id="loginBtn">Connexion avec Discord</a>
+    </div>
+    <div id="credits" class="hidden">
+        <p>Salut <span id="username"></span> !</p>
+        <p>Crédits actuels : <span id="credit-count">0</span></p>
+        <p id="message"></p>
+        <button id="getCreditsBtn">Récupérer 10 crédits</button>
+        <button id="logout">Se déconnecter</button>
+    </div>
 </div>
-<div id="credits" class="hidden">
-<p>Salut <span id="username"></span> !</p>
-<p>Crédits actuels : <span id="credit-count"></span></p>
-<p id="message"></p>
-<button id="logout">Se déconnecter</button>
-</div>
-</div>
+
 <script>
+// Simulé pour front-end autonome (sans backend)
+let user = null;
+
 const loginDiv = document.getElementById("login");
 const creditsDiv = document.getElementById("credits");
 const usernameEl = document.getElementById("username");
 const creditCountEl = document.getElementById("credit-count");
 const messageEl = document.getElementById("message");
 const logoutBtn = document.getElementById("logout");
+const getCreditsBtn = document.getElementById("getCreditsBtn");
+const loginBtn = document.getElementById("loginBtn");
 
-async function fetchCredits() {
-    try {
-        const res = await fetch("/api/credits");
-        const data = await res.json();
-        if(data.loggedIn){
-            loginDiv.classList.add("hidden");
-            creditsDiv.classList.remove("hidden");
-            usernameEl.textContent = data.username;
-            creditCountEl.textContent = data.credits;
-            messageEl.textContent = data.message;
-        }
-    } catch(err){ console.error(err); }
+function updateUI() {
+    if(user){
+        loginDiv.classList.add("hidden");
+        creditsDiv.classList.remove("hidden");
+        usernameEl.textContent = user.username;
+        creditCountEl.textContent = user.credits;
+        messageEl.textContent = user.message;
+    } else {
+        loginDiv.classList.remove("hidden");
+        creditsDiv.classList.add("hidden");
+    }
 }
 
-logoutBtn.onclick = async () => { await fetch("/auth/discord/logout"); window.location.reload(); }
+// Simule connexion Discord
+loginBtn.onclick = () => {
+    user = { username: "Shadow123", credits: 0, lastReset: 0, message: "Bienvenue !" };
+    updateUI();
+};
 
-fetchCredits();
+// Récupérer 10 crédits toutes les 24h
+getCreditsBtn.onclick = () => {
+    const now = Date.now();
+    if(!user.lastReset || now - user.lastReset >= 24*60*60*1000){
+        user.credits += 10;
+        user.lastReset = now;
+        user.message = "✅ Vous avez récupéré vos 10 crédits !";
+    } else {
+        const remaining = 24*60*60*1000 - (now - user.lastReset);
+        const hours = Math.floor(remaining/(1000*60*60));
+        const minutes = Math.floor((remaining%(1000*60*60))/(1000*60));
+        user.message = `⏳ Vous devez attendre ${hours}h ${minutes}m avant de récupérer vos crédits.`;
+    }
+    updateUI();
+};
+
+// Déconnexion
+logoutBtn.onclick = () => { user = null; updateUI(); };
+
+updateUI();
 </script>
 </body>
-</html>`);
-});
-
-// ---------------- API CREDITS ----------------
-app.get("/api/credits", async (req,res) => {
-    if(!req.isAuthenticated()) return res.json({ loggedIn:false });
-
-    const db = await getDB();
-    if(!db.users) db.users = {};
-
-    let user = db.users[req.user.id];
-    if(!user) user = { credits:0, lastReset: new Date(0) };
-
-    let message = "";
-    if(canGetCredits(user.lastReset)) {
-        user.credits += 10;
-        user.lastReset = new Date();
-        db.users[req.user.id] = user;
-        await saveDB(db);
-        message = "✅ Vous avez récupéré vos 10 crédits !";
-    } else {
-        const remaining = 24*60*60*1000 - (new Date() - new Date(user.lastReset));
-        const hours = Math.floor(remaining / (1000*60*60));
-        const minutes = Math.floor((remaining % (1000*60*60)) / (1000*60));
-        message = \`⏳ Vous devez attendre \${hours}h \${minutes}m avant de récupérer vos crédits.\`;
-    }
-
-    res.json({ loggedIn:true, username:req.user.username, credits:user.credits, message });
-});
-
-// ---------------- LANCEMENT ----------------
-app.listen(PORT, () => console.log(\`🚀 Axtra Credits en ligne sur http://localhost:\${PORT}\`));
+</html>
