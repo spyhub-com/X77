@@ -3,94 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axtra Credits</title>
+    <title>Axtra Credits - Récupération</title>
     <style>
-        body {
-            background-color: #0d0d0d;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .box {
-            background: #151515;
-            padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #00c3ff;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0, 195, 255, 0.2);
-        }
-        input {
-            padding: 10px;
-            margin: 15px 0;
-            background: #222;
-            border: 1px solid #00c3ff;
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-            width: 80%;
-        }
-        button {
-            background: #00c3ff;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover { background: #0088cc; }
-        #reponse { margin-top: 15px; font-weight: bold; }
+        body { background: #0d0d0d; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: #151515; padding: 40px; border-radius: 15px; border: 2px solid #00c3ff; text-align: center; box-shadow: 0 0 20px #00c3ff44; width: 320px; }
+        h2 { color: #00c3ff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: white; border-radius: 8px; text-align: center; box-sizing: border-box; outline: none; }
+        input:focus { border-color: #00c3ff; }
+        button { width: 100%; background: #00c3ff; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+        button:hover { background: #0088cc; box-shadow: 0 0 15px #00c3ff; }
+        #status { margin-top: 20px; font-size: 14px; font-weight: bold; min-height: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h2>Quelle est votre ID Discord ?</h2>
-        <input type="text" id="discordId" placeholder="Ex: 123456789012345678">
-        <br>
-        <button onclick="donnerCredits()">Valider</button>
-        <p id="reponse"></p>
+    <div class="card">
+        <h2>Axtra Credits</h2>
+        <p>Quelle est votre ID Discord ?</p>
+        <input type="text" id="userId" placeholder="Entrez votre ID ici">
+        <button onclick="claim()">Valider</button>
+        <div id="status"></div>
     </div>
 
     <script>
-        async function donnerCredits() {
-            const id = document.getElementById('discordId').value;
-            const reponseTexte = document.getElementById('reponse');
+        const BIN_ID = "69c3d98bb7ec241ddca074ea";
+        const API_KEY = "$2a$10$EBYT18QsDuSLonTCcO0ipuqMzAZErZtyTS4U7Qybk92N.jQWHeaTG";
 
-            if (!id) {
-                reponseTexte.innerText = "❌ Met ton ID d'abord !";
-                reponseTexte.style.color = "red";
-                return;
-            }
+        async function claim() {
+            const id = document.getElementById('userId').value;
+            const status = document.getElementById('status');
+            if (!id) return status.innerText = "❌ Entre une ID valide";
 
-            reponseTexte.innerText = "⏳ Vérification...";
-            reponseTexte.style.color = "white";
+            status.innerText = "⏳ Connexion à JSONBin...";
+            status.style.color = "white";
 
             try {
-                // On envoie l'ID à ton bot sur Katabump
-                const res = await fetch('/api/claim', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ discordId: id })
+                // 1. Récupérer les données actuelles
+                const getRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
                 });
-                
-                const data = await res.json();
-                
-                if (data.success) {
-                    reponseTexte.innerText = `✅ Succès ! 10 crédits ajoutés sur le compte.`;
-                    reponseTexte.style.color = "#00ffaa";
-                } else {
-                    reponseTexte.innerText = `❌ ${data.message}`;
-                    reponseTexte.style.color = "red";
+                const data = await getRes.json();
+                let db = data.record;
+
+                if (!db.users) db.users = {};
+                const now = Date.now();
+                const cooldown = 24 * 60 * 60 * 1000;
+
+                // 2. Vérifier le temps
+                if (db.users[id] && (now - db.users[id].lastReset < cooldown)) {
+                    status.innerText = "❌ Déjà réclamé aujourd'hui !";
+                    status.style.color = "#ff4444";
+                    return;
                 }
+
+                // 3. Mettre à jour localement
+                db.users[id] = {
+                    credits: (db.users[id]?.credits || 0) + 10,
+                    lastReset: now
+                };
+
+                // 4. Envoyer la mise à jour à JSONBin
+                const putRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify(db)
+                });
+
+                if (putRes.ok) {
+                    status.innerText = "✅ 10 Crédits ajoutés avec succès !";
+                    status.style.color = "#00ffaa";
+                } else {
+                    status.innerText = "❌ Erreur de sauvegarde";
+                    status.style.color = "#ff4444";
+                }
+
             } catch (err) {
-                reponseTexte.innerText = "❌ Le serveur (Katabump) est éteint.";
-                reponseTexte.style.color = "red";
+                status.innerText = "❌ Erreur réseau ou API Key";
+                status.style.color = "#ff4444";
             }
         }
     </script>
