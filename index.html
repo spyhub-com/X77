@@ -3,1016 +3,487 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXTRA HUB | BEYOND LIMITS</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>AXTRA HUB — BEYOND LIMITS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black: #0d0d0d;
-    --dark: #111111;
-    --dark2: #1a1a1a;
-    --dark3: #222222;
-    --card: #161616;
-    --red: #ff004f;
-    --red-dim: rgba(255, 0, 79, 0.15);
-    --red-glow: rgba(255, 0, 79, 0.4);
-    --red-border: rgba(255, 0, 79, 0.3);
-    --white: #f0f0f0;
-    --grey: #888;
-    --grey-light: #aaa;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Poppins', sans-serif;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  /* \u2500\u2500\u2500 NOISE OVERLAY \u2500\u2500\u2500 */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
-
-  /* \u2500\u2500\u2500 SCROLLBAR \u2500\u2500\u2500 */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--black); }
-  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
-
-  /* \u2500\u2500\u2500 NAV \u2500\u2500\u2500 */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 6%;
-    background: rgba(13,13,13,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255,0,79,0.1);
-  }
-
-  .nav-logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--white);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--red); }
-
-  .nav-links { display: flex; gap: 32px; list-style: none; }
-  .nav-links a {
-    color: var(--grey);
-    text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--red); }
-
-  /* \u2500\u2500\u2500 HERO \u2500\u2500\u2500 */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 120px 6% 80px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,0,79,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,0,79,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-  }
-
-  .hero-glow {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 300px;
-    background: radial-gradient(ellipse, rgba(255,0,79,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid var(--red-border);
-    background: var(--red-dim);
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 28px;
-    animation: fadeInDown 0.8s ease;
-  }
-  .hero-badge-dot {
-    width: 6px; height: 6px;
-    background: var(--red);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--red-glow); }
-    50% { opacity: 0.6; box-shadow: 0 0 0 6px transparent; }
-  }
-
-  h1.neon-text {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(2.8rem, 7vw, 6rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--white);
-    text-shadow:
-      0 0 20px rgba(255,0,79,0.6),
-      0 0 60px rgba(255,0,79,0.2);
-    margin-bottom: 8px;
-    animation: fadeInDown 0.9s ease 0.1s both;
-  }
-
-  h1.neon-text .red { color: var(--red); }
-
-  .hero-divider {
-    width: 80px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--red), transparent);
-    margin: 20px auto;
-    animation: fadeIn 1s ease 0.3s both;
-  }
-
-  .hero-sub {
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--grey-light);
-    font-weight: 300;
-    letter-spacing: 2px;
-    max-width: 500px;
-    margin: 0 auto 40px;
-    animation: fadeIn 1s ease 0.4s both;
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    margin-bottom: 44px;
-    animation: fadeIn 1s ease 0.5s both;
-  }
-
-  .stat {
-    text-align: center;
-  }
-  .stat-num {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--red);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--grey);
-    margin-top: 4px;
-  }
-
-  .hero-buttons {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeInUp 1s ease 0.6s both;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 32px;
-    background: var(--red);
-    color: var(--white);
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.1);
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-  }
-  .btn-primary:hover::before { transform: translateX(0); }
-  .btn-primary:hover {
-    box-shadow: 0 0 30px var(--red-glow), 0 0 60px rgba(255,0,79,0.2);
-    transform: translateY(-2px);
-  }
-
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 13px 30px;
-    background: transparent;
-    color: var(--white);
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    border: 1px solid var(--red-border);
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    transition: all 0.25s;
-  }
-  .btn-secondary:hover {
-    background: var(--red-dim);
-    border-color: var(--red);
-    transform: translateY(-2px);
-  }
-
-  /* \u2500\u2500\u2500 SCROLL INDICATOR \u2500\u2500\u2500 */
-  .scroll-hint {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    color: var(--grey);
-    font-size: 0.6rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    animation: fadeIn 1.5s ease 1s both;
-  }
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(180deg, var(--red), transparent);
-    animation: scrollDown 2s ease infinite;
-  }
-  @keyframes scrollDown {
-    0% { transform: scaleY(0); transform-origin: top; }
-    50% { transform: scaleY(1); transform-origin: top; }
-    51% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
-  }
-
-  /* \u2500\u2500\u2500 SECTIONS \u2500\u2500\u2500 */
-  section { padding: 100px 6%; }
-  section:nth-child(even) { background: var(--dark2); }
-
-  .section-tag {
-    font-size: 0.65rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--red);
-    font-weight: 600;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  h2.section-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    line-height: 1.1;
-    margin-bottom: 16px;
-    text-shadow: 0 0 30px rgba(255,0,79,0.3);
-  }
-  h2.section-title .red { color: var(--red); }
-
-  .section-desc {
-    color: var(--grey-light);
-    font-size: 0.95rem;
-    line-height: 1.8;
-    max-width: 600px;
-  }
-
-  /* \u2500\u2500\u2500 SECURITY SECTION \u2500\u2500\u2500 */
-  .security-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .security-features {
-    display: grid;
-    gap: 16px;
-    margin-top: 36px;
-  }
-
-  .feat-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 20px 22px;
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-left: 2px solid var(--red);
-    transition: all 0.25s;
-  }
-  .feat-card:hover {
-    background: #1c1c1c;
-    border-left-color: var(--red);
-    box-shadow: -4px 0 20px rgba(255,0,79,0.2);
-    transform: translateX(4px);
-  }
-
-  .feat-icon {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    background: var(--red-dim);
-    border: 1px solid var(--red-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-  }
-
-  .feat-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--white);
-    margin-bottom: 4px;
-  }
-  .feat-desc { font-size: 0.78rem; color: var(--grey); line-height: 1.6; }
-
-  /* Security visual */
-  .security-visual {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .shield-container {
-    position: relative;
-    width: 280px;
-    height: 280px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .shield-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid var(--red-border);
-    animation: spinRing 20s linear infinite;
-  }
-  .shield-ring:nth-child(1) { width: 280px; height: 280px; animation-duration: 30s; }
-  .shield-ring:nth-child(2) { width: 220px; height: 220px; animation-direction: reverse; animation-duration: 20s; border-style: dashed; }
-  .shield-ring:nth-child(3) { width: 160px; height: 160px; animation-duration: 15s; }
-
-  .shield-ring::before {
-    content: '';
-    position: absolute;
-    top: -3px; left: 50%;
-    width: 6px; height: 6px;
-    background: var(--red);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--red);
-  }
-
-  @keyframes spinRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-  .shield-core {
-    width: 100px;
-    height: 100px;
-    background: var(--red-dim);
-    border: 2px solid var(--red);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.8rem;
-    box-shadow: 0 0 40px rgba(255,0,79,0.3), inset 0 0 30px rgba(255,0,79,0.1);
-    position: relative;
-    z-index: 2;
-  }
-
-  /* \u2500\u2500\u2500 TEAM SECTION \u2500\u2500\u2500 */
-  .team-header {
-    text-align: center;
-    margin-bottom: 60px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .team-card {
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.05);
-    padding: 36px 28px;
-    text-align: center;
-    position: relative;
-    transition: all 0.3s;
-    overflow: hidden;
-  }
-  .team-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--red);
-    transform: scaleX(0);
-    transition: transform 0.3s;
-  }
-  .team-card:hover::before { transform: scaleX(1); }
-  .team-card:hover {
-    border-color: var(--red-border);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255,0,79,0.1);
-    transform: translateY(-6px);
-  }
-
-  .team-card.founder { border-color: var(--red-border); }
-  .team-card.founder::before { transform: scaleX(1); }
-
-  .avatar-wrap {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 20px;
-  }
-
-  .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--red-border);
-    background: var(--dark3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--red);
-    overflow: hidden;
-  }
-
-  .avatar-status {
-    position: absolute;
-    bottom: 2px; right: 2px;
-    width: 14px; height: 14px;
-    background: #43b581;
-    border-radius: 50%;
-    border: 2px solid var(--card);
-  }
-
-  .member-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--white);
-    margin-bottom: 4px;
-  }
-
-  .member-role {
-    display: inline-block;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--red);
-    background: var(--red-dim);
-    border: 1px solid var(--red-border);
-    padding: 3px 10px;
-    margin-bottom: 14px;
-  }
-
-  .member-desc {
-    font-size: 0.78rem;
-    color: var(--grey);
-    line-height: 1.7;
-  }
-
-  /* \u2500\u2500\u2500 BOT SECTION \u2500\u2500\u2500 */
-  .bot-section-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-  }
-
-  .bot-visual {
-    background: var(--card);
-    border: 1px solid var(--red-border);
-    padding: 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .bot-visual::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,0,79,0.05) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .terminal-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .t-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-  }
-  .t-dot:nth-child(1) { background: #ff5f57; }
-  .t-dot:nth-child(2) { background: #febc2e; }
-  .t-dot:nth-child(3) { background: #28c840; }
-  .t-title { font-size: 0.7rem; color: var(--grey); letter-spacing: 2px; margin-left: 8px; }
-
-  .terminal-line {
-    font-family: 'Courier New', monospace;
-    font-size: 0.78rem;
-    line-height: 1.9;
-    color: var(--grey);
-  }
-  .terminal-line .cmd { color: var(--red); }
-  .terminal-line .ok { color: #28c840; }
-  .terminal-line .info { color: #5e9eff; }
-  .terminal-cursor {
-    display: inline-block;
-    width: 8px; height: 14px;
-    background: var(--red);
-    animation: blink 1s step-end infinite;
-    vertical-align: middle;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .bot-features {
-    display: grid;
-    gap: 12px;
-    margin-top: 0;
-  }
-
-  .bot-feat {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.04);
-    transition: all 0.2s;
-  }
-  .bot-feat:hover {
-    border-color: var(--red-border);
-    background: #1c1c1c;
-  }
-  .bot-feat-icon { font-size: 1.2rem; min-width: 24px; }
-  .bot-feat-text { font-size: 0.82rem; color: var(--grey-light); }
-  .bot-feat-text strong { color: var(--white); font-weight: 600; }
-
-  /* \u2500\u2500\u2500 DISCORD LIVE \u2500\u2500\u2500 */
-  .discord-section {
-    text-align: center;
-    padding: 80px 6%;
-  }
-  .discord-card {
-    display: inline-flex;
-    align-items: center;
-    gap: 20px;
-    background: var(--card);
-    border: 1px solid var(--red-border);
-    padding: 28px 40px;
-    margin-top: 40px;
-    transition: all 0.3s;
-  }
-  .discord-card:hover {
-    box-shadow: 0 0 40px rgba(255,0,79,0.15);
-    transform: translateY(-3px);
-  }
-  .discord-icon { font-size: 2.8rem; }
-  .discord-info { text-align: left; }
-  .discord-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-  }
-  .discord-online {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    color: var(--grey);
-    margin-top: 4px;
-  }
-  .online-dot {
-    width: 8px; height: 8px;
-    background: #43b581;
-    border-radius: 50%;
-    box-shadow: 0 0 6px #43b581;
-  }
-  .online-count { color: #43b581; font-weight: 600; }
-
-  /* \u2500\u2500\u2500 FOOTER \u2500\u2500\u2500 */
-  footer {
-    background: var(--black);
-    border-top: 1px solid rgba(255,0,79,0.1);
-    padding: 50px 6% 30px;
-  }
-
-  .footer-inner {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 40px;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding-bottom: 40px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .footer-brand-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    margin-bottom: 12px;
-  }
-  .footer-brand-name span { color: var(--red); }
-  .footer-brand-desc { font-size: 0.8rem; color: var(--grey); line-height: 1.8; max-width: 280px; }
-
-  .footer-col-title {
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--red);
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .footer-links a {
-    color: var(--grey);
-    text-decoration: none;
-    font-size: 0.82rem;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--white); }
-
-  .footer-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 28px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .footer-copy { font-size: 0.75rem; color: var(--grey); letter-spacing: 1px; }
-  .footer-copy span { color: var(--red); }
-
-  .footer-socials { display: flex; gap: 12px; }
-  .social-btn {
-    width: 38px; height: 38px;
-    border: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--grey);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-  }
-  .social-btn:hover {
-    border-color: var(--red);
-    color: var(--red);
-    box-shadow: 0 0 15px rgba(255,0,79,0.2);
-  }
-
-  /* \u2500\u2500\u2500 ANIMATIONS \u2500\u2500\u2500 */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* \u2500\u2500\u2500 RESPONSIVE \u2500\u2500\u2500 */
-  @media (max-width: 900px) {
-    .security-grid, .bot-section-inner { grid-template-columns: 1fr; }
-    .security-visual { display: none; }
-    .footer-inner { grid-template-columns: 1fr 1fr; }
-    nav .nav-links { display: none; }
-  }
-
-  @media (max-width: 600px) {
-    section { padding: 70px 5%; }
-    .hero-stats { gap: 24px; }
-    .footer-inner { grid-template-columns: 1fr; }
-    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
-    .discord-card { flex-direction: column; text-align: center; }
-    .discord-info { text-align: center; }
-    .discord-online { justify-content: center; }
-  }
+:root {
+  --bg:       #080808;
+  --bg2:      #0e0e0e;
+  --bg3:      #131313;
+  --surface:  #111111;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.12);
+  --amber:    #ff9500;
+  --amber2:   #ffb340;
+  --amber-dim: rgba(255,149,0,0.12);
+  --amber-glow:rgba(255,149,0,0.35);
+  --white:    #f5f0e8;
+  --offwhite: #c8c0b0;
+  --grey:     #555;
+  --grey2:    #888;
+  --mono: 'IBM Plex Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'Barlow Condensed', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--body);overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9998}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--amber)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:60px;background:rgba(8,8,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:border-color .3s}
+.nav-logo{font-family:var(--display);font-size:1.55rem;letter-spacing:4px;color:var(--white);text-decoration:none}
+.nav-logo .sl{color:var(--amber)}
+.nav-links{display:flex;gap:0;list-style:none}
+.nav-links a{display:block;padding:0 18px;height:60px;line-height:60px;font-family:var(--mono);font-size:.62rem;letter-spacing:2px;color:var(--grey2);text-decoration:none;text-transform:uppercase;border-right:1px solid var(--border);transition:all .2s}
+.nav-links li:first-child a{border-left:1px solid var(--border)}
+.nav-links a:hover{color:var(--white);background:rgba(255,255,255,.03)}
+.nav-cta{display:flex;align-items:center;gap:9px;padding:9px 20px;background:var(--amber);color:#000;text-decoration:none;font-family:var(--mono);font-size:.62rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;transition:all .2s}
+.nav-cta:hover{background:var(--amber2);transform:translateY(-1px)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5% 80px;position:relative;overflow:hidden}
+.h-bg{position:absolute;bottom:-60px;left:-2%;font-family:var(--display);font-size:clamp(100px,18vw,200px);color:rgba(255,255,255,.018);letter-spacing:-4px;line-height:1;user-select:none;pointer-events:none;white-space:nowrap}
+.h-vline{position:absolute;top:0;width:1px;height:100%}
+.h-vline.l1{right:16%;background:linear-gradient(180deg,transparent 0%,var(--amber) 40%,var(--amber) 60%,transparent 100%);opacity:.12}
+.h-vline.l2{right:calc(16% + 56px);background:linear-gradient(180deg,transparent 0%,var(--border2) 50%,transparent 100%)}
+.h-corner{position:absolute;top:80px;right:5%;width:180px;height:180px;border-top:1px solid var(--amber);border-right:1px solid var(--amber);opacity:.25}
+.h-corner::before{content:'';position:absolute;top:18px;right:18px;width:110px;height:110px;border-top:1px solid var(--border2);border-right:1px solid var(--border2)}
+.h-tag{font-family:var(--mono);font-size:.62rem;color:var(--amber);letter-spacing:4px;text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:14px;animation:fadeUp .8s ease both}
+.h-tag::before{content:'';width:36px;height:1px;background:var(--amber)}
+h1{font-family:var(--display);font-size:clamp(5rem,13vw,12rem);line-height:.88;letter-spacing:-2px;animation:fadeUp .9s ease .1s both}
+h1 .out{-webkit-text-stroke:1px var(--offwhite);color:transparent}
+h1 .am{color:var(--amber)}
+.h-sub-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:38px;flex-wrap:wrap;gap:20px;animation:fadeUp 1s ease .3s both}
+.h-slogan{font-size:1.25rem;font-weight:300;color:var(--offwhite);letter-spacing:3px;text-transform:uppercase;max-width:380px;line-height:1.5}
+.h-btns{display:flex;gap:10px;flex-wrap:wrap}
+.stats-bar{display:flex;border-top:1px solid var(--border);margin-top:56px;animation:fadeUp 1s ease .4s both}
+.st{flex:1;padding:18px 22px;border-right:1px solid var(--border)}
+.st:last-child{border-right:none}
+.st-val{font-family:var(--display);font-size:2.4rem;letter-spacing:1px;color:var(--amber);line-height:1}
+.st-lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--grey);text-transform:uppercase;margin-top:4px}
+
+/* BUTTONS */
+.btn-main{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;background:var(--amber);color:#000;text-decoration:none;font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;transition:all .22s;position:relative;overflow:hidden}
+.btn-main::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.2);transform:translateX(-110%) skewX(-15deg);transition:transform .4s}
+.btn-main:hover::before{transform:translateX(110%) skewX(-15deg)}
+.btn-main:hover{background:var(--amber2);transform:translateY(-2px);box-shadow:0 10px 28px var(--amber-glow)}
+.btn-ghost{display:inline-flex;align-items:center;gap:9px;padding:14px 26px;background:transparent;color:var(--offwhite);text-decoration:none;font-family:var(--mono);font-size:.68rem;letter-spacing:3px;text-transform:uppercase;border:1px solid var(--border2);transition:all .22s}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
+
+/* SECTION BASE */
+.sec{padding:110px 5%;position:relative}
+.sec.alt{background:var(--bg2)}
+.s-num{font-family:var(--mono);font-size:.58rem;color:var(--amber);letter-spacing:3px;margin-bottom:14px;display:block}
+h2{font-family:var(--display);font-size:clamp(3rem,6vw,5.5rem);line-height:.9;letter-spacing:1px;margin-bottom:22px}
+h2 .l2{display:block;-webkit-text-stroke:1px var(--offwhite);color:transparent}
+h2 .a{color:var(--amber)}
+.s-body{font-size:1rem;font-weight:300;color:var(--offwhite);line-height:1.8;letter-spacing:.4px;max-width:500px}
+
+/* SECURITY */
+.sec-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;max-width:1180px;margin:0 auto}
+.feat-list{margin-top:44px}
+.feat{display:grid;grid-template-columns:56px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid var(--border);transition:all .22s}
+.feat:first-child{border-top:1px solid var(--border)}
+.feat:hover{background:rgba(255,255,255,.015);margin:0 -16px;padding:22px 16px}
+.f-num{font-family:var(--mono);font-size:.62rem;color:var(--amber);letter-spacing:2px;padding-top:3px}
+.f-title{font-family:var(--body);font-size:1.15rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:5px}
+.f-desc{font-size:.88rem;font-weight:300;color:var(--grey2);line-height:1.7}
+.sec-vis{position:sticky;top:100px}
+.grid-disp{width:100%;aspect-ratio:1;position:relative;background:var(--surface);border:1px solid var(--border2);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.grid-disp::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:38px 38px}
+.scan{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:scan 3s linear infinite}
+@keyframes scan{0%{top:0;opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+.c-tl,.c-br{position:absolute;width:18px;height:18px;border-color:var(--amber);border-style:solid}
+.c-tl{top:12px;left:12px;border-width:2px 0 0 2px}
+.c-br{bottom:12px;right:12px;border-width:0 2px 2px 0}
+.g-core{position:relative;z-index:2;text-align:center}
+.g-icon{font-size:3.5rem;display:block;margin-bottom:12px;filter:drop-shadow(0 0 18px var(--amber));animation:flt 4s ease-in-out infinite}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.g-lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:4px;color:var(--amber);text-transform:uppercase}
+.chips{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.chip{display:flex;align-items:center;gap:10px;padding:9px 13px;background:var(--surface);border:1px solid var(--border);font-family:var(--mono);font-size:.62rem;letter-spacing:1px;color:var(--grey2)}
+.cdot{width:6px;height:6px;border-radius:50%;background:#3ddc84;box-shadow:0 0 7px #3ddc84;flex-shrink:0;animation:cp 2s ease-in-out infinite}
+.cdot.o{background:var(--amber);box-shadow:0 0 7px var(--amber)}
+@keyframes cp{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* BOT */
+.bot-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:76px;align-items:center;max-width:1180px;margin:0 auto}
+.terminal{background:#060606;border:1px solid var(--border2);overflow:hidden}
+.t-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;background:var(--surface);border-bottom:1px solid var(--border)}
+.t-dots{display:flex;gap:5px}
+.td{width:10px;height:10px;border-radius:50%}
+.td:nth-child(1){background:#ff5f57}.td:nth-child(2){background:#febc2e}.td:nth-child(3){background:#28c840}
+.t-title{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--grey)}
+.t-live{font-family:var(--mono);font-size:.52rem;color:var(--amber);letter-spacing:1px}
+.t-body{padding:18px 18px 22px;font-family:var(--mono);font-size:.72rem;line-height:1.95}
+.tl{display:block}
+.tl .p{color:#3ddc84}.tl .cmd{color:var(--amber)}.tl .val{color:#79c0ff}.tl .ok{color:#3ddc84}.tl .dim{color:var(--grey)}.tl .w{color:#febc2e}
+.cur{display:inline-block;width:7px;height:13px;background:var(--amber);vertical-align:middle;animation:blk 1.1s step-end infinite}
+@keyframes blk{50%{opacity:0}}
+.bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:0}
+.bf{background:var(--bg);padding:22px 20px;transition:background .2s}
+.bf:hover{background:var(--surface)}
+.bf-ic{font-size:1.3rem;margin-bottom:8px;display:block}
+.bf-name{font-family:var(--body);font-size:.9rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:3px}
+.bf-desc{font-size:.8rem;font-weight:300;color:var(--grey2);line-height:1.6}
+
+/* TEAM */
+.team-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px;flex-wrap:wrap;gap:20px;max-width:1180px;margin-left:auto;margin-right:auto}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);max-width:1180px;margin:0 auto}
+.mc{background:var(--bg2);padding:32px 26px;position:relative;overflow:hidden;transition:background .3s}
+.mc:hover{background:var(--bg3)}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.mc:hover::before,.mc.lead::before{transform:scaleX(1)}
+.mc.lead{background:var(--bg3)}
+.mc:hover .m-av{border-color:var(--amber);box-shadow:0 0 18px var(--amber-dim)}
+.m-av{width:60px;height:60px;border-radius:2px;border:1px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.5rem;color:var(--amber);margin-bottom:18px;transition:all .3s}
+.m-name{font-family:var(--display);font-size:1.7rem;letter-spacing:2px;color:var(--white);margin-bottom:3px}
+.m-role{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:12px}
+.m-bio{font-size:.82rem;font-weight:300;color:var(--grey2);line-height:1.7}
+
+/* JOIN */
+.join-sec{padding:110px 5%;position:relative;overflow:hidden}
+.join-bgnm{position:absolute;right:2%;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:28vw;color:rgba(255,255,255,.015);pointer-events:none;user-select:none;line-height:1}
+.join-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1180px;margin:0 auto}
+.join-text p{font-size:1rem;font-weight:300;color:var(--offwhite);line-height:1.8;margin-bottom:32px}
+.dc-card{background:var(--surface);border:1px solid var(--border2);padding:30px;position:relative}
+.dc-card::before{content:'EN DIRECT';position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:.52rem;letter-spacing:3px;color:var(--amber);border:1px solid var(--amber);padding:2px 7px}
+.dc-icon{font-size:2.2rem;margin-bottom:14px;display:block}
+.dc-name{font-family:var(--display);font-size:1.7rem;letter-spacing:2px;margin-bottom:7px}
+.dc-online{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.66rem;letter-spacing:1px;color:var(--grey2);margin-bottom:22px}
+.dc-dot{width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 5px #3ddc84}
+.dc-cnt{color:#3ddc84;font-weight:500}
+.bot-add{margin-top:14px;background:var(--bg3);border:1px solid var(--border);padding:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;transition:border-color .2s}
+.bot-add:hover{border-color:var(--amber)}
+.bot-add-txt{font-size:.82rem;font-weight:300;color:var(--offwhite)}
+.bot-add-txt strong{display:block;font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--white);margin-bottom:2px;font-weight:500;text-transform:uppercase}
+
+/* FOOTER */
+footer{background:#040404;border-top:1px solid var(--border);padding:58px 5% 28px}
+.f-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;max-width:1180px;margin:0 auto;padding-bottom:44px;border-bottom:1px solid var(--border)}
+.f-logo{font-family:var(--display);font-size:2rem;letter-spacing:4px;margin-bottom:10px}
+.f-logo span{color:var(--amber)}
+.f-desc{font-size:.82rem;font-weight:300;color:var(--grey);line-height:1.8;max-width:240px}
+.f-col-t{font-family:var(--mono);font-size:.58rem;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:18px;padding-bottom:9px;border-bottom:1px solid var(--border)}
+.f-links{list-style:none;display:flex;flex-direction:column;gap:11px}
+.f-links a{font-size:.82rem;font-weight:300;color:var(--grey2);text-decoration:none;letter-spacing:.4px;transition:color .2s}
+.f-links a:hover{color:var(--amber)}
+.f-bot{display:flex;align-items:center;justify-content:space-between;padding-top:26px;max-width:1180px;margin:0 auto;flex-wrap:wrap;gap:14px}
+.f-copy{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--grey)}
+.f-copy em{color:var(--amber);font-style:normal}
+.f-socs{display:flex;gap:7px}
+.f-soc{width:34px;height:34px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--grey2);text-decoration:none;font-family:var(--mono);font-size:.58rem;transition:all .2s}
+.f-soc:hover{border-color:var(--amber);color:var(--amber)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .sec-layout,.bot-layout,.join-inner{grid-template-columns:1fr;gap:44px}
+  .sec-vis{position:static}
+  .team-grid{grid-template-columns:1fr 1fr}
+  .f-top{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  h1{font-size:4rem}
+  .team-grid{grid-template-columns:1fr}
+  .bot-grid{grid-template-columns:1fr}
+  .f-top{grid-template-columns:1fr}
+  .stats-bar{flex-wrap:wrap}
+  .st{min-width:50%}
+  .f-bot{flex-direction:column;text-align:center}
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">AXTRA <span>HUB</span></a>
+<nav id="navbar">
+  <a href="#" class="nav-logo">AXTRA<span class="sl">/</span>HUB</a>
   <ul class="nav-links">
-    <li><a href="#security">Security</a></li>
-    <li><a href="#bot">Bot</a></li>
-    <li><a href="#team">Team</a></li>
-    <li><a href="#join">Join</a></li>
+    <li><a href="#securite">Sécurité</a></li>
+    <li><a href="#bot">Le Bot</a></li>
+    <li><a href="#equipe">L'Équipe</a></li>
+    <li><a href="#rejoindre">Rejoindre</a></li>
   </ul>
-  <a href="https://discord.gg" class="btn-primary" style="padding:10px 22px;font-size:0.7rem;">
-    <svg width="14" height="11" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02 8.07 8.07 0 0 0-.36.73 10.72 10.72 0 0 0-3.22 0A7.5 7.5 0 0 0 5.03.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22a.04.04 0 0 0-.02.02C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03 11.65 11.65 0 0 0 3.51 1.77.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02 11.62 11.62 0 0 0 3.51-1.77.04.04 0 0 0 .02-.03c.29-2.99-.49-5.59-2.06-7.82a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42S3.98 4.63 4.68 4.63s1.28.64 1.26 1.42c0 .78-.56 1.42-1.26 1.42Zm4.64 0c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.28.64 1.26 1.42c0 .78-.56 1.42-1.26 1.42Z"/></svg>
-    Discord
+  <a href="https://discord.gg" class="nav-cta">
+    <svg width="13" height="10" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
+    Rejoindre
   </a>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
+  <div class="h-bg">AXTRA</div>
+  <div class="h-vline l1"></div>
+  <div class="h-vline l2"></div>
+  <div class="h-corner"></div>
 
-  <div class="hero-badge">
-    <span class="hero-badge-dot"></span>
-    Serveur actif \u00b7 Community Hub
-  </div>
+  <div class="h-tag">Serveur Discord · Communauté active</div>
 
-  <h1 class="neon-text">AXTRA <span class="red">HUB</span><br>BEYOND LIMITS</h1>
-  <div class="hero-divider"></div>
-  <p class="hero-sub">Your Ultimate Hub for Innovation &amp; Community.</p>
+  <h1>
+    BEYOND<br>
+    <span class="out">LIMI</span><span class="am">TS</span>
+  </h1>
 
-  <div class="hero-stats" id="hero-stats">
-    <div class="stat">
-      <div class="stat-num" id="member-count">\u2014</div>
-      <div class="stat-label">Members</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="online-count">\u2014</div>
-      <div class="stat-label">Online</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">24/7</div>
-      <div class="stat-label">Uptime</div>
+  <div class="h-sub-row">
+    <div class="h-slogan">Votre hub ultime pour l'innovation et la communauté.</div>
+    <div class="h-btns">
+      <a href="https://discord.gg" class="btn-main">
+        <svg width="15" height="12" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
+        Rejoindre le Discord
+      </a>
+      <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0" class="btn-ghost">⚙ Ajouter le bot</a>
     </div>
   </div>
 
-  <div class="hero-buttons">
-    <a href="https://discord.gg" class="btn-primary">
-      <svg width="18" height="14" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02 8.07 8.07 0 0 0-.36.73 10.72 10.72 0 0 0-3.22 0A7.5 7.5 0 0 0 5.03.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22a.04.04 0 0 0-.02.02C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03 11.65 11.65 0 0 0 3.51 1.77.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02 11.62 11.62 0 0 0 3.51-1.77.04.04 0 0 0 .02-.03c.29-2.99-.49-5.59-2.06-7.82a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42S3.98 4.63 4.68 4.63s1.28.64 1.26 1.42c0 .78-.56 1.42-1.26 1.42Zm4.64 0c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.28.64 1.26 1.42c0 .78-.56 1.42-1.26 1.42Z"/></svg>
-      JOIN OUR DISCORD
-    </a>
-    <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&permissions=8&integration_type=0&scope=bot" class="btn-secondary">
-      \u2699\ufe0f Add Bot to Server
-    </a>
-  </div>
-
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
-    Scroll
+  <div class="stats-bar">
+    <div class="st"><div class="st-val" id="s-online">—</div><div class="st-lbl">Membres en ligne</div></div>
+    <div class="st"><div class="st-val" id="s-total">—</div><div class="st-lbl">Total membres</div></div>
+    <div class="st"><div class="st-val">24/7</div><div class="st-lbl">Disponibilité bot</div></div>
+    <div class="st"><div class="st-val">100%</div><div class="st-lbl">Sécurité active</div></div>
   </div>
 </section>
 
-<!-- SECURITY SECTION -->
-<section id="security">
-  <div class="security-grid">
+<!-- SÉCURITÉ -->
+<section id="securite" class="sec alt">
+  <div class="sec-layout">
     <div>
-      <span class="section-tag reveal">// Protection & Automation</span>
-      <h2 class="section-title reveal">Axtra Core: Unmatched<br><span class="red">Security</span> & Automation</h2>
-      <p class="section-desc reveal">Le serveur est prot\u00e9g\u00e9 par un syst\u00e8me Anti-Raid enti\u00e8rement personnalis\u00e9 et un AutoMod sur-mesure, con\u00e7us pour garantir une exp\u00e9rience s\u00fbre et fluide pour toute la communaut\u00e9.</p>
-
-      <div class="security-features">
-        <div class="feat-card reveal">
-          <div class="feat-icon">\ud83d\udee1\ufe0f</div>
-          <div>
-            <div class="feat-title">Advanced Anti-Raid System</div>
-            <div class="feat-desc">D\u00e9tection automatique des raids en temps r\u00e9el. Blocage imm\u00e9diat, logs d\u00e9taill\u00e9s et alertes staff instantan\u00e9es.</div>
-          </div>
-        </div>
-        <div class="feat-card reveal">
-          <div class="feat-icon">\u2699\ufe0f</div>
-          <div>
-            <div class="feat-title">Custom AutoMod Features</div>
-            <div class="feat-desc">Filtrage intelligent du spam, des liens malveillants et des contenus inappropri\u00e9s. R\u00e8gles enti\u00e8rement personnalisables.</div>
-          </div>
-        </div>
-        <div class="feat-card reveal">
-          <div class="feat-icon">\ud83d\udd10</div>
-          <div>
-            <div class="feat-title">Role & Permission Manager</div>
-            <div class="feat-desc">Syst\u00e8me de r\u00f4les avanc\u00e9 avec permissions granulaires et gestion automatis\u00e9e des acc\u00e8s.</div>
-          </div>
-        </div>
-        <div class="feat-card reveal">
-          <div class="feat-icon">\ud83d\udcca</div>
-          <div>
-            <div class="feat-title">Real-Time Monitoring</div>
-            <div class="feat-desc">Dashboard de surveillance en temps r\u00e9el. Statistiques, alertes et historique des \u00e9v\u00e9nements complets.</div>
-          </div>
-        </div>
+      <span class="s-num reveal">— 01 / Protection</span>
+      <h2 class="reveal">AXTRA<br><span class="l2">CORE</span><br><span class="a">SHIELD</span></h2>
+      <p class="s-body reveal">Le serveur est blindé par un système Anti-Raid entièrement sur-mesure et un AutoMod intelligent conçu pour maintenir un environnement sûr, fluide et agréable pour tous les membres.</p>
+      <div class="feat-list">
+        <div class="feat reveal"><div class="f-num">01</div><div><div class="f-title">Système Anti-Raid Avancé</div><div class="f-desc">Détection automatique des raids en temps réel. Blocage immédiat, logs détaillés et alertes staff instantanées.</div></div></div>
+        <div class="feat reveal"><div class="f-num">02</div><div><div class="f-title">AutoMod Personnalisé</div><div class="f-desc">Filtrage intelligent du spam, des liens malveillants et des contenus inappropriés. Règles entièrement configurables.</div></div></div>
+        <div class="feat reveal"><div class="f-num">03</div><div><div class="f-title">Gestion des Permissions</div><div class="f-desc">Système de rôles granulaire avec attribution automatique et gestion avancée des accès.</div></div></div>
+        <div class="feat reveal"><div class="f-num">04</div><div><div class="f-title">Monitoring Temps Réel</div><div class="f-desc">Surveillance continue, historique des événements complet et alertes proactives.</div></div></div>
       </div>
     </div>
-
-    <div class="security-visual reveal">
-      <div class="shield-container">
-        <div class="shield-ring"></div>
-        <div class="shield-ring"></div>
-        <div class="shield-ring"></div>
-        <div class="shield-core">\ud83d\udee1\ufe0f</div>
+    <div class="sec-vis reveal">
+      <div class="grid-disp">
+        <div class="scan"></div>
+        <div class="c-tl"></div><div class="c-br"></div>
+        <div class="g-core">
+          <span class="g-icon">🛡️</span>
+          <div class="g-lbl">Système actif</div>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><div class="cdot"></div>Anti-Raid — OPÉRATIONNEL</div>
+        <div class="chip"><div class="cdot"></div>AutoMod — OPÉRATIONNEL</div>
+        <div class="chip"><div class="cdot o"></div>Surveillance — EN COURS</div>
+        <div class="chip"><div class="cdot"></div>Logs — SYNCHRONISÉS</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BOT SECTION -->
-<section id="bot">
-  <div class="bot-section-inner">
-    <div class="bot-visual reveal">
-      <div class="terminal-bar">
-        <div class="t-dot"></div>
-        <div class="t-dot"></div>
-        <div class="t-dot"></div>
-        <span class="t-title">AXTRA CORE \u2014 TERMINAL</span>
-      </div>
-      <div class="terminal-line"><span class="cmd">$</span> axtra --status</div>
-      <div class="terminal-line"><span class="ok">\u2713</span> Bot online &amp; operational</div>
-      <div class="terminal-line"><span class="info">\u2192</span> Anti-Raid: <span class="ok">ACTIVE</span></div>
-      <div class="terminal-line"><span class="info">\u2192</span> AutoMod: <span class="ok">ACTIVE</span></div>
-      <div class="terminal-line"><span class="info">\u2192</span> Uptime: <span class="ok">99.98%</span></div>
-      <div class="terminal-line"><span class="cmd">$</span> axtra --deobfuscate ./script.lua</div>
-      <div class="terminal-line"><span class="ok">\u2713</span> Deobfuscation pipeline loaded</div>
-      <div class="terminal-line"><span class="info">\u2192</span> Layers detected: <span style="color:#febc2e">IronBrew2, Luraph</span></div>
-      <div class="terminal-line"><span class="ok">\u2713</span> Output ready \u00b7 0.34s</div>
-      <div class="terminal-line"><span class="cmd">$</span> <span class="terminal-cursor"></span></div>
-    </div>
-
+<!-- BOT -->
+<section id="bot" class="sec">
+  <div class="bot-layout">
     <div>
-      <span class="section-tag reveal">// Axtra Smart Scanner</span>
-      <h2 class="section-title reveal"><span class="red">Bot</span><br>Intelligent</h2>
-      <p class="section-desc reveal" style="margin-bottom:28px;">Axtra Smart Scanner est bien plus qu'un simple bot de mod\u00e9ration \u2014 c'est un outil d'analyse avanc\u00e9 pour votre serveur et vos projets Lua.</p>
-
-      <div class="bot-features">
-        <div class="bot-feat reveal">
-          <span class="bot-feat-icon">\ud83d\udd0d</span>
-          <div class="bot-feat-text"><strong>Lua Deobfuscator</strong> \u2014 WeAreDevs, IronBrew 2, Luraph, Synapse XORM</div>
-        </div>
-        <div class="bot-feat reveal">
-          <span class="bot-feat-icon">\ud83e\udd16</span>
-          <div class="bot-feat-text"><strong>AutoMod Intelligent</strong> \u2014 Filtrage contextuel par IA</div>
-        </div>
-        <div class="bot-feat reveal">
-          <span class="bot-feat-icon">\ud83d\udcc8</span>
-          <div class="bot-feat-text"><strong>Statistiques & Analytics</strong> \u2014 Suivi de l'activit\u00e9 en temps r\u00e9el</div>
-        </div>
-        <div class="bot-feat reveal">
-          <span class="bot-feat-icon">\ud83c\udfad</span>
-          <div class="bot-feat-text"><strong>R\u00f4les automatiques</strong> \u2014 Attribution bas\u00e9e sur l'activit\u00e9</div>
-        </div>
-        <div class="bot-feat reveal">
-          <span class="bot-feat-icon">\u26a1</span>
-          <div class="bot-feat-text"><strong>Commandes rapides</strong> \u2014 Interface mobile-friendly</div>
-        </div>
+      <span class="s-num reveal">— 02 / Intelligence</span>
+      <h2 class="reveal">AXTRA<br><span class="a">SMART</span><br><span class="l2">SCANNER</span></h2>
+      <p class="s-body reveal" style="margin-bottom:32px">Bien plus qu'un bot de modération — un vrai outil d'analyse avancée. Déobfuscation Lua, automatisation et statistiques en temps réel.</p>
+      <div class="bot-grid reveal">
+        <div class="bf"><span class="bf-ic">🔍</span><div class="bf-name">Déobfuscateur Lua</div><div class="bf-desc">WeAreDevs, IronBrew 2, Luraph, Synapse XORM.</div></div>
+        <div class="bf"><span class="bf-ic">🤖</span><div class="bf-name">AutoMod IA</div><div class="bf-desc">Filtrage contextuel intelligent et adaptatif.</div></div>
+        <div class="bf"><span class="bf-ic">📊</span><div class="bf-name">Analytics</div><div class="bf-desc">Statistiques et suivi d'activité en temps réel.</div></div>
+        <div class="bf"><span class="bf-ic">⚡</span><div class="bf-name">Commandes Rapides</div><div class="bf-desc">Interface optimisée mobile, réponses instantanées.</div></div>
+        <div class="bf"><span class="bf-ic">🎭</span><div class="bf-name">Rôles Auto</div><div class="bf-desc">Attribution dynamique selon l'activité.</div></div>
+        <div class="bf"><span class="bf-ic">🔐</span><div class="bf-name">Logs Avancés</div><div class="bf-desc">Historique complet et alertes configurables.</div></div>
       </div>
+      <div style="margin-top:28px" class="reveal">
+        <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0" class="btn-main">⚙ Ajouter le bot à mon serveur</a>
+      </div>
+    </div>
+    <div class="terminal reveal">
+      <div class="t-hdr">
+        <div class="t-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+        <span class="t-title">AXTRA SMART SCANNER — v2.0</span>
+        <span class="t-live">● EN LIGNE</span>
+      </div>
+      <div class="t-body">
+        <span class="tl"><span class="p">axtra@core</span><span class="dim">:~$ </span><span class="cmd">./axtra --status</span></span>
+        <span class="tl"><span class="ok">✓</span> Bot opérationnel</span>
+        <span class="tl"><span class="ok">✓</span> Anti-Raid: <span class="val">ACTIF</span></span>
+        <span class="tl"><span class="ok">✓</span> AutoMod: <span class="val">ACTIF</span></span>
+        <span class="tl"><span class="ok">✓</span> Uptime: <span class="val">99.98%</span></span>
+        <span class="tl"> </span>
+        <span class="tl"><span class="p">axtra@core</span><span class="dim">:~$ </span><span class="cmd">./axtra deobfuscate script.lua</span></span>
+        <span class="tl"><span class="dim">» Analyse en cours...</span></span>
+        <span class="tl"><span class="ok">✓</span> Couches: <span class="w">IronBrew2</span>, <span class="w">Luraph</span></span>
+        <span class="tl"><span class="ok">✓</span> Pipeline: <span class="val">3/3 étapes</span></span>
+        <span class="tl"><span class="ok">✓</span> Résultat prêt <span class="dim">(0.31s)</span></span>
+        <span class="tl"> </span>
+        <span class="tl"><span class="p">axtra@core</span><span class="dim">:~$ </span><span class="cur"></span></span>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div style="margin-top:28px;" class="reveal">
-        <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&permissions=8&integration_type=0&scope=bot" class="btn-primary">
-          \u2699\ufe0f Ajouter le Bot \u00e0 ton Serveur
+<!-- ÉQUIPE -->
+<section id="equipe" class="sec alt">
+  <div class="team-hdr">
+    <div>
+      <span class="s-num reveal">— 03 / L'Équipe</span>
+      <h2 class="reveal" style="margin-bottom:0">LES<br><span class="a">ARCHITECTES</span></h2>
+    </div>
+    <p class="s-body reveal" style="max-width:320px">Les personnes qui construisent, protègent et font vivre AXTRA HUB chaque jour.</p>
+  </div>
+  <div class="team-grid">
+    <div class="mc lead reveal">
+      <div class="m-av">7X</div>
+      <div class="m-name">7XUHQ</div>
+      <div class="m-role">Lead Developer &amp; Fondateur</div>
+      <p class="m-bio">Architecte principal d'Axtra Hub. Développeur full-stack, créateur de bots Discord, systèmes de sécurité et outils communautaires. Visionnaire derrière tout l'écosystème Axtra.</p>
+    </div>
+    <div class="mc reveal">
+      <div class="m-av">AX</div>
+      <div class="m-name">AXEL</div>
+      <div class="m-role">Responsable Modération</div>
+      <p class="m-bio">Garant d'un environnement sain et respectueux. Il veille au maintien des règles et à la sécurité de la communauté au quotidien.</p>
+    </div>
+    <div class="mc reveal">
+      <div class="m-av">ZR</div>
+      <div class="m-name">ZER0X</div>
+      <div class="m-role">Co-Fondateur &amp; Dev</div>
+      <p class="m-bio">Spécialisé dans l'optimisation des systèmes automatisés et l'expérience utilisateur du bot Axtra Core.</p>
+    </div>
+    <div class="mc reveal">
+      <div class="m-av">NV</div>
+      <div class="m-name">N0VA</div>
+      <div class="m-role">Community Manager</div>
+      <p class="m-bio">Animateur de la communauté, organisateur d'événements et lien direct entre les membres et le staff.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REJOINDRE -->
+<section id="rejoindre" class="join-sec">
+  <div class="join-bgnm">∞</div>
+  <div class="join-inner">
+    <div class="join-text">
+      <span class="s-num reveal">— 04 / Communauté</span>
+      <h2 class="reveal">REJOINS<br><span class="a">AXTRA</span><br><span class="l2">HUB</span></h2>
+      <p class="reveal">Des membres passionnés t'attendent. Rejoins la communauté, profite des outils et participe à quelque chose de plus grand.</p>
+      <div class="reveal">
+        <a href="https://discord.gg" class="btn-main">
+          <svg width="15" height="12" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
+          Rejoindre le serveur
         </a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- TEAM SECTION -->
-<section id="team" style="background:var(--dark2)">
-  <div class="team-header">
-    <span class="section-tag reveal">// Les Fondateurs</span>
-    <h2 class="section-title reveal">Meet The <span class="red">Architects</span></h2>
-    <p class="section-desc reveal" style="margin:0 auto;text-align:center;">L'\u00e9quipe derri\u00e8re AXTRA HUB \u2014 des passionn\u00e9s qui construisent et font \u00e9voluer la communaut\u00e9 chaque jour.</p>
-  </div>
-
-  <div class="team-grid">
-    <!-- 7xhq -->
-    <div class="team-card founder reveal">
-      <div class="avatar-wrap">
-        <div class="avatar">7X</div>
-        <div class="avatar-status"></div>
+    <div class="reveal">
+      <div class="dc-card">
+        <span class="dc-icon">
+          <svg width="38" height="29" viewBox="0 0 14 11" fill="#5865F2"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
+        </span>
+        <div class="dc-name">AXTRA HUB</div>
+        <div class="dc-online"><div class="dc-dot"></div><span class="dc-cnt" id="footer-online">—</span>&nbsp;membres en ligne</div>
+        <a href="https://discord.gg" class="btn-main" style="width:100%;justify-content:center">Rejoindre maintenant</a>
       </div>
-      <div class="member-name">7XUHQ</div>
-      <div class="member-role">Lead Developer & Founder</div>
-      <p class="member-desc">Architecte principal d'Axtra Hub. D\u00e9veloppeur full-stack, cr\u00e9ateur de bots Discord, syst\u00e8mes de s\u00e9curit\u00e9 et outils communautaires. Visionnaire derri\u00e8re l'\u00e9cosyst\u00e8me Axtra.</p>
-    </div>
-
-    <!-- Mod -->
-    <div class="team-card reveal">
-      <div class="avatar-wrap">
-        <div class="avatar">AX</div>
-        <div class="avatar-status"></div>
+      <div class="bot-add">
+        <div class="bot-add-txt">
+          <strong>Axtra Smart Scanner</strong>
+          Ajoute le bot directement à ton serveur Discord.
+        </div>
+        <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0" class="btn-ghost" style="white-space:nowrap;flex-shrink:0">⚙ Ajouter</a>
       </div>
-      <div class="member-name">AXEL_MOD</div>
-      <div class="member-role">Head Moderator</div>
-      <p class="member-desc">Responsable de la mod\u00e9ration et du maintien d'un environnement sain. Garant des r\u00e8gles et de la s\u00e9curit\u00e9 de la communaut\u00e9 au quotidien.</p>
-    </div>
-
-    <!-- Co-fondateur -->
-    <div class="team-card reveal">
-      <div class="avatar-wrap">
-        <div class="avatar">ZR</div>
-        <div class="avatar-status"></div>
-      </div>
-      <div class="member-name">ZER0X</div>
-      <div class="member-role">Co-Founder & Dev</div>
-      <p class="member-desc">Co-fondateur et d\u00e9veloppeur. Sp\u00e9cialis\u00e9 dans l'optimisation des syst\u00e8mes automatis\u00e9s et l'exp\u00e9rience utilisateur du bot Axtra Core.</p>
-    </div>
-
-    <!-- Community manager -->
-    <div class="team-card reveal">
-      <div class="avatar-wrap">
-        <div class="avatar">NV</div>
-        <div class="avatar-status"></div>
-      </div>
-      <div class="member-name">N0VA</div>
-      <div class="member-role">Community Manager</div>
-      <p class="member-desc">Animateur de la communaut\u00e9, organisateur d'\u00e9v\u00e9nements et lien entre les membres et le staff. Il veille \u00e0 ce que chaque voix soit entendue.</p>
     </div>
   </div>
 </section>
 
-<!-- JOIN / DISCORD LIVE -->
-<section id="join" class="discord-section">
-  <span class="section-tag reveal">// Discord</span>
-  <h2 class="section-title reveal">Rejoins la <span class="red">Communaut\u00e9</span></h2>
-  <p class="section-desc reveal" style="margin:0 auto 0;text-align:center;max-width:460px">Des milliers de membres t'attendent. Rejoins AXTRA HUB d\u00e8s maintenant.</p>
+<!-- FOOTER -->
+<footer>
+  <div class="f-top">
+    <div>
+      <div class="f-logo">AXTRA <span>HUB</span></div>
+      <p class="f-desc">Votre hub ultime pour l'innovation et la communauté. Sécurité, automatisation et esprit collectif — beyond limits.</p>
+    </div>
+    <div>
+      <div class="f-col-t">Navigation</div>
+      <ul class="f-links">
+        <li><a href="#securite">Sécurité</a></li>
+        <li><a href="#bot">Le Bot</a></li>
+        <li><a href="#equipe">L'Équipe</a></li>
+        <li><a href="#rejoindre">Rejoindre</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-t">Liens</div>
+      <ul class="f-links">
+        <li><a href="https://discord.gg">Serveur Discord</a></li>
+        <li><a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0">Ajouter le Bot</a></li>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">GitHub</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-t">Contact</div>
+      <ul class="f-links">
+        <li><a href="#">Support Discord</a></li>
+        <li><a href="#">Signaler un bug</a></li>
+        <li><a href="#">Partenariats</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="f-bot">
+    <div class="f-copy">© 2024–2026 <em>AXTRA HUB</em>. Tous droits réservés. Conçu par <em>7XUHQ</em>.</div>
+    <div class="f-socs">
+      <a href="https://discord.gg" class="f-soc">DC</a>
+      <a href="#" class="f-soc">✕</a>
+      <a href="#" class="f-soc">GH</a>
+    </div>
+  </div>
+</footer>
 
-  <div style="margin-top:40px" class="reveal">
-    <div class="discord-card">
-      <div class="discord-icon">
+<script>
+// Discord Widget
+async function loadDiscord() {
+  try {
+    const r = await fetch('https://discord.com/api/guilds/1486820931216216186/widget.json');
+    const d = await r.json();
+    const online = d.presence_count || (d.members ? d.members.length : '—');
+    document.getElementById('s-online').textContent = online;
+    document.getElementById('s-total').textContent = d.members ? d.members.length : '—';
+    const fo = document.getElementById('footer-online');
+    if (fo) fo.textContent = online;
+  } catch(e) {}
+}
+loadDiscord();
+
+// Scroll reveal avec stagger
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), 50); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  const grp = el.closest('.feat-list, .team-grid, .bot-grid, .chips');
+  if (grp) {
+    const siblings = [...grp.querySelectorAll('.reveal')];
+    const idx = siblings.indexOf(el);
+    if (idx >= 0) el.style.transitionDelay = `${idx * 65}ms`;
+  }
+  obs.observe(el);
+});
+
+// Nav border on scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').style.borderBottomColor =
+    window.scrollY > 60 ? 'rgba(255,149,0,.18)' : 'rgba(255,255,255,.07)';
+}, { passive: true });
+</script>
+</body>
+</html>
