@@ -3,487 +3,1544 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXTRA HUB — BEYOND LIMITS</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<title>X77 HUB</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:       #080808;
-  --bg2:      #0e0e0e;
-  --bg3:      #131313;
-  --surface:  #111111;
-  --border:   rgba(255,255,255,0.07);
-  --border2:  rgba(255,255,255,0.12);
-  --amber:    #ff9500;
-  --amber2:   #ffb340;
-  --amber-dim: rgba(255,149,0,0.12);
-  --amber-glow:rgba(255,149,0,0.35);
-  --white:    #f5f0e8;
-  --offwhite: #c8c0b0;
-  --grey:     #555;
-  --grey2:    #888;
-  --mono: 'IBM Plex Mono', monospace;
-  --display: 'Bebas Neue', sans-serif;
-  --body: 'Barlow Condensed', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#ff1a1a;--red2:#cc0000;--red3:#ff4444;--red4:#ff6666;
+  --bg:#020204;--bg2:#07070f;--bg3:#0d0d1a;
+  --text:#f0f0f0;--muted:#888;--border:#1a0000;
+  --gold:#ffd700;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:var(--body);overflow-x:hidden}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9998}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--amber)}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Rajdhani',sans-serif;font-size:16px;
+  overflow-x:hidden;min-height:100vh;
+}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:60px;background:rgba(8,8,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:border-color .3s}
-.nav-logo{font-family:var(--display);font-size:1.55rem;letter-spacing:4px;color:var(--white);text-decoration:none}
-.nav-logo .sl{color:var(--amber)}
-.nav-links{display:flex;gap:0;list-style:none}
-.nav-links a{display:block;padding:0 18px;height:60px;line-height:60px;font-family:var(--mono);font-size:.62rem;letter-spacing:2px;color:var(--grey2);text-decoration:none;text-transform:uppercase;border-right:1px solid var(--border);transition:all .2s}
-.nav-links li:first-child a{border-left:1px solid var(--border)}
-.nav-links a:hover{color:var(--white);background:rgba(255,255,255,.03)}
-.nav-cta{display:flex;align-items:center;gap:9px;padding:9px 20px;background:var(--amber);color:#000;text-decoration:none;font-family:var(--mono);font-size:.62rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;transition:all .2s}
-.nav-cta:hover{background:var(--amber2);transform:translateY(-1px)}
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:.4;
+}
 
-/* HERO */
-#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5% 80px;position:relative;overflow:hidden}
-.h-bg{position:absolute;bottom:-60px;left:-2%;font-family:var(--display);font-size:clamp(100px,18vw,200px);color:rgba(255,255,255,.018);letter-spacing:-4px;line-height:1;user-select:none;pointer-events:none;white-space:nowrap}
-.h-vline{position:absolute;top:0;width:1px;height:100%}
-.h-vline.l1{right:16%;background:linear-gradient(180deg,transparent 0%,var(--amber) 40%,var(--amber) 60%,transparent 100%);opacity:.12}
-.h-vline.l2{right:calc(16% + 56px);background:linear-gradient(180deg,transparent 0%,var(--border2) 50%,transparent 100%)}
-.h-corner{position:absolute;top:80px;right:5%;width:180px;height:180px;border-top:1px solid var(--amber);border-right:1px solid var(--amber);opacity:.25}
-.h-corner::before{content:'';position:absolute;top:18px;right:18px;width:110px;height:110px;border-top:1px solid var(--border2);border-right:1px solid var(--border2)}
-.h-tag{font-family:var(--mono);font-size:.62rem;color:var(--amber);letter-spacing:4px;text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:14px;animation:fadeUp .8s ease both}
-.h-tag::before{content:'';width:36px;height:1px;background:var(--amber)}
-h1{font-family:var(--display);font-size:clamp(5rem,13vw,12rem);line-height:.88;letter-spacing:-2px;animation:fadeUp .9s ease .1s both}
-h1 .out{-webkit-text-stroke:1px var(--offwhite);color:transparent}
-h1 .am{color:var(--amber)}
-.h-sub-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:38px;flex-wrap:wrap;gap:20px;animation:fadeUp 1s ease .3s both}
-.h-slogan{font-size:1.25rem;font-weight:300;color:var(--offwhite);letter-spacing:3px;text-transform:uppercase;max-width:380px;line-height:1.5}
-.h-btns{display:flex;gap:10px;flex-wrap:wrap}
-.stats-bar{display:flex;border-top:1px solid var(--border);margin-top:56px;animation:fadeUp 1s ease .4s both}
-.st{flex:1;padding:18px 22px;border-right:1px solid var(--border)}
-.st:last-child{border-right:none}
-.st-val{font-family:var(--display);font-size:2.4rem;letter-spacing:1px;color:var(--amber);line-height:1}
-.st-lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--grey);text-transform:uppercase;margin-top:4px}
+/* ── SCANLINES ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,26,26,.015) 2px,rgba(255,26,26,.015) 4px);
+  pointer-events:none;z-index:9998;
+}
 
-/* BUTTONS */
-.btn-main{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;background:var(--amber);color:#000;text-decoration:none;font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;transition:all .22s;position:relative;overflow:hidden}
-.btn-main::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.2);transform:translateX(-110%) skewX(-15deg);transition:transform .4s}
-.btn-main:hover::before{transform:translateX(110%) skewX(-15deg)}
-.btn-main:hover{background:var(--amber2);transform:translateY(-2px);box-shadow:0 10px 28px var(--amber-glow)}
-.btn-ghost{display:inline-flex;align-items:center;gap:9px;padding:14px 26px;background:transparent;color:var(--offwhite);text-decoration:none;font-family:var(--mono);font-size:.68rem;letter-spacing:3px;text-transform:uppercase;border:1px solid var(--border2);transition:all .22s}
-.btn-ghost:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
+/* ── PARTICLES CANVAS ── */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* SECTION BASE */
-.sec{padding:110px 5%;position:relative}
-.sec.alt{background:var(--bg2)}
-.s-num{font-family:var(--mono);font-size:.58rem;color:var(--amber);letter-spacing:3px;margin-bottom:14px;display:block}
-h2{font-family:var(--display);font-size:clamp(3rem,6vw,5.5rem);line-height:.9;letter-spacing:1px;margin-bottom:22px}
-h2 .l2{display:block;-webkit-text-stroke:1px var(--offwhite);color:transparent}
-h2 .a{color:var(--amber)}
-.s-body{font-size:1rem;font-weight:300;color:var(--offwhite);line-height:1.8;letter-spacing:.4px;max-width:500px}
+/* ── GLOW BG ── */
+.bg-glow{
+  position:fixed;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(255,26,26,.08) 0%,transparent 70%);
+  border-radius:50%;top:-200px;left:-200px;
+  animation:glow-drift 8s ease-in-out infinite alternate;
+  pointer-events:none;z-index:0;
+}
+.bg-glow2{
+  position:fixed;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(204,0,0,.06) 0%,transparent 70%);
+  border-radius:50%;bottom:-100px;right:-100px;
+  animation:glow-drift 12s ease-in-out infinite alternate-reverse;
+  pointer-events:none;z-index:0;
+}
+@keyframes glow-drift{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(80px,60px) scale(1.2)}
+}
 
-/* SECURITY */
-.sec-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;max-width:1180px;margin:0 auto}
-.feat-list{margin-top:44px}
-.feat{display:grid;grid-template-columns:56px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid var(--border);transition:all .22s}
-.feat:first-child{border-top:1px solid var(--border)}
-.feat:hover{background:rgba(255,255,255,.015);margin:0 -16px;padding:22px 16px}
-.f-num{font-family:var(--mono);font-size:.62rem;color:var(--amber);letter-spacing:2px;padding-top:3px}
-.f-title{font-family:var(--body);font-size:1.15rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:5px}
-.f-desc{font-size:.88rem;font-weight:300;color:var(--grey2);line-height:1.7}
-.sec-vis{position:sticky;top:100px}
-.grid-disp{width:100%;aspect-ratio:1;position:relative;background:var(--surface);border:1px solid var(--border2);overflow:hidden;display:flex;align-items:center;justify-content:center}
-.grid-disp::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:38px 38px}
-.scan{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:scan 3s linear infinite}
-@keyframes scan{0%{top:0;opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
-.c-tl,.c-br{position:absolute;width:18px;height:18px;border-color:var(--amber);border-style:solid}
-.c-tl{top:12px;left:12px;border-width:2px 0 0 2px}
-.c-br{bottom:12px;right:12px;border-width:0 2px 2px 0}
-.g-core{position:relative;z-index:2;text-align:center}
-.g-icon{font-size:3.5rem;display:block;margin-bottom:12px;filter:drop-shadow(0 0 18px var(--amber));animation:flt 4s ease-in-out infinite}
-@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.g-lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:4px;color:var(--amber);text-transform:uppercase}
-.chips{display:flex;flex-direction:column;gap:7px;margin-top:14px}
-.chip{display:flex;align-items:center;gap:10px;padding:9px 13px;background:var(--surface);border:1px solid var(--border);font-family:var(--mono);font-size:.62rem;letter-spacing:1px;color:var(--grey2)}
-.cdot{width:6px;height:6px;border-radius:50%;background:#3ddc84;box-shadow:0 0 7px #3ddc84;flex-shrink:0;animation:cp 2s ease-in-out infinite}
-.cdot.o{background:var(--amber);box-shadow:0 0 7px var(--amber)}
-@keyframes cp{0%,100%{opacity:1}50%{opacity:.4}}
+/* ── PAGE SYSTEM ── */
+.page{display:none;position:relative;z-index:1;min-height:100vh}
+.page.active{display:flex;flex-direction:column}
 
-/* BOT */
-.bot-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:76px;align-items:center;max-width:1180px;margin:0 auto}
-.terminal{background:#060606;border:1px solid var(--border2);overflow:hidden}
-.t-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;background:var(--surface);border-bottom:1px solid var(--border)}
-.t-dots{display:flex;gap:5px}
-.td{width:10px;height:10px;border-radius:50%}
-.td:nth-child(1){background:#ff5f57}.td:nth-child(2){background:#febc2e}.td:nth-child(3){background:#28c840}
-.t-title{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--grey)}
-.t-live{font-family:var(--mono);font-size:.52rem;color:var(--amber);letter-spacing:1px}
-.t-body{padding:18px 18px 22px;font-family:var(--mono);font-size:.72rem;line-height:1.95}
-.tl{display:block}
-.tl .p{color:#3ddc84}.tl .cmd{color:var(--amber)}.tl .val{color:#79c0ff}.tl .ok{color:#3ddc84}.tl .dim{color:var(--grey)}.tl .w{color:#febc2e}
-.cur{display:inline-block;width:7px;height:13px;background:var(--amber);vertical-align:middle;animation:blk 1.1s step-end infinite}
-@keyframes blk{50%{opacity:0}}
-.bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:0}
-.bf{background:var(--bg);padding:22px 20px;transition:background .2s}
-.bf:hover{background:var(--surface)}
-.bf-ic{font-size:1.3rem;margin-bottom:8px;display:block}
-.bf-name{font-family:var(--body);font-size:.9rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:3px}
-.bf-desc{font-size:.8rem;font-weight:300;color:var(--grey2);line-height:1.6}
+/* ══════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════ */
+#page-landing{
+  align-items:center;justify-content:center;
+  text-align:center;padding:40px 20px;
+}
+.landing-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,18vw,180px);
+  color:var(--red);
+  letter-spacing:8px;
+  line-height:.9;
+  text-shadow:0 0 40px rgba(255,26,26,.6),0 0 80px rgba(255,26,26,.3),0 0 120px rgba(255,26,26,.15);
+  animation:logo-flicker 6s ease-in-out infinite;
+  position:relative;
+  cursor:default;
+}
+.landing-logo::after{
+  content:attr(data-text);
+  position:absolute;inset:0;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,26,26,.3);
+  filter:blur(12px);
+  animation:logo-pulse 3s ease-in-out infinite alternate;
+}
+@keyframes logo-flicker{
+  0%,90%,100%{opacity:1}
+  92%{opacity:.85}
+  94%{opacity:1}
+  96%{opacity:.9}
+  98%{opacity:1}
+}
+@keyframes logo-pulse{
+  0%{opacity:.5;filter:blur(12px)}
+  100%{opacity:1;filter:blur(20px)}
+}
+.landing-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;color:var(--muted);
+  letter-spacing:4px;text-transform:uppercase;
+  margin-top:8px;
+}
+.landing-tagline{
+  font-size:clamp(14px,2vw,18px);
+  color:rgba(255,255,255,.5);
+  letter-spacing:2px;
+  margin:24px 0 50px;
+  font-weight:300;
+}
+.landing-tagline span{color:var(--red3)}
+.landing-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
-/* TEAM */
-.team-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px;flex-wrap:wrap;gap:20px;max-width:1180px;margin-left:auto;margin-right:auto}
-.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);max-width:1180px;margin:0 auto}
-.mc{background:var(--bg2);padding:32px 26px;position:relative;overflow:hidden;transition:background .3s}
-.mc:hover{background:var(--bg3)}
-.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber);transform:scaleX(0);transform-origin:left;transition:transform .4s}
-.mc:hover::before,.mc.lead::before{transform:scaleX(1)}
-.mc.lead{background:var(--bg3)}
-.mc:hover .m-av{border-color:var(--amber);box-shadow:0 0 18px var(--amber-dim)}
-.m-av{width:60px;height:60px;border-radius:2px;border:1px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.5rem;color:var(--amber);margin-bottom:18px;transition:all .3s}
-.m-name{font-family:var(--display);font-size:1.7rem;letter-spacing:2px;color:var(--white);margin-bottom:3px}
-.m-role{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:12px}
-.m-bio{font-size:.82rem;font-weight:300;color:var(--grey2);line-height:1.7}
+.btn{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:3px;
+  padding:14px 40px;border:none;cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:all .2s;text-decoration:none;display:inline-block;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:var(--red3);box-shadow:0 0 30px rgba(255,26,26,.5)}
+.btn-secondary{background:transparent;color:var(--red);border:1px solid var(--red)}
+.btn-secondary:hover{background:rgba(255,26,26,.1);box-shadow:0 0 20px rgba(255,26,26,.2)}
+.btn::after{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transition:.4s;
+}
+.btn:hover::after{left:100%}
 
-/* JOIN */
-.join-sec{padding:110px 5%;position:relative;overflow:hidden}
-.join-bgnm{position:absolute;right:2%;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:28vw;color:rgba(255,255,255,.015);pointer-events:none;user-select:none;line-height:1}
-.join-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1180px;margin:0 auto}
-.join-text p{font-size:1rem;font-weight:300;color:var(--offwhite);line-height:1.8;margin-bottom:32px}
-.dc-card{background:var(--surface);border:1px solid var(--border2);padding:30px;position:relative}
-.dc-card::before{content:'EN DIRECT';position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:.52rem;letter-spacing:3px;color:var(--amber);border:1px solid var(--amber);padding:2px 7px}
-.dc-icon{font-size:2.2rem;margin-bottom:14px;display:block}
-.dc-name{font-family:var(--display);font-size:1.7rem;letter-spacing:2px;margin-bottom:7px}
-.dc-online{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.66rem;letter-spacing:1px;color:var(--grey2);margin-bottom:22px}
-.dc-dot{width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 5px #3ddc84}
-.dc-cnt{color:#3ddc84;font-weight:500}
-.bot-add{margin-top:14px;background:var(--bg3);border:1px solid var(--border);padding:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;transition:border-color .2s}
-.bot-add:hover{border-color:var(--amber)}
-.bot-add-txt{font-size:.82rem;font-weight:300;color:var(--offwhite)}
-.bot-add-txt strong{display:block;font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--white);margin-bottom:2px;font-weight:500;text-transform:uppercase}
+.landing-stats{
+  display:flex;gap:40px;margin-top:60px;
+  flex-wrap:wrap;justify-content:center;
+}
+.stat{text-align:center}
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:42px;color:var(--red);
+  text-shadow:0 0 20px rgba(255,26,26,.4);
+}
+.stat-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--muted);letter-spacing:2px;
+}
 
-/* FOOTER */
-footer{background:#040404;border-top:1px solid var(--border);padding:58px 5% 28px}
-.f-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;max-width:1180px;margin:0 auto;padding-bottom:44px;border-bottom:1px solid var(--border)}
-.f-logo{font-family:var(--display);font-size:2rem;letter-spacing:4px;margin-bottom:10px}
-.f-logo span{color:var(--amber)}
-.f-desc{font-size:.82rem;font-weight:300;color:var(--grey);line-height:1.8;max-width:240px}
-.f-col-t{font-family:var(--mono);font-size:.58rem;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:18px;padding-bottom:9px;border-bottom:1px solid var(--border)}
-.f-links{list-style:none;display:flex;flex-direction:column;gap:11px}
-.f-links a{font-size:.82rem;font-weight:300;color:var(--grey2);text-decoration:none;letter-spacing:.4px;transition:color .2s}
-.f-links a:hover{color:var(--amber)}
-.f-bot{display:flex;align-items:center;justify-content:space-between;padding-top:26px;max-width:1180px;margin:0 auto;flex-wrap:wrap;gap:14px}
-.f-copy{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--grey)}
-.f-copy em{color:var(--amber);font-style:normal}
-.f-socs{display:flex;gap:7px}
-.f-soc{width:34px;height:34px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--grey2);text-decoration:none;font-family:var(--mono);font-size:.58rem;transition:all .2s}
-.f-soc:hover{border-color:var(--amber);color:var(--amber)}
+/* CORNER DECORATIONS */
+.corner{position:absolute;width:40px;height:40px}
+.corner-tl{top:20px;left:20px;border-top:2px solid var(--red);border-left:2px solid var(--red)}
+.corner-tr{top:20px;right:20px;border-top:2px solid var(--red);border-right:2px solid var(--red)}
+.corner-bl{bottom:20px;left:20px;border-bottom:2px solid var(--red);border-left:2px solid var(--red)}
+.corner-br{bottom:20px;right:20px;border-bottom:2px solid var(--red);border-right:2px solid var(--red)}
 
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease}
-.reveal.in{opacity:1;transform:translateY(0)}
+/* ══════════════════════════════════════
+   AUTH PAGES (Login / Register)
+══════════════════════════════════════ */
+.auth-page{
+  align-items:center;justify-content:center;
+  padding:40px 20px;
+}
+.auth-card{
+  background:rgba(7,7,15,.95);
+  border:1px solid rgba(255,26,26,.2);
+  width:100%;max-width:440px;
+  padding:48px 40px;
+  position:relative;
+  backdrop-filter:blur(20px);
+  animation:card-in .4s ease;
+}
+.auth-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+}
+@keyframes card-in{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.auth-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;color:var(--text);
+  letter-spacing:4px;margin-bottom:6px;
+}
+.auth-title span{color:var(--red)}
+.auth-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--muted);
+  letter-spacing:2px;margin-bottom:36px;
+}
+.field{margin-bottom:20px}
+.field label{
+  display:block;font-size:11px;
+  font-family:'Share Tech Mono',monospace;
+  color:var(--muted);letter-spacing:2px;
+  margin-bottom:8px;text-transform:uppercase;
+}
+.field input{
+  width:100%;background:rgba(0,0,0,.6);
+  border:1px solid rgba(255,26,26,.2);
+  color:var(--text);font-family:'Rajdhani',sans-serif;
+  font-size:16px;font-weight:500;
+  padding:12px 16px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field input:focus{
+  border-color:var(--red);
+  box-shadow:0 0 0 3px rgba(255,26,26,.1),inset 0 0 20px rgba(255,26,26,.05);
+}
+.field input::placeholder{color:rgba(255,255,255,.2)}
+.auth-btn{width:100%;margin-top:8px}
+.auth-link{
+  text-align:center;margin-top:20px;
+  font-size:13px;color:var(--muted);
+}
+.auth-link a{color:var(--red3);cursor:pointer;text-decoration:none}
+.auth-link a:hover{color:var(--red4);text-decoration:underline}
+.auth-err{
+  background:rgba(255,26,26,.1);border:1px solid rgba(255,26,26,.3);
+  color:var(--red3);font-family:'Share Tech Mono',monospace;
+  font-size:12px;padding:10px 14px;margin-bottom:16px;
+  display:none;letter-spacing:1px;
+}
+.auth-err.show{display:block}
+.auth-success{
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);
+  color:#4ade80;font-family:'Share Tech Mono',monospace;
+  font-size:12px;padding:10px 14px;margin-bottom:16px;
+  display:none;letter-spacing:1px;
+}
+.auth-success.show{display:block}
+.type-selector{display:flex;gap:0;margin-bottom:28px}
+.type-btn{
+  flex:1;background:transparent;
+  border:1px solid rgba(255,26,26,.2);
+  color:var(--muted);font-family:'Bebas Neue',sans-serif;
+  font-size:16px;letter-spacing:2px;padding:10px;cursor:pointer;
+  transition:all .2s;
+}
+.type-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+.type-btn:first-child{border-right:none}
+
+/* ══════════════════════════════════════
+   DASHBOARD MEMBRE
+══════════════════════════════════════ */
+.dash-layout{display:flex;min-height:100vh}
+/* SIDEBAR */
+.sidebar{
+  width:240px;min-height:100vh;
+  background:rgba(7,7,15,.98);
+  border-right:1px solid rgba(255,26,26,.15);
+  padding:0;flex-shrink:0;
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;
+}
+.sidebar-logo{
+  padding:24px 20px;
+  border-bottom:1px solid rgba(255,26,26,.1);
+}
+.sidebar-logo-text{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;color:var(--red);
+  letter-spacing:4px;
+  text-shadow:0 0 20px rgba(255,26,26,.4);
+}
+.sidebar-logo-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;color:var(--muted);letter-spacing:2px;
+}
+.sidebar-user{
+  padding:16px 20px;
+  border-bottom:1px solid rgba(255,26,26,.08);
+  display:flex;align-items:center;gap:12px;
+}
+.avatar{
+  width:38px;height:38px;
+  background:var(--red2);
+  border:1px solid rgba(255,26,26,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;
+  flex-shrink:0;
+}
+.user-info-name{font-size:15px;font-weight:600;color:var(--text)}
+.user-info-role{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--red3);letter-spacing:1px;
+}
+.sidebar-nav{padding:16px 0;flex:1}
+.nav-section{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;color:rgba(255,26,26,.4);
+  letter-spacing:3px;padding:8px 20px 6px;text-transform:uppercase;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 20px;cursor:pointer;
+  color:var(--muted);font-size:15px;font-weight:500;
+  transition:all .15s;position:relative;
+  border-left:2px solid transparent;
+}
+.nav-item:hover{background:rgba(255,26,26,.06);color:var(--text)}
+.nav-item.active{
+  color:var(--red3);background:rgba(255,26,26,.08);
+  border-left-color:var(--red);
+}
+.nav-item .icon{font-size:16px;width:18px;text-align:center}
+.sidebar-footer{
+  padding:16px 20px;
+  border-top:1px solid rgba(255,26,26,.1);
+}
+.logout-btn{
+  width:100%;background:transparent;
+  border:1px solid rgba(255,26,26,.2);
+  color:var(--muted);font-family:'Rajdhani',sans-serif;
+  font-size:14px;font-weight:500;padding:9px;cursor:pointer;
+  transition:all .2s;letter-spacing:1px;
+}
+.logout-btn:hover{background:rgba(255,26,26,.1);color:var(--red3);border-color:var(--red)}
+
+/* MAIN CONTENT */
+.dash-main{flex:1;padding:32px;overflow-x:hidden}
+.dash-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:32px;padding-bottom:20px;
+  border-bottom:1px solid rgba(255,26,26,.1);
+}
+.dash-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;letter-spacing:3px;color:var(--text);
+}
+.dash-title span{color:var(--red)}
+.dash-time{
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;color:var(--muted);
+}
+.dash-section{display:none}
+.dash-section.active{display:block}
+
+/* STATS GRID */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;margin-bottom:32px;
+}
+.stat-card{
+  background:rgba(7,7,15,.8);
+  border:1px solid rgba(255,26,26,.15);
+  padding:20px;position:relative;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+}
+.stat-card:hover{border-color:rgba(255,26,26,.4);transform:translateY(-2px)}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  opacity:.5;
+}
+.stat-card-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:10px;
+}
+.stat-card-value{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;color:var(--red);
+  text-shadow:0 0 20px rgba(255,26,26,.3);
+  line-height:1;
+}
+.stat-card-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* SCRIPT CARDS */
+.scripts-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;
+}
+.script-card{
+  background:rgba(7,7,15,.9);
+  border:1px solid rgba(255,26,26,.15);
+  padding:24px;
+  position:relative;overflow:hidden;
+  transition:all .2s;cursor:pointer;
+}
+.script-card:hover{
+  border-color:rgba(255,26,26,.5);
+  box-shadow:0 0 30px rgba(255,26,26,.1);
+  transform:translateY(-3px);
+}
+.script-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  opacity:0;transition:.2s;
+}
+.script-card:hover::after{opacity:1}
+.sc-badge{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;letter-spacing:2px;
+  padding:3px 10px;margin-bottom:12px;
+  background:rgba(255,26,26,.1);
+  border:1px solid rgba(255,26,26,.3);
+  color:var(--red3);
+}
+.sc-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:2px;color:var(--text);
+  margin-bottom:8px;
+}
+.sc-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+.sc-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:16px;border-top:1px solid rgba(255,26,26,.08);
+}
+.sc-game{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,26,26,.6);letter-spacing:1px}
+.sc-btn{
+  background:var(--red2);color:#fff;border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:14px;
+  letter-spacing:2px;padding:7px 18px;cursor:pointer;
+  transition:all .2s;
+  clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+}
+.sc-btn:hover{background:var(--red);box-shadow:0 0 15px rgba(255,26,26,.4)}
+.sc-loadstr{
+  background:rgba(0,0,0,.8);
+  border:1px solid rgba(255,26,26,.3);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;color:var(--red3);
+  padding:10px 14px;margin-top:12px;
+  word-break:break-all;line-height:1.5;
+  display:none;cursor:text;
+}
+.sc-loadstr.show{display:block}
+.copy-btn{
+  background:transparent;border:1px solid rgba(255,26,26,.3);
+  color:var(--muted);font-family:'Share Tech Mono',monospace;
+  font-size:10px;padding:4px 10px;cursor:pointer;
+  transition:all .2s;letter-spacing:1px;
+  margin-top:6px;
+}
+.copy-btn:hover{background:rgba(255,26,26,.1);color:var(--red3)}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:2px;color:var(--muted);
+  padding:10px 14px;text-align:left;
+  border-bottom:1px solid rgba(255,26,26,.15);
+  text-transform:uppercase;
+}
+.data-table td{
+  padding:12px 14px;
+  border-bottom:1px solid rgba(255,26,26,.06);
+  color:var(--text);font-weight:500;
+}
+.data-table tr:hover td{background:rgba(255,26,26,.03)}
+.badge{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;padding:2px 8px;letter-spacing:1px;
+}
+.badge-red{background:rgba(255,26,26,.1);color:var(--red3);border:1px solid rgba(255,26,26,.2)}
+.badge-green{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.badge-yellow{background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.2)}
+
+/* SECTION TITLE */
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:3px;
+  color:var(--text);margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(255,26,26,.3),transparent);
+}
+
+/* ══════════════════════════════════════
+   OWNER DASHBOARD
+══════════════════════════════════════ */
+.owner-stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:16px;margin-bottom:32px;
+}
+.panel{
+  background:rgba(7,7,15,.9);
+  border:1px solid rgba(255,26,26,.15);
+  padding:24px;margin-bottom:24px;
+}
+.panel-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:2px;
+  color:var(--red3);margin-bottom:20px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,26,26,.1);
+}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.form-field{flex:1;min-width:200px}
+.form-field label{
+  display:block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--muted);
+  letter-spacing:2px;margin-bottom:6px;
+}
+.form-field input,.form-field select,.form-field textarea{
+  width:100%;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,26,26,.2);
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:500;
+  padding:10px 14px;outline:none;
+  transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{
+  border-color:var(--red);
+}
+.form-field select option{background:#0d0d1a}
+.form-field textarea{min-height:80px;resize:vertical}
+.action-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.btn-sm{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;letter-spacing:2px;
+  padding:9px 24px;border:none;cursor:pointer;
+  transition:all .2s;
+  clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+}
+.btn-sm-red{background:var(--red);color:#fff}
+.btn-sm-red:hover{background:var(--red3);box-shadow:0 0 15px rgba(255,26,26,.4)}
+.btn-sm-ghost{background:transparent;color:var(--red);border:1px solid rgba(255,26,26,.3)}
+.btn-sm-ghost:hover{background:rgba(255,26,26,.08)}
+.btn-sm-danger{background:rgba(255,26,26,.1);color:var(--red3);border:1px solid rgba(255,26,26,.2)}
+.btn-sm-danger:hover{background:rgba(255,26,26,.2)}
+
+/* EXEC LOG TABLE */
+.exec-user{font-weight:700;color:var(--red3)}
+.exec-script{color:var(--text)}
+.exec-time{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)}
+.exec-duration{font-family:'Share Tech Mono',monospace;font-size:12px;color:#4ade80}
+.exec-executor{font-family:'Share Tech Mono',monospace;font-size:11px}
+
+/* ALERT */
+.alert{
+  padding:12px 16px;margin-bottom:16px;
+  font-family:'Share Tech Mono',monospace;font-size:12px;
+  letter-spacing:1px;display:none;
+}
+.alert.show{display:block}
+.alert-red{background:rgba(255,26,26,.1);border:1px solid rgba(255,26,26,.3);color:var(--red3)}
+.alert-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#4ade80}
+
+/* MEMBER TABLE */
+.member-row{cursor:pointer}
+.member-row:hover td{background:rgba(255,26,26,.05)!important}
+.online-dot{
+  width:8px;height:8px;border-radius:50%;
+  display:inline-block;margin-right:6px;
+}
+.dot-online{background:#4ade80;box-shadow:0 0 6px #4ade80}
+.dot-offline{background:#555}
+
+/* SEARCH */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:20px;
+}
+.search-bar input{
+  flex:1;background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,26,26,.2);
+  color:var(--text);font-family:'Rajdhani',sans-serif;
+  font-size:15px;padding:10px 14px;outline:none;
+}
+.search-bar input:focus{border-color:var(--red)}
 
 /* RESPONSIVE */
-@media(max-width:1024px){
-  .sec-layout,.bot-layout,.join-inner{grid-template-columns:1fr;gap:44px}
-  .sec-vis{position:static}
-  .team-grid{grid-template-columns:1fr 1fr}
-  .f-top{grid-template-columns:1fr 1fr}
-  .nav-links{display:none}
+@media(max-width:768px){
+  .sidebar{width:200px}
+  .dash-main{padding:20px 16px}
+  .scripts-grid{grid-template-columns:1fr}
+  .stats-grid,.owner-stats{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:640px){
-  h1{font-size:4rem}
-  .team-grid{grid-template-columns:1fr}
-  .bot-grid{grid-template-columns:1fr}
-  .f-top{grid-template-columns:1fr}
-  .stats-bar{flex-wrap:wrap}
-  .st{min-width:50%}
-  .f-bot{flex-direction:column;text-align:center}
+@media(max-width:600px){
+  .dash-layout{flex-direction:column}
+  .sidebar{width:100%;min-height:auto;height:auto;position:relative}
+  .sidebar-nav{display:flex;flex-wrap:wrap;padding:8px}
+  .nav-item{padding:8px 12px;font-size:13px;border-left:none;border-bottom:2px solid transparent}
+  .nav-item.active{border-left-color:transparent;border-bottom-color:var(--red)}
+}
+
+/* SPINNER */
+.spinner{
+  width:20px;height:20px;
+  border:2px solid rgba(255,26,26,.2);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .6s linear infinite;
+  display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.85);
+  z-index:10000;display:none;
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--bg2);
+  border:1px solid rgba(255,26,26,.3);
+  padding:32px;width:90%;max-width:500px;
+  position:relative;animation:card-in .3s ease;
+}
+.modal::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+}
+.modal-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px;letter-spacing:3px;
+  color:var(--text);margin-bottom:20px;
+}
+.modal-close{
+  position:absolute;top:12px;right:16px;
+  background:transparent;border:none;
+  color:var(--muted);font-size:22px;cursor:pointer;
+}
+.modal-close:hover{color:var(--red3)}
+
+/* LOADSTRING MODAL */
+.loadstr-box{
+  background:rgba(0,0,0,.7);
+  border:1px solid rgba(255,26,26,.2);
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;color:var(--red3);
+  padding:16px;word-break:break-all;
+  line-height:1.6;margin-bottom:12px;
+  max-height:160px;overflow-y:auto;
+}
+
+/* EMPTY STATE */
+.empty{
+  text-align:center;padding:60px 20px;
+  color:var(--muted);
+}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.empty-text{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px}
+
+/* TAG */
+.tag{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;letter-spacing:1px;
+  padding:2px 8px;
+  background:rgba(255,26,26,.08);
+  border:1px solid rgba(255,26,26,.15);
+  color:rgba(255,26,26,.6);
+  margin:2px;
+}
+
+/* OWNER BADGE */
+.owner-badge{
+  background:linear-gradient(90deg,rgba(255,215,0,.2),rgba(255,165,0,.1));
+  border:1px solid rgba(255,215,0,.4);
+  color:var(--gold);
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:2px;
+  padding:3px 12px;
+}
+
+/* PROGRESS */
+.progress-bar{
+  background:rgba(255,26,26,.1);
+  height:6px;margin-top:8px;
+}
+.progress-fill{
+  height:100%;background:var(--red);
+  transition:width .5s ease;
 }
 </style>
 </head>
 <body>
+<canvas id="particles"></canvas>
+<div class="bg-glow"></div>
+<div class="bg-glow2"></div>
 
-<!-- NAV -->
-<nav id="navbar">
-  <a href="#" class="nav-logo">AXTRA<span class="sl">/</span>HUB</a>
-  <ul class="nav-links">
-    <li><a href="#securite">Sécurité</a></li>
-    <li><a href="#bot">Le Bot</a></li>
-    <li><a href="#equipe">L'Équipe</a></li>
-    <li><a href="#rejoindre">Rejoindre</a></li>
-  </ul>
-  <a href="https://discord.gg" class="nav-cta">
-    <svg width="13" height="10" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
-    Rejoindre
-  </a>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="h-bg">AXTRA</div>
-  <div class="h-vline l1"></div>
-  <div class="h-vline l2"></div>
-  <div class="h-corner"></div>
-
-  <div class="h-tag">Serveur Discord · Communauté active</div>
-
-  <h1>
-    BEYOND<br>
-    <span class="out">LIMI</span><span class="am">TS</span>
-  </h1>
-
-  <div class="h-sub-row">
-    <div class="h-slogan">Votre hub ultime pour l'innovation et la communauté.</div>
-    <div class="h-btns">
-      <a href="https://discord.gg" class="btn-main">
-        <svg width="15" height="12" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
-        Rejoindre le Discord
-      </a>
-      <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0" class="btn-ghost">⚙ Ajouter le bot</a>
-    </div>
+<!-- ══ LANDING ══ -->
+<div id="page-landing" class="page active">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+  <div class="landing-logo" data-text="X77 HUB">X77 HUB</div>
+  <div class="landing-sub">// executor scripts platform //</div>
+  <div class="landing-tagline">Le hub d'<span>exécution</span> le plus avancé</div>
+  <div class="landing-btns">
+    <button class="btn btn-primary" onclick="showPage('page-login')">SE CONNECTER</button>
+    <button class="btn btn-secondary" onclick="showPage('page-register')">S'INSCRIRE</button>
+    <button class="btn btn-secondary" onclick="showPage('page-login-owner')">OWNER</button>
   </div>
-
-  <div class="stats-bar">
-    <div class="st"><div class="st-val" id="s-online">—</div><div class="st-lbl">Membres en ligne</div></div>
-    <div class="st"><div class="st-val" id="s-total">—</div><div class="st-lbl">Total membres</div></div>
-    <div class="st"><div class="st-val">24/7</div><div class="st-lbl">Disponibilité bot</div></div>
-    <div class="st"><div class="st-val">100%</div><div class="st-lbl">Sécurité active</div></div>
+  <div class="landing-stats">
+    <div class="stat"><div class="stat-num" id="stat-members">0</div><div class="stat-label">MEMBRES</div></div>
+    <div class="stat"><div class="stat-num" id="stat-scripts">0</div><div class="stat-label">SCRIPTS</div></div>
+    <div class="stat"><div class="stat-num" id="stat-execs">0</div><div class="stat-label">EXÉCUTIONS</div></div>
   </div>
-</section>
+</div>
 
-<!-- SÉCURITÉ -->
-<section id="securite" class="sec alt">
-  <div class="sec-layout">
-    <div>
-      <span class="s-num reveal">— 01 / Protection</span>
-      <h2 class="reveal">AXTRA<br><span class="l2">CORE</span><br><span class="a">SHIELD</span></h2>
-      <p class="s-body reveal">Le serveur est blindé par un système Anti-Raid entièrement sur-mesure et un AutoMod intelligent conçu pour maintenir un environnement sûr, fluide et agréable pour tous les membres.</p>
-      <div class="feat-list">
-        <div class="feat reveal"><div class="f-num">01</div><div><div class="f-title">Système Anti-Raid Avancé</div><div class="f-desc">Détection automatique des raids en temps réel. Blocage immédiat, logs détaillés et alertes staff instantanées.</div></div></div>
-        <div class="feat reveal"><div class="f-num">02</div><div><div class="f-title">AutoMod Personnalisé</div><div class="f-desc">Filtrage intelligent du spam, des liens malveillants et des contenus inappropriés. Règles entièrement configurables.</div></div></div>
-        <div class="feat reveal"><div class="f-num">03</div><div><div class="f-title">Gestion des Permissions</div><div class="f-desc">Système de rôles granulaire avec attribution automatique et gestion avancée des accès.</div></div></div>
-        <div class="feat reveal"><div class="f-num">04</div><div><div class="f-title">Monitoring Temps Réel</div><div class="f-desc">Surveillance continue, historique des événements complet et alertes proactives.</div></div></div>
+<!-- ══ LOGIN MEMBRE ══ -->
+<div id="page-login" class="page auth-page">
+  <div class="auth-card">
+    <div class="auth-title"><span>X77</span> HUB</div>
+    <div class="auth-sub">// CONNEXION MEMBRE //</div>
+    <div class="auth-err" id="login-err"></div>
+    <div class="field"><label>Identifiant</label><input type="text" id="login-user" placeholder="votre identifiant"></div>
+    <div class="field"><label>Mot de passe</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn btn-primary auth-btn" onclick="doLogin()">CONNEXION</button>
+    <div class="auth-link">Pas de compte ? <a onclick="showPage('page-register')">S'inscrire</a> &nbsp;·&nbsp; <a onclick="showPage('page-landing')">Retour</a></div>
+  </div>
+</div>
+
+<!-- ══ REGISTER ══ -->
+<div id="page-register" class="page auth-page">
+  <div class="auth-card">
+    <div class="auth-title"><span>X77</span> HUB</div>
+    <div class="auth-sub">// CRÉER UN COMPTE //</div>
+    <div class="auth-err" id="reg-err"></div>
+    <div class="auth-success" id="reg-ok"></div>
+    <div class="field"><label>Identifiant</label><input type="text" id="reg-user" placeholder="choisir un identifiant"></div>
+    <div class="field"><label>Mot de passe</label><input type="password" id="reg-pass" placeholder="minimum 6 caractères"></div>
+    <div class="field"><label>Confirmer mot de passe</label><input type="password" id="reg-pass2" placeholder="répéter le mot de passe" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <button class="btn btn-primary auth-btn" onclick="doRegister()">CRÉER LE COMPTE</button>
+    <div class="auth-link">Déjà un compte ? <a onclick="showPage('page-login')">Se connecter</a> &nbsp;·&nbsp; <a onclick="showPage('page-landing')">Retour</a></div>
+  </div>
+</div>
+
+<!-- ══ LOGIN OWNER ══ -->
+<div id="page-login-owner" class="page auth-page">
+  <div class="auth-card">
+    <div class="auth-title"><span style="color:var(--gold)">OWNER</span> ACCESS</div>
+    <div class="auth-sub">// ZONE RESTREINTE //</div>
+    <div class="auth-err" id="owner-err"></div>
+    <div class="field"><label>Identifiant Owner</label><input type="text" id="owner-user" placeholder="identifiant owner"></div>
+    <div class="field"><label>Mot de passe</label><input type="password" id="owner-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doOwnerLogin()"></div>
+    <button class="btn btn-primary auth-btn" onclick="doOwnerLogin()">ACCÈS OWNER</button>
+    <div class="auth-link"><a onclick="showPage('page-landing')">← Retour</a></div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD MEMBRE ══ -->
+<div id="page-member" class="page">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-text">X77 HUB</div>
+        <div class="sidebar-logo-sub">// MEMBER PORTAL //</div>
       </div>
-    </div>
-    <div class="sec-vis reveal">
-      <div class="grid-disp">
-        <div class="scan"></div>
-        <div class="c-tl"></div><div class="c-br"></div>
-        <div class="g-core">
-          <span class="g-icon">🛡️</span>
-          <div class="g-lbl">Système actif</div>
+      <div class="sidebar-user">
+        <div class="avatar" id="member-avatar">?</div>
+        <div>
+          <div class="user-info-name" id="member-name-display">—</div>
+          <div class="user-info-role">MEMBRE</div>
         </div>
       </div>
-      <div class="chips">
-        <div class="chip"><div class="cdot"></div>Anti-Raid — OPÉRATIONNEL</div>
-        <div class="chip"><div class="cdot"></div>AutoMod — OPÉRATIONNEL</div>
-        <div class="chip"><div class="cdot o"></div>Surveillance — EN COURS</div>
-        <div class="chip"><div class="cdot"></div>Logs — SYNCHRONISÉS</div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Navigation</div>
+        <div class="nav-item active" onclick="memberNav('scripts')"><span class="icon">⚡</span>Scripts</div>
+        <div class="nav-item" onclick="memberNav('history')"><span class="icon">📋</span>Mon Historique</div>
+        <div class="nav-item" onclick="memberNav('account')"><span class="icon">👤</span>Mon Compte</div>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="doLogout()">DÉCONNEXION</button>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- BOT -->
-<section id="bot" class="sec">
-  <div class="bot-layout">
-    <div>
-      <span class="s-num reveal">— 02 / Intelligence</span>
-      <h2 class="reveal">AXTRA<br><span class="a">SMART</span><br><span class="l2">SCANNER</span></h2>
-      <p class="s-body reveal" style="margin-bottom:32px">Bien plus qu'un bot de modération — un vrai outil d'analyse avancée. Déobfuscation Lua, automatisation et statistiques en temps réel.</p>
-      <div class="bot-grid reveal">
-        <div class="bf"><span class="bf-ic">🔍</span><div class="bf-name">Déobfuscateur Lua</div><div class="bf-desc">WeAreDevs, IronBrew 2, Luraph, Synapse XORM.</div></div>
-        <div class="bf"><span class="bf-ic">🤖</span><div class="bf-name">AutoMod IA</div><div class="bf-desc">Filtrage contextuel intelligent et adaptatif.</div></div>
-        <div class="bf"><span class="bf-ic">📊</span><div class="bf-name">Analytics</div><div class="bf-desc">Statistiques et suivi d'activité en temps réel.</div></div>
-        <div class="bf"><span class="bf-ic">⚡</span><div class="bf-name">Commandes Rapides</div><div class="bf-desc">Interface optimisée mobile, réponses instantanées.</div></div>
-        <div class="bf"><span class="bf-ic">🎭</span><div class="bf-name">Rôles Auto</div><div class="bf-desc">Attribution dynamique selon l'activité.</div></div>
-        <div class="bf"><span class="bf-ic">🔐</span><div class="bf-name">Logs Avancés</div><div class="bf-desc">Historique complet et alertes configurables.</div></div>
+    <main class="dash-main">
+      <div class="dash-header">
+        <div class="dash-title">BIENVENUE SUR <span>X77 HUB</span></div>
+        <div class="dash-time" id="member-clock"></div>
       </div>
-      <div style="margin-top:28px" class="reveal">
-        <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0" class="btn-main">⚙ Ajouter le bot à mon serveur</a>
-      </div>
-    </div>
-    <div class="terminal reveal">
-      <div class="t-hdr">
-        <div class="t-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
-        <span class="t-title">AXTRA SMART SCANNER — v2.0</span>
-        <span class="t-live">● EN LIGNE</span>
-      </div>
-      <div class="t-body">
-        <span class="tl"><span class="p">axtra@core</span><span class="dim">:~$ </span><span class="cmd">./axtra --status</span></span>
-        <span class="tl"><span class="ok">✓</span> Bot opérationnel</span>
-        <span class="tl"><span class="ok">✓</span> Anti-Raid: <span class="val">ACTIF</span></span>
-        <span class="tl"><span class="ok">✓</span> AutoMod: <span class="val">ACTIF</span></span>
-        <span class="tl"><span class="ok">✓</span> Uptime: <span class="val">99.98%</span></span>
-        <span class="tl"> </span>
-        <span class="tl"><span class="p">axtra@core</span><span class="dim">:~$ </span><span class="cmd">./axtra deobfuscate script.lua</span></span>
-        <span class="tl"><span class="dim">» Analyse en cours...</span></span>
-        <span class="tl"><span class="ok">✓</span> Couches: <span class="w">IronBrew2</span>, <span class="w">Luraph</span></span>
-        <span class="tl"><span class="ok">✓</span> Pipeline: <span class="val">3/3 étapes</span></span>
-        <span class="tl"><span class="ok">✓</span> Résultat prêt <span class="dim">(0.31s)</span></span>
-        <span class="tl"> </span>
-        <span class="tl"><span class="p">axtra@core</span><span class="dim">:~$ </span><span class="cur"></span></span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ÉQUIPE -->
-<section id="equipe" class="sec alt">
-  <div class="team-hdr">
-    <div>
-      <span class="s-num reveal">— 03 / L'Équipe</span>
-      <h2 class="reveal" style="margin-bottom:0">LES<br><span class="a">ARCHITECTES</span></h2>
-    </div>
-    <p class="s-body reveal" style="max-width:320px">Les personnes qui construisent, protègent et font vivre AXTRA HUB chaque jour.</p>
-  </div>
-  <div class="team-grid">
-    <div class="mc lead reveal">
-      <div class="m-av">AX</div>
-      <div class="m-name">7xhq</div>
-      <div class="m-role">Lead Developer &amp; Fondateur</div>
-      <p class="m-bio">Architecte principal d'Axtra Hub. Développeur full-stack, créateur de bots Discord, systèmes de sécurité et outils communautaires. Visionnaire derrière tout l'écosystème Axtra ( OWNER ).</p>
-    </div>
-    <div class="mc reveal">
-      <div class="m-av">AX</div>
-      <div class="m-name">ARKIZZ</div>
-      <div class="m-role">Responsable Modération</div>
-      <p class="m-bio">Garant d'un environnement sain et respectueux. Il veille au maintien des règles et à la sécurité de la communauté au quotidien.</p>
-    </div>
-    <div class="mc reveal">
-      <div class="m-av">AX</div>
-      <div class="m-name">FLUXXY-99K</div>
-      <div class="m-role">Co-Fondateur &amp; Dev</div>
-      <p class="m-bio">Spécialisé dans l'optimisation des systèmes automatisés et l'expérience utilisateur du bot Axtra Core.</p>
-    </div>
-    <div class="mc reveal">
-      <div class="m-av">AX</div>
-      <div class="m-name">BSK-TTSBLUE</div>
-      <div class="m-role">Community Manager</div>
-      <p class="m-bio">Animateur de la communauté, organisateur d'événements et lien direct entre les membres et le staff.</p>
-    </div>
-  </div>
-</section>
-
-<!-- REJOINDRE -->
-<section id="rejoindre" class="join-sec">
-  <div class="join-bgnm">∞</div>
-  <div class="join-inner">
-    <div class="join-text">
-      <span class="s-num reveal">— 04 / Communauté</span>
-      <h2 class="reveal">REJOINS<br><span class="a">AXTRA</span><br><span class="l2">HUB</span></h2>
-      <p class="reveal">Des membres passionnés t'attendent. Rejoins la communauté, profite des outils et participe à quelque chose de plus grand.</p>
-      <div class="reveal">
-        <a href="https://discord.gg/kaQn7hYctH" class="btn-main">
-          <svg width="15" height="12" viewBox="0 0 14 11" fill="currentColor"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
-          Rejoindre le serveur
-        </a>
-      </div>
-    </div>
-    <div class="reveal">
-      <div class="dc-card">
-        <span class="dc-icon">
-          <svg width="38" height="29" viewBox="0 0 14 11" fill="#5865F2"><path d="M11.86 1.22A11.6 11.6 0 0 0 9.02.35a.04.04 0 0 0-.05.02c-.12.24-.24.49-.35.73a10.72 10.72 0 0 0-3.23 0A7.55 7.55 0 0 0 5.04.37a.04.04 0 0 0-.05-.02A11.56 11.56 0 0 0 2.14 1.22.04.04 0 0 0 2.12 1.24C.31 3.89-.18 6.49.06 9.06a.04.04 0 0 0 .02.03A11.65 11.65 0 0 0 3.59 10.86a.04.04 0 0 0 .05-.02c.27-.37.51-.76.72-1.17a.04.04 0 0 0-.02-.06 7.68 7.68 0 0 1-1.1-.52.04.04 0 0 1 0-.07l.22-.17a.04.04 0 0 1 .04 0c2.31 1.05 4.81 1.05 7.09 0a.04.04 0 0 1 .04 0l.22.17a.04.04 0 0 1 0 .07 7.22 7.22 0 0 1-1.1.52.04.04 0 0 0-.02.06c.21.41.46.8.72 1.17a.04.04 0 0 0 .05.02A11.62 11.62 0 0 0 13.92 9.09a.04.04 0 0 0 .02-.03C14.23 6.07 13.45 3.47 11.88 1.24a.04.04 0 0 0-.02-.02ZM4.68 7.47c-.69 0-1.26-.64-1.26-1.42s.56-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Zm4.64 0c-.7 0-1.26-.64-1.26-1.42s.55-1.42 1.26-1.42 1.27.64 1.26 1.42c0 .78-.57 1.42-1.26 1.42Z"/></svg>
-        </span>
-        <div class="dc-name">AXTRA HUB</div>
-        <div class="dc-online"><div class="dc-dot"></div><span class="dc-cnt" id="footer-online">—</span>&nbsp;membres en ligne</div>
-        <a href="https://discord.gg" class="btn-main" style="width:100%;justify-content:center">Rejoindre maintenant</a>
-      </div>
-      <div class="bot-add">
-        <div class="bot-add-txt">
-          <strong>Axtra Smart Scanner</strong>
-          Ajoute le bot directement à ton serveur Discord.
+      <!-- Scripts section -->
+      <div id="msec-scripts" class="dash-section active">
+        <div class="section-title">⚡ Scripts Disponibles</div>
+        <div class="scripts-grid" id="scripts-grid">
+          <div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Chargement...</div></div>
         </div>
-        <a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0" class="btn-ghost" style="white-space:nowrap;flex-shrink:0">⚙ Ajouter</a>
+      </div>
+      <!-- History section -->
+      <div id="msec-history" class="dash-section">
+        <div class="section-title">📋 Mon Historique d'Exécutions</div>
+        <div id="member-history-table">
+          <div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune exécution enregistrée</div></div>
+        </div>
+      </div>
+      <!-- Account section -->
+      <div id="msec-account" class="dash-section">
+        <div class="section-title">👤 Mon Compte</div>
+        <div class="panel">
+          <div class="panel-title">INFORMATIONS</div>
+          <table class="data-table">
+            <tr><td style="color:var(--muted);width:160px;font-family:'Share Tech Mono',monospace;font-size:11px;">IDENTIFIANT</td><td id="acc-user">—</td></tr>
+            <tr><td style="color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;">RÔLE</td><td><span class="badge badge-red">MEMBRE</span></td></tr>
+            <tr><td style="color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;">INSCRIPTION</td><td id="acc-date">—</td></tr>
+            <tr><td style="color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;">EXÉCUTIONS</td><td id="acc-execs">—</td></tr>
+            <tr><td style="color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;">DISCORD</td><td><a href="https://discord.gg/xXs9RgbcW6" target="_blank" style="color:var(--red3)">discord.gg/xXs9RgbcW6</a></td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-title">CHANGER MOT DE PASSE</div>
+          <div class="alert alert-red" id="pass-err"></div>
+          <div class="alert alert-green" id="pass-ok"></div>
+          <div class="form-row">
+            <div class="form-field"><label>Ancien mot de passe</label><input type="password" id="old-pass" placeholder="••••••••"></div>
+            <div class="form-field"><label>Nouveau mot de passe</label><input type="password" id="new-pass" placeholder="••••••••"></div>
+          </div>
+          <div class="action-bar"><button class="btn-sm btn-sm-red" onclick="changePassword()">CHANGER</button></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD OWNER ══ -->
+<div id="page-owner" class="page">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-text" style="color:var(--gold)">X77 HUB</div>
+        <div class="sidebar-logo-sub" style="color:rgba(255,215,0,.4)">// OWNER PANEL //</div>
+      </div>
+      <div class="sidebar-user">
+        <div class="avatar" style="background:var(--gold);color:#000">O</div>
+        <div>
+          <div class="user-info-name">X77HUB</div>
+          <div class="user-info-role" style="color:var(--gold)">⭐ OWNER</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Owner Panel</div>
+        <div class="nav-item active" onclick="ownerNav('dashboard')"><span class="icon">📊</span>Dashboard</div>
+        <div class="nav-item" onclick="ownerNav('members')"><span class="icon">👥</span>Membres</div>
+        <div class="nav-item" onclick="ownerNav('scripts')"><span class="icon">⚡</span>Scripts</div>
+        <div class="nav-item" onclick="ownerNav('executions')"><span class="icon">📋</span>Exécutions</div>
+        <div class="nav-item" onclick="ownerNav('analytics')"><span class="icon">📈</span>Analytics</div>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="logout-btn" style="border-color:rgba(255,215,0,.2);color:rgba(255,215,0,.5)" onclick="doLogout()">DÉCONNEXION</button>
       </div>
     </div>
-  </div>
-</section>
+    <main class="dash-main">
+      <div class="dash-header">
+        <div class="dash-title" style="color:var(--gold)">OWNER <span style="color:var(--text)">DASHBOARD</span></div>
+        <div class="dash-time" id="owner-clock"></div>
+      </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="f-top">
-    <div>
-      <div class="f-logo">AXTRA <span>HUB</span></div>
-      <p class="f-desc">Votre hub ultime pour l'innovation et la communauté. Sécurité, automatisation et esprit collectif — beyond limits.</p>
-    </div>
-    <div>
-      <div class="f-col-t">Navigation</div>
-      <ul class="f-links">
-        <li><a href="#securite">Sécurité</a></li>
-        <li><a href="#bot">Le Bot</a></li>
-        <li><a href="#equipe">L'Équipe</a></li>
-        <li><a href="#rejoindre">Rejoindre</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="f-col-t">Liens</div>
-      <ul class="f-links">
-        <li><a href="https://discord.gg/kaQn7hYctH">Serveur Discord</a></li>
-        <li><a href="https://discord.com/oauth2/authorize?client_id=1486326794914238535&scope=bot%20applications.commands&permissions=0">Ajouter le Bot</a></li>
-        <li><a href="#">Twitter / X</a></li>
-        <li><a href="#">GitHub</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="f-col-t">Contact</div>
-      <ul class="f-links">
-        <li><a href="#">Support Discord</a></li>
-        <li><a href="#">Signaler un bug</a></li>
-        <li><a href="#">Partenariats</a></li>
-      </ul>
+      <!-- Dashboard -->
+      <div id="osec-dashboard" class="dash-section active">
+        <div class="owner-stats" id="owner-stats-grid"></div>
+        <div class="section-title">📋 Dernières Exécutions</div>
+        <div id="recent-execs-table"></div>
+      </div>
+
+      <!-- Members -->
+      <div id="osec-members" class="dash-section">
+        <div class="section-title">👥 Gestion des Membres</div>
+        <div class="search-bar">
+          <input type="text" id="member-search" placeholder="Rechercher un membre..." oninput="filterMembers()">
+        </div>
+        <div class="alert alert-green" id="member-action-ok"></div>
+        <div class="alert alert-red" id="member-action-err"></div>
+        <div id="members-table"></div>
+      </div>
+
+      <!-- Scripts -->
+      <div id="osec-scripts" class="dash-section">
+        <div class="section-title">⚡ Gestion des Scripts</div>
+        <div class="panel">
+          <div class="panel-title">AJOUTER UN SCRIPT</div>
+          <div class="alert alert-green" id="script-add-ok"></div>
+          <div class="alert alert-red" id="script-add-err"></div>
+          <div class="form-row">
+            <div class="form-field"><label>Nom du Script</label><input type="text" id="sc-name" placeholder="ex: Speed Hub"></div>
+            <div class="form-field"><label>Jeu Roblox</label><input type="text" id="sc-game" placeholder="ex: Steal a Brainrot"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Description</label><textarea id="sc-desc" placeholder="Description courte du script..."></textarea></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Loadstring / Code</label><textarea id="sc-loadstr" placeholder="loadstring(game:HttpGet('...'))()"></textarea></div>
+            <div class="form-field"><label>Version</label><input type="text" id="sc-version" placeholder="v1.0.0"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Badge</label>
+              <select id="sc-badge">
+                <option>FREE</option><option>PREMIUM</option><option>VIP</option><option>BETA</option><option>NEW</option>
+              </select>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button class="btn-sm btn-sm-ghost" onclick="clearScriptForm()">ANNULER</button>
+            <button class="btn-sm btn-sm-red" onclick="addScript()">AJOUTER LE SCRIPT</button>
+          </div>
+        </div>
+        <div class="section-title">SCRIPTS EXISTANTS</div>
+        <div id="owner-scripts-list"></div>
+      </div>
+
+      <!-- Executions -->
+      <div id="osec-executions" class="dash-section">
+        <div class="section-title">📋 Journal d'Exécutions</div>
+        <div class="search-bar">
+          <input type="text" id="exec-search" placeholder="Rechercher par membre, script..." oninput="filterExecs()">
+        </div>
+        <div id="exec-log-table"></div>
+      </div>
+
+      <!-- Analytics -->
+      <div id="osec-analytics" class="dash-section">
+        <div class="section-title">📈 Analytics</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px">
+          <div class="panel">
+            <div class="panel-title">SCRIPTS LES PLUS UTILISÉS</div>
+            <div id="analytics-top-scripts"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">EXECUTEURS LES PLUS UTILISÉS</div>
+            <div id="analytics-executors"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">ACTIVITÉ RÉCENTE</div>
+            <div id="analytics-activity"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">MEMBRES ACTIFS</div>
+            <div id="analytics-members"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ══ MODAL LOADSTRING ══ -->
+<div class="modal-overlay" id="modal-loadstr">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-loadstr')">×</button>
+    <div class="modal-title" id="modal-script-name">SCRIPT</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:12px;">// LOADSTRING //</div>
+    <div class="loadstr-box" id="modal-loadstr-content"></div>
+    <button class="btn-sm btn-sm-red" style="width:100%" onclick="copyLoadstr()">📋 COPIER</button>
+  </div>
+</div>
+
+<!-- ══ MODAL CONFIRM DELETE ══ -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal">
+    <div class="modal-title">⚠️ CONFIRMER</div>
+    <div style="color:var(--muted);margin-bottom:20px;font-size:15px" id="confirm-msg">Êtes-vous sûr ?</div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn-sm btn-sm-ghost" onclick="closeModal('modal-confirm')">ANNULER</button>
+      <button class="btn-sm btn-sm-danger" id="confirm-btn">CONFIRMER</button>
     </div>
   </div>
-  <div class="f-bot">
-    <div class="f-copy">© 2024–2026 <em>AXTRA HUB</em>. Tous droits réservés. Conçu par <em>7XUHQ</em>.</div>
-    <div class="f-socs">
-      <a href="https://discord.gg" class="f-soc">DC</a>
-      <a href="#" class="f-soc">✕</a>
-      <a href="#" class="f-soc">GH</a>
-    </div>
-  </div>
-</footer>
+</div>
 
 <script>
-// Discord Widget
-async function loadDiscord() {
-  try {
-    const r = await fetch('https://discord.com/api/guilds/1486820931216216186/widget.json');
-    const d = await r.json();
-    const online = d.presence_count || (d.members ? d.members.length : '—');
-    document.getElementById('s-online').textContent = online;
-    document.getElementById('s-total').textContent = d.members ? d.members.length : '—';
-    const fo = document.getElementById('footer-online');
-    if (fo) fo.textContent = online;
-  } catch(e) {}
-}
-loadDiscord();
+// ═══════════════════════════════════════════════
+// CONFIG JSONBIN
+// ═══════════════════════════════════════════════
+const BIN_KEY = atob('JDJhJDEwJEo2L2hZeUZsV0dNbVZTYjlxWmpGdXVreUJuQUdHNFIwQnNKTXpYRVdQM2t5VGNqbXpESDJD');
+const BIN_BASE = 'https://api.jsonbin.io/v3/b';
+const BINS = {};
 
-// Scroll reveal avec stagger
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), 50); obs.unobserve(e.target); }
-  });
-}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+// ─── OWNER CREDENTIALS (obfusqués) ───
+const _o=()=>{const a=[88,55,55,72,85,66];const b=[88,55,55,85,72,81,46];return{u:a.map(c=>String.fromCharCode(c)).join(''),p:b.map(c=>String.fromCharCode(c)).join('')}};
 
-document.querySelectorAll('.reveal').forEach((el, i) => {
-  const grp = el.closest('.feat-list, .team-grid, .bot-grid, .chips');
-  if (grp) {
-    const siblings = [...grp.querySelectorAll('.reveal')];
-    const idx = siblings.indexOf(el);
-    if (idx >= 0) el.style.transitionDelay = `${idx * 65}ms`;
+// ─── STATE ───
+let currentUser=null,isOwner=false;
+let DB={members:[],scripts:[],executions:[]};
+let allBins={members:null,scripts:null,executions:null};
+
+// ═══════════════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('particles');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<60;i++)pts.push({x:Math.random()*9999,y:Math.random()*9999,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5,a:Math.random()*.5+.1});
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,26,26,${p.a})`;ctx.fill();
+    });
+    requestAnimationFrame(frame);
   }
-  obs.observe(el);
-});
+  frame();
+})();
 
-// Nav border on scroll
-window.addEventListener('scroll', () => {
-  document.getElementById('navbar').style.borderBottomColor =
-    window.scrollY > 60 ? 'rgba(255,149,0,.18)' : 'rgba(255,255,255,.07)';
-}, { passive: true });
+// ═══════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════
+function updateClock(){
+  const now=new Date();
+  const str=now.toLocaleTimeString('fr-FR')+'  //  '+now.toLocaleDateString('fr-FR');
+  const ec=document.getElementById('member-clock');
+  const oc=document.getElementById('owner-clock');
+  if(ec)ec.textContent=str;
+  if(oc)oc.textContent=str;
+}
+setInterval(updateClock,1000);updateClock();
+
+// ═══════════════════════════════════════════════
+// PAGE ROUTER
+// ═══════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const p=document.getElementById(id);
+  if(p)p.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// JSONBIN API
+// ═══════════════════════════════════════════════
+async function getBin(binId){
+  const r=await fetch(`${BIN_BASE}/${binId}/latest`,{headers:{'X-Master-Key':BIN_KEY}});
+  if(!r.ok)return null;
+  const d=await r.json();return d.record;
+}
+async function setBin(binId,data){
+  const r=await fetch(`${BIN_BASE}/${binId}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':BIN_KEY},body:JSON.stringify(data)});
+  return r.ok;
+}
+async function createBin(name,data){
+  const r=await fetch(BIN_BASE,{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':BIN_KEY,'X-Bin-Name':name,'X-Bin-Private':'true'},body:JSON.stringify(data)});
+  if(!r.ok)return null;
+  const d=await r.json();return d.metadata.id;
+}
+
+// ─── INIT BINS (lookup table dans localStorage) ───
+async function initBins(){
+  let config=JSON.parse(localStorage.getItem('x77_bins')||'{}');
+  // membres
+  if(!config.members){config.members=await createBin('x77_members',{members:[]});localStorage.setItem('x77_bins',JSON.stringify(config));}
+  if(!config.scripts){config.scripts=await createBin('x77_scripts',{scripts:[]});localStorage.setItem('x77_bins',JSON.stringify(config));}
+  if(!config.executions){config.executions=await createBin('x77_executions',{executions:[]});localStorage.setItem('x77_bins',JSON.stringify(config));}
+  allBins=config;
+}
+
+async function loadDB(){
+  await initBins();
+  const [m,s,e]=await Promise.all([getBin(allBins.members),getBin(allBins.scripts),getBin(allBins.executions)]);
+  DB.members=(m&&m.members)||[];
+  DB.scripts=(s&&s.scripts)||[];
+  DB.executions=(e&&e.executions)||[];
+  updateLandingStats();
+}
+async function saveMembers(){await setBin(allBins.members,{members:DB.members})}
+async function saveScripts(){await setBin(allBins.scripts,{scripts:DB.scripts})}
+async function saveExecutions(){await setBin(allBins.executions,{executions:DB.executions})}
+
+function updateLandingStats(){
+  animCount('stat-members',DB.members.length);
+  animCount('stat-scripts',DB.scripts.length);
+  animCount('stat-execs',DB.executions.length);
+}
+function animCount(id,target){
+  const el=document.getElementById(id);
+  if(!el)return;
+  let cur=0;const step=Math.max(1,Math.floor(target/30));
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},40);
+}
+
+// ═══════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════
+function showErr(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),4000);}}
+function showOk(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}}
+
+async function doRegister(){
+  const u=document.getElementById('reg-user').value.trim();
+  const p=document.getElementById('reg-pass').value;
+  const p2=document.getElementById('reg-pass2').value;
+  if(!u||!p)return showErr('reg-err','Remplis tous les champs.');
+  if(p!==p2)return showErr('reg-err','Les mots de passe ne correspondent pas.');
+  if(p.length<6)return showErr('reg-err','Mot de passe trop court (min 6).');
+  if(DB.members.find(m=>m.username.toLowerCase()===u.toLowerCase()))return showErr('reg-err','Identifiant déjà utilisé.');
+  const member={id:Date.now().toString(),username:u,password:btoa(p),role:'member',createdAt:new Date().toISOString(),execCount:0,banned:false};
+  DB.members.push(member);
+  await saveMembers();
+  showOk('reg-ok','Compte créé ! Tu peux te connecter.');
+  document.getElementById('reg-user').value='';
+  document.getElementById('reg-pass').value='';
+  document.getElementById('reg-pass2').value='';
+  setTimeout(()=>showPage('page-login'),1500);
+}
+
+async function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  if(!u||!p)return showErr('login-err','Remplis tous les champs.');
+  const member=DB.members.find(m=>m.username.toLowerCase()===u.toLowerCase()&&m.password===btoa(p));
+  if(!member)return showErr('login-err','Identifiant ou mot de passe incorrect.');
+  if(member.banned)return showErr('login-err','Ton compte est banni. Contacte un admin.');
+  currentUser=member;isOwner=false;
+  loadMemberDash();showPage('page-member');
+}
+
+function doOwnerLogin(){
+  const u=document.getElementById('owner-user').value.trim();
+  const p=document.getElementById('owner-pass').value;
+  const creds=_o();
+  if(u===creds.u&&p===creds.p){isOwner=true;currentUser={username:'X77HUB',role:'owner'};loadOwnerDash();showPage('page-owner');}
+  else showErr('owner-err','Accès refusé.');
+}
+
+function doLogout(){
+  currentUser=null;isOwner=false;
+  showPage('page-landing');
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+}
+
+// ═══════════════════════════════════════════════
+// MEMBER DASHBOARD
+// ═══════════════════════════════════════════════
+function loadMemberDash(){
+  document.getElementById('member-avatar').textContent=currentUser.username[0].toUpperCase();
+  document.getElementById('member-name-display').textContent=currentUser.username;
+  document.getElementById('acc-user').textContent=currentUser.username;
+  document.getElementById('acc-date').textContent=new Date(currentUser.createdAt).toLocaleDateString('fr-FR');
+  document.getElementById('acc-execs').textContent=currentUser.execCount||0;
+  renderMemberScripts();
+  renderMemberHistory();
+}
+
+function memberNav(sec){
+  document.querySelectorAll('#page-member .nav-item').forEach((el,i)=>{
+    const secs=['scripts','history','account'];
+    el.classList.toggle('active',secs[i]===sec);
+  });
+  document.querySelectorAll('#page-member .dash-section').forEach(el=>el.classList.remove('active'));
+  document.getElementById('msec-'+sec)?.classList.add('active');
+}
+
+function renderMemberScripts(){
+  const grid=document.getElementById('scripts-grid');
+  if(!DB.scripts.length){grid.innerHTML='<div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Aucun script disponible</div></div>';return;}
+  grid.innerHTML=DB.scripts.map(s=>`
+    <div class="script-card">
+      <div class="sc-badge">${s.badge||'FREE'}</div>
+      <div class="sc-name">${esc(s.name)}</div>
+      <div class="sc-desc">${esc(s.description||'')}</div>
+      <div class="sc-footer">
+        <div class="sc-game">${esc(s.game||'Roblox')}</div>
+        <button class="sc-btn" onclick="openLoadstr('${s.id}')">LOADSTRING</button>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="tag">v${esc(s.version||'1.0')}</span>
+        <span class="tag">${s.executions||0} exécutions</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openLoadstr(scriptId){
+  const s=DB.scripts.find(x=>x.id===scriptId);
+  if(!s)return;
+  document.getElementById('modal-script-name').textContent=s.name;
+  document.getElementById('modal-loadstr-content').textContent=s.loadstring||'// Aucun loadstring défini';
+  document.getElementById('modal-loadstr').classList.add('open');
+  logExecution(scriptId,s.name);
+}
+
+async function logExecution(scriptId,scriptName){
+  if(!currentUser)return;
+  const exec={
+    id:Date.now().toString(),
+    memberId:currentUser.id,
+    memberName:currentUser.username,
+    scriptId,scriptName,
+    executor:navigator.userAgent.includes('Delta')?'Delta':navigator.userAgent.includes('Synapse')?'Synapse X':'Inconnu',
+    startTime:new Date().toISOString(),
+    duration:Math.floor(Math.random()*120+10)+'s',
+    ip:'***.***.***.**',
+    platform:navigator.platform||'Unknown',
+    timestamp:Date.now()
+  };
+  DB.executions.unshift(exec);
+  if(DB.executions.length>1000)DB.executions=DB.executions.slice(0,1000);
+  currentUser.execCount=(currentUser.execCount||0)+1;
+  const s=DB.scripts.find(x=>x.id===scriptId);
+  if(s){s.executions=(s.executions||0)+1;}
+  const mi=DB.members.findIndex(m=>m.id===currentUser.id);
+  if(mi>=0)DB.members[mi]=currentUser;
+  await Promise.all([saveExecutions(),saveMembers(),saveScripts()]);
+  document.getElementById('acc-execs').textContent=currentUser.execCount;
+}
+
+function renderMemberHistory(){
+  const myExecs=DB.executions.filter(e=>e.memberId===currentUser.id);
+  const el=document.getElementById('member-history-table');
+  if(!myExecs.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune exécution</div></div>';return;}
+  el.innerHTML=`<table class="data-table">
+    <thead><tr><th>Script</th><th>Date</th><th>Durée</th><th>Executeur</th></tr></thead>
+    <tbody>${myExecs.slice(0,50).map(e=>`
+      <tr>
+        <td class="exec-script">${esc(e.scriptName)}</td>
+        <td class="exec-time">${new Date(e.startTime).toLocaleString('fr-FR')}</td>
+        <td class="exec-duration">${esc(e.duration)}</td>
+        <td class="exec-executor"><span class="badge badge-yellow">${esc(e.executor)}</span></td>
+      </tr>
+    `).join('')}</tbody>
+  </table>`;
+}
+
+async function changePassword(){
+  const op=document.getElementById('old-pass').value;
+  const np=document.getElementById('new-pass').value;
+  if(btoa(op)!==currentUser.password)return showErr('pass-err','Ancien mot de passe incorrect.');
+  if(np.length<6)return showErr('pass-err','Nouveau mot de passe trop court.');
+  currentUser.password=btoa(np);
+  const mi=DB.members.findIndex(m=>m.id===currentUser.id);
+  if(mi>=0)DB.members[mi]=currentUser;
+  await saveMembers();
+  showOk('pass-ok','Mot de passe changé !');
+  document.getElementById('old-pass').value='';
+  document.getElementById('new-pass').value='';
+}
+
+// ═══════════════════════════════════════════════
+// OWNER DASHBOARD
+// ═══════════════════════════════════════════════
+function loadOwnerDash(){ownerNav('dashboard')}
+
+function ownerNav(sec){
+  const secs=['dashboard','members','scripts','executions','analytics'];
+  document.querySelectorAll('#page-owner .nav-item').forEach((el,i)=>{el.classList.toggle('active',secs[i]===sec)});
+  document.querySelectorAll('#page-owner .dash-section').forEach(el=>el.classList.remove('active'));
+  document.getElementById('osec-'+sec)?.classList.add('active');
+  if(sec==='dashboard')renderOwnerDash();
+  if(sec==='members')renderOwnerMembers();
+  if(sec==='scripts')renderOwnerScripts();
+  if(sec==='executions')renderOwnerExecs();
+  if(sec==='analytics')renderAnalytics();
+}
+
+function renderOwnerDash(){
+  const totalExecs=DB.executions.length;
+  const today=new Date().toDateString();
+  const todayExecs=DB.executions.filter(e=>new Date(e.startTime).toDateString()===today).length;
+  const banned=DB.members.filter(m=>m.banned).length;
+  document.getElementById('owner-stats-grid').innerHTML=`
+    <div class="stat-card"><div class="stat-card-label">MEMBRES TOTAL</div><div class="stat-card-value">${DB.members.length}</div></div>
+    <div class="stat-card"><div class="stat-card-label">SCRIPTS</div><div class="stat-card-value">${DB.scripts.length}</div></div>
+    <div class="stat-card"><div class="stat-card-label">EXÉCUTIONS TOTAL</div><div class="stat-card-value">${totalExecs}</div></div>
+    <div class="stat-card"><div class="stat-card-label">EXÉCUTIONS AUJOURD'HUI</div><div class="stat-card-value" style="color:#4ade80">${todayExecs}</div></div>
+    <div class="stat-card"><div class="stat-card-label">MEMBRES BANNIS</div><div class="stat-card-value" style="color:var(--gold)">${banned}</div></div>
+    <div class="stat-card"><div class="stat-card-label">SCRIPT LE + POP.</div><div class="stat-card-value" style="font-size:18px">${getMostUsed()}</div></div>
+  `;
+  renderRecentExecs();
+}
+
+function getMostUsed(){
+  if(!DB.executions.length)return'—';
+  const counts={};
+  DB.executions.forEach(e=>{counts[e.scriptName]=(counts[e.scriptName]||0)+1});
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+}
+
+function renderRecentExecs(){
+  const el=document.getElementById('recent-execs-table');
+  if(!DB.executions.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune exécution</div></div>';return;}
+  el.innerHTML=`<table class="data-table">
+    <thead><tr><th>Membre</th><th>Script</th><th>Date</th><th>Durée</th><th>Executeur</th></tr></thead>
+    <tbody>${DB.executions.slice(0,20).map(e=>`
+      <tr>
+        <td class="exec-user">${esc(e.memberName)}</td>
+        <td class="exec-script">${esc(e.scriptName)}</td>
+        <td class="exec-time">${new Date(e.startTime).toLocaleString('fr-FR')}</td>
+        <td class="exec-duration">${esc(e.duration)}</td>
+        <td><span class="badge badge-yellow">${esc(e.executor)}</span></td>
+      </tr>
+    `).join('')}</tbody>
+  </table>`;
+}
+
+function renderOwnerMembers(){
+  const el=document.getElementById('members-table');
+  if(!DB.members.length){el.innerHTML='<div class="empty"><div class="empty-icon">👥</div><div class="empty-text">Aucun membre</div></div>';return;}
+  el.innerHTML=`<table class="data-table">
+    <thead><tr><th>Identifiant</th><th>Inscription</th><th>Exécutions</th><th>Statut</th><th>Actions</th></tr></thead>
+    <tbody id="members-tbody">${renderMemberRows(DB.members)}</tbody>
+  </table>`;
+}
+
+function renderMemberRows(members){
+  return members.map(m=>`
+    <tr class="member-row">
+      <td><strong>${esc(m.username)}</strong></td>
+      <td class="exec-time">${new Date(m.createdAt).toLocaleDateString('fr-FR')}</td>
+      <td><span style="color:var(--red3);font-family:'Share Tech Mono',monospace">${m.execCount||0}</span></td>
+      <td>${m.banned?'<span class="badge badge-red">BANNI</span>':'<span class="badge badge-green">ACTIF</span>'}</td>
+      <td>
+        <button class="btn-sm btn-sm-ghost" style="font-size:11px;padding:5px 12px;margin-right:4px" onclick="toggleBan('${m.id}')">${m.banned?'DÉBANNIR':'BANNIR'}</button>
+        <button class="btn-sm btn-sm-danger" style="font-size:11px;padding:5px 12px" onclick="confirmDelete('member','${m.id}','${esc(m.username)}')">SUPPRIMER</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterMembers(){
+  const q=document.getElementById('member-search').value.toLowerCase();
+  const filtered=DB.members.filter(m=>m.username.toLowerCase().includes(q));
+  const tb=document.getElementById('members-tbody');
+  if(tb)tb.innerHTML=renderMemberRows(filtered);
+}
+
+async function toggleBan(memberId){
+  const mi=DB.members.findIndex(m=>m.id===memberId);
+  if(mi<0)return;
+  DB.members[mi].banned=!DB.members[mi].banned;
+  await saveMembers();
+  showOk('member-action-ok',`Membre ${DB.members[mi].banned?'banni':'débanni'} !`);
+  renderOwnerMembers();
+}
+
+function confirmDelete(type,id,name){
+  document.getElementById('confirm-msg').textContent=`Supprimer "${name}" définitivement ?`;
+  document.getElementById('confirm-btn').onclick=async()=>{
+    if(type==='member'){DB.members=DB.members.filter(m=>m.id!==id);await saveMembers();renderOwnerMembers();showOk('member-action-ok','Membre supprimé.');}
+    if(type==='script'){DB.scripts=DB.scripts.filter(s=>s.id!==id);await saveScripts();renderOwnerScripts();showOk('script-add-ok','Script supprimé.');}
+    closeModal('modal-confirm');
+  };
+  document.getElementById('modal-confirm').classList.add('open');
+}
+
+function renderOwnerScripts(){
+  const el=document.getElementById('owner-scripts-list');
+  if(!DB.scripts.length){el.innerHTML='<div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Aucun script</div></div>';return;}
+  el.innerHTML=DB.scripts.map(s=>`
+    <div class="panel" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <span class="sc-badge" style="margin-right:10px">${s.badge||'FREE'}</span>
+          <strong style="font-size:18px">${esc(s.name)}</strong>
+          <span class="tag" style="margin-left:8px">v${esc(s.version||'1.0')}</span>
+          <span class="tag">${s.executions||0} exéc.</span>
+          <span class="tag">${esc(s.game||'Roblox')}</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-sm btn-sm-ghost" style="font-size:11px;padding:5px 14px" onclick="editScript('${s.id}')">MODIFIER</button>
+          <button class="btn-sm btn-sm-danger" style="font-size:11px;padding:5px 14px" onclick="confirmDelete('script','${s.id}','${esc(s.name)}')">SUPPRIMER</button>
+        </div>
+      </div>
+      <div style="color:var(--muted);font-size:13px;margin-top:8px">${esc(s.description||'')}</div>
+    </div>
+  `).join('');
+}
+
+async function addScript(){
+  const name=document.getElementById('sc-name').value.trim();
+  const game=document.getElementById('sc-game').value.trim();
+  const desc=document.getElementById('sc-desc').value.trim();
+  const loadstr=document.getElementById('sc-loadstr').value.trim();
+  const version=document.getElementById('sc-version').value.trim()||'1.0.0';
+  const badge=document.getElementById('sc-badge').value;
+  if(!name||!loadstr)return showErr('script-add-err','Nom et loadstring requis.');
+  const editing=document.getElementById('sc-name').dataset.editId;
+  if(editing){
+    const si=DB.scripts.findIndex(s=>s.id===editing);
+    if(si>=0){DB.scripts[si]={...DB.scripts[si],name,game,description:desc,loadstring:loadstr,version,badge};}
+    delete document.getElementById('sc-name').dataset.editId;
+  }else{
+    DB.scripts.push({id:Date.now().toString(),name,game,description:desc,loadstring:loadstr,version,badge,executions:0,createdAt:new Date().toISOString()});
+  }
+  await saveScripts();
+  showOk('script-add-ok',editing?'Script modifié !':'Script ajouté !');
+  clearScriptForm();
+  renderOwnerScripts();
+  updateLandingStats();
+}
+
+function editScript(id){
+  const s=DB.scripts.find(x=>x.id===id);
+  if(!s)return;
+  document.getElementById('sc-name').value=s.name;
+  document.getElementById('sc-name').dataset.editId=id;
+  document.getElementById('sc-game').value=s.game||'';
+  document.getElementById('sc-desc').value=s.description||'';
+  document.getElementById('sc-loadstr').value=s.loadstring||'';
+  document.getElementById('sc-version').value=s.version||'1.0.0';
+  document.getElementById('sc-badge').value=s.badge||'FREE';
+  ownerNav('scripts');
+  document.getElementById('sc-name').scrollIntoView({behavior:'smooth'});
+}
+
+function clearScriptForm(){
+  ['sc-name','sc-game','sc-desc','sc-loadstr','sc-version'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('sc-name').dataset.editId='';
+  document.getElementById('sc-badge').value='FREE';
+}
+
+function renderOwnerExecs(){
+  const el=document.getElementById('exec-log-table');
+  if(!DB.executions.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune exécution</div></div>';return;}
+  el.innerHTML=`<table class="data-table">
+    <thead><tr><th>Membre</th><th>Script</th><th>Date & Heure</th><th>Durée</th><th>Executeur</th><th>Plateforme</th></tr></thead>
+    <tbody id="exec-log-tbody">${renderExecRows(DB.executions)}</tbody>
+  </table>`;
+}
+
+function renderExecRows(execs){
+  return execs.map(e=>`
+    <tr>
+      <td class="exec-user">${esc(e.memberName)}</td>
+      <td class="exec-script">${esc(e.scriptName)}</td>
+      <td class="exec-time">${new Date(e.startTime).toLocaleString('fr-FR')}</td>
+      <td class="exec-duration">${esc(e.duration)}</td>
+      <td><span class="badge badge-yellow">${esc(e.executor)}</span></td>
+      <td style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)">${esc(e.platform||'Unknown')}</td>
+    </tr>
+  `).join('');
+}
+
+function filterExecs(){
+  const q=document.getElementById('exec-search').value.toLowerCase();
+  const filtered=DB.executions.filter(e=>e.memberName.toLowerCase().includes(q)||e.scriptName.toLowerCase().includes(q));
+  const tb=document.getElementById('exec-log-tbody');
+  if(tb)tb.innerHTML=renderExecRows(filtered);
+}
+
+function renderAnalytics(){
+  // Top scripts
+  const scriptCounts={};
+  DB.executions.forEach(e=>{scriptCounts[e.scriptName]=(scriptCounts[e.scriptName]||0)+1});
+  const topScripts=Object.entries(scriptCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxSC=topScripts[0]?.[1]||1;
+  document.getElementById('analytics-top-scripts').innerHTML=topScripts.length?topScripts.map(([name,count])=>`
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span>${esc(name)}</span><span style="color:var(--red3);font-family:'Share Tech Mono',monospace">${count}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(count/maxSC*100)}%"></div></div>
+    </div>
+  `).join(''):'<div class="empty"><div class="empty-text">Pas de données</div></div>';
+
+  // Executors
+  const execCounts={};
+  DB.executions.forEach(e=>{execCounts[e.executor]=(execCounts[e.executor]||0)+1});
+  const topExec=Object.entries(execCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxEC=topExec[0]?.[1]||1;
+  document.getElementById('analytics-executors').innerHTML=topExec.length?topExec.map(([name,count])=>`
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span>${esc(name)}</span><span style="color:var(--gold);font-family:'Share Tech Mono',monospace">${count}</span>
+      </div>
+      <div class="progress-bar" style="background:rgba(255,215,0,.1)"><div class="progress-fill" style="width:${Math.round(count/maxEC*100)}%;background:var(--gold)"></div></div>
+    </div>
+  `).join(''):'<div class="empty"><div class="empty-text">Pas de données</div></div>';
+
+  // Activity last 7 days
+  const days={};
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days[d.toLocaleDateString('fr-FR')]=0;}
+  DB.executions.forEach(e=>{const d=new Date(e.startTime).toLocaleDateString('fr-FR');if(days[d]!==undefined)days[d]++;});
+  const maxDay=Math.max(...Object.values(days),1);
+  document.getElementById('analytics-activity').innerHTML=Object.entries(days).map(([d,c])=>`
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;font-family:'Share Tech Mono',monospace">
+        <span style="color:var(--muted)">${d}</span><span style="color:#4ade80">${c}</span>
+      </div>
+      <div class="progress-bar" style="background:rgba(74,222,128,.1)"><div class="progress-fill" style="width:${Math.round(c/maxDay*100)}%;background:#4ade80"></div></div>
+    </div>
+  `).join('');
+
+  // Top members
+  const memberCounts={};
+  DB.executions.forEach(e=>{memberCounts[e.memberName]=(memberCounts[e.memberName]||0)+1});
+  const topMem=Object.entries(memberCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById('analytics-members').innerHTML=topMem.length?topMem.map(([name,count],i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,26,26,.06)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'Bebas Neue',sans-serif;color:var(--red3);font-size:20px;width:24px">#${i+1}</span>
+        <span style="font-weight:600">${esc(name)}</span>
+      </div>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--red3)">${count} exéc.</span>
+    </div>
+  `).join(''):'<div class="empty"><div class="empty-text">Pas de données</div></div>';
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function copyLoadstr(){
+  const txt=document.getElementById('modal-loadstr-content').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn=document.querySelector('#modal-loadstr .btn-sm-red');
+    btn.textContent='✓ COPIÉ !';
+    setTimeout(()=>btn.textContent='📋 COPIER',2000);
+  });
+}
+
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')})});
+
+// Anti inspect (DevTools detection)
+(function(){
+  const t=()=>{};
+  Object.defineProperty(window,'__devtools__',{get(){window.location.reload()}});
+  setInterval(()=>{
+    const s=new Date();
+    debugger;
+    if(new Date()-s>100){
+      document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#020204;color:#ff1a1a;font-family:monospace;font-size:24px;text-align:center">⛔ ACCÈS REFUSÉ<br><small style="font-size:14px;color:#555;margin-top:10px;display:block">Ferme les DevTools</small></div>';
+    }
+  },500);
+  // Disable right click
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+  // Disable F12, Ctrl+Shift+I, Ctrl+U
+  document.addEventListener('keydown',e=>{
+    if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&e.key==='U')){
+      e.preventDefault();return false;
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+loadDB().catch(console.error);
 </script>
 </body>
 </html>
