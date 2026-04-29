@@ -582,15 +582,149 @@ footer.home-footer { padding-bottom: 40px; }
 .analytics-bar-fill { height: 8px; border-radius: 4px; transition: width .6s cubic-bezier(.34,1.56,.64,1); }
 .analytics-bar-val { margin-left: auto; font-weight: 700; font-size: .8rem; white-space: nowrap; }
 
-/* LOG ENTRIES */
-.log-entry { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: .78rem; font-family: monospace; }
-.log-entry:last-child { border: none; }
-.log-badge { padding: 2px 8px; border-radius: 6px; font-size: .62rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
-.log-ok { background: rgba(48,209,88,.15); color: var(--green); border: 1px solid rgba(48,209,88,.3); }
-.log-fail { background: rgba(255,69,58,.15); color: var(--red); border: 1px solid rgba(255,69,58,.3); }
-.log-owner { background: rgba(124,92,252,.15); color: var(--accent); border: 1px solid rgba(124,92,252,.3); }
-.log-ip { color: var(--muted); font-size: .7rem; margin-left: auto; white-space: nowrap; }
-.log-time { color: var(--muted); font-size: .7rem; white-space: nowrap; }
+/* AI GENERATION BUTTON */
+.ai-gen-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 980px;
+  background: linear-gradient(135deg, rgba(124,92,252,.2), rgba(0,207,255,.15));
+  border: 1px solid rgba(124,92,252,.35); color: var(--accent);
+  font-family: var(--font-b); font-size: .72rem; font-weight: 700;
+  cursor: pointer; transition: .2s; white-space: nowrap;
+}
+.ai-gen-btn:hover:not(:disabled) { background: linear-gradient(135deg, rgba(124,92,252,.35), rgba(0,207,255,.25)); transform: scale(1.04); }
+.ai-gen-btn:disabled { opacity: .4; cursor: not-allowed; }
+.ai-gen-btn.loading { pointer-events: none; }
+.ai-btn-icon { font-size: .9rem; }
+@keyframes aiSpin { to { transform: rotate(360deg); } }
+.ai-spin { display: inline-block; animation: aiSpin .7s linear infinite; }
+
+/* IMAGE UPLOAD DROPZONE */
+#apImgDropZone:hover, #epImgDropZone:hover { border-color: var(--accent); background: rgba(124,92,252,.04); }
+
+/* CHAT WIDGET */
+#chatWidget {
+  position: fixed; bottom: 24px; right: 24px; z-index: 5000;
+  display: none; flex-direction: column; align-items: flex-end; gap: 12px;
+}
+#chatWidget.visible { display: flex; }
+#chatToggleBtn {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 30px rgba(124,92,252,.5); transition: .2s; position: relative;
+}
+#chatToggleBtn:hover { transform: scale(1.08); }
+#chatUnreadDot {
+  position: absolute; top: -2px; right: -2px; width: 16px; height: 16px;
+  background: var(--accent3); border-radius: 50%; border: 2px solid var(--bg);
+  font-size: .55rem; font-weight: 700; color: #fff;
+  display: none; align-items: center; justify-content: center;
+}
+#chatUnreadDot.show { display: flex; }
+#chatBox {
+  width: 320px; background: var(--card); border: 1px solid rgba(124,92,252,.25);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  display: none; flex-direction: column;
+  animation: modalIn .3s cubic-bezier(.34,1.2,.64,1);
+}
+#chatBox.open { display: flex; }
+.chat-header {
+  padding: 16px 18px; background: linear-gradient(135deg, rgba(124,92,252,.2), rgba(0,207,255,.1));
+  border-bottom: 1px solid rgba(124,92,252,.2);
+  display: flex; align-items: center; gap: 10px;
+}
+.chat-header-title { font-weight: 700; font-size: .9rem; flex: 1; }
+.chat-header-sub { font-size: .7rem; color: var(--green); }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px;
+  min-height: 220px; max-height: 320px;
+}
+.chat-msg { max-width: 80%; padding: 9px 13px; border-radius: 14px; font-size: .82rem; line-height: 1.5; word-break: break-word; }
+.chat-msg.mine { align-self: flex-end; background: linear-gradient(135deg, var(--accent), #5a3fd4); color: #fff; border-radius: 14px 14px 4px 14px; }
+.chat-msg.theirs { align-self: flex-start; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.08); border-radius: 14px 14px 14px 4px; }
+.chat-msg-time { font-size: .62rem; opacity: .6; margin-top: 4px; }
+.chat-input-row { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--border); }
+.chat-input {
+  flex: 1; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+  color: var(--text); border-radius: 12px; padding: 9px 14px;
+  font-family: var(--font-b); font-size: .85rem; outline: none; resize: none;
+}
+.chat-input:focus { border-color: rgba(124,92,252,.5); }
+.chat-send-btn {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  background: var(--accent); border: none; cursor: pointer; color: #fff;
+  display: flex; align-items: center; justify-content: center; transition: .2s;
+}
+.chat-send-btn:hover { background: #6a4ce8; }
+
+/* NOTIF BELL */
+.notif-bell-wrap { position: relative; }
+#notifBell {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  color: var(--muted2); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: .2s; position: relative;
+}
+#notifBell:hover { color: var(--text); background: rgba(255,255,255,.1); }
+#notifBadge {
+  position: absolute; top: -5px; right: -5px; width: 16px; height: 16px;
+  background: var(--accent3); border-radius: 50%; border: 2px solid var(--bg);
+  font-size: .55rem; font-weight: 700; color: #fff;
+  display: none; align-items: center; justify-content: center;
+}
+#notifBadge.show { display: flex; }
+#notifPanel {
+  position: absolute; top: calc(100% + 10px); right: 0; width: 300px;
+  background: var(--card); border: 1px solid rgba(124,92,252,.2);
+  border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  display: none; z-index: 4000; overflow: hidden;
+  animation: modalIn .2s cubic-bezier(.34,1.2,.64,1);
+}
+#notifPanel.show { display: block; }
+.notif-panel-head { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.notif-panel-title { font-size: .8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.notif-item { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; cursor: pointer; transition: .15s; }
+.notif-item:hover { background: rgba(255,255,255,.03); }
+.notif-item:last-child { border: none; }
+.notif-item.unread { background: rgba(124,92,252,.05); }
+.notif-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+.notif-dot.read { background: transparent; border: 1px solid var(--border2); }
+.notif-text { font-size: .8rem; color: var(--muted2); line-height: 1.5; flex: 1; }
+.notif-text strong { color: var(--text); }
+.notif-time { font-size: .65rem; color: var(--muted); margin-top: 3px; }
+
+/* ORDERS PAGE */
+.orders-grid { display: flex; flex-direction: column; gap: 14px; }
+.order-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px;
+  display: flex; align-items: center; gap: 16px; transition: .2s;
+}
+.order-card:hover { border-color: rgba(124,92,252,.3); }
+.order-img { width: 56px; height: 56px; border-radius: 12px; flex-shrink: 0; overflow: hidden; background: linear-gradient(135deg, #0c0c20, #15153a); display: flex; align-items: center; justify-content: center; }
+.order-img img { width: 100%; height: 100%; object-fit: cover; }
+.order-info { flex: 1; }
+.order-title { font-weight: 600; font-size: .95rem; margin-bottom: 4px; }
+.order-meta { font-size: .75rem; color: var(--muted); }
+.order-price { font-family: var(--font-d); font-size: 1.1rem; color: var(--accent); font-weight: 700; }
+.order-status { padding: 4px 12px; border-radius: 980px; font-size: .65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.status-confirmed { background: rgba(48,209,88,.15); border: 1px solid rgba(48,209,88,.3); color: var(--green); }
+.status-pending { background: rgba(255,159,10,.15); border: 1px solid rgba(255,159,10,.3); color: var(--orange); }
+
+/* REFERRAL PAGE */
+.referral-card { background: linear-gradient(135deg, rgba(124,92,252,.12), rgba(0,207,255,.08)); border: 1px solid rgba(124,92,252,.25); border-radius: 20px; padding: 32px; margin-bottom: 20px; text-align: center; }
+.referral-link-box { background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 16px; font-family: monospace; font-size: .8rem; color: var(--accent2); margin: 16px 0; word-break: break-all; }
+.referral-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 20px; }
+.ref-stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+.ref-stat-n { font-family: var(--font-d); font-size: 1.8rem; color: var(--accent); }
+.ref-stat-l { font-size: .68rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+/* MOBILE adjustments for new features */
+@media(max-width:768px) {
+  #chatWidget { bottom: 80px; right: 14px; }
+  #chatBox { width: 290px; }
+  .referral-stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
+}
 </style>
 </head>
 <body>
@@ -612,6 +746,8 @@ footer.home-footer { padding-bottom: 40px; }
     <button class="nav-btn" id="nb-shop" onclick="showPage('shop')">Boutique</button>
     <button class="nav-btn" id="nb-reviews" onclick="showPage('reviews')">Avis</button>
     <button class="nav-btn" id="nb-inbox" onclick="showPage('inbox')" style="display:none">Messages</button>
+    <button class="nav-btn" id="nb-orders" onclick="showPage('orders')" style="display:none">Commandes</button>
+    <button class="nav-btn" id="nb-referral" onclick="showPage('referral')" style="display:none">Parrainage</button>
     <button class="nav-btn" id="nb-profile" onclick="showPage('profile')" style="display:none">Profil</button>
     <button class="nav-btn" id="nb-dashboard" onclick="showPage('dashboard')" style="display:none">Dashboard</button>
   </div>
@@ -621,6 +757,20 @@ footer.home-footer { padding-bottom: 40px; }
       Panier
       <div class="cart-badge" id="cartBadge">0</div>
     </button>
+    <!-- NOTIF BELL (logged users) -->
+    <div class="notif-bell-wrap" id="notifWrap" style="display:none">
+      <button id="notifBell" onclick="toggleNotifPanel()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <div class="notif-badge" id="notifBadge"></div>
+      </button>
+      <div id="notifPanel">
+        <div class="notif-panel-head">
+          <span class="notif-panel-title">Notifications</span>
+          <button onclick="markAllNotifsRead()" style="background:none;border:none;color:var(--accent);font-size:.72rem;cursor:pointer;font-family:var(--font-b)">Tout lire</button>
+        </div>
+        <div id="notifList"><div style="padding:20px;text-align:center;color:var(--muted);font-size:.8rem">Aucune notification</div></div>
+      </div>
+    </div>
     <div id="navAuth" style="display:flex;gap:8px">
       <button class="btn btn-outline btn-sm" onclick="showPage('auth')">Connexion</button>
       <button class="btn btn-accent btn-sm" onclick="showPage('auth');switchTab('register')">S'inscrire</button>
@@ -1124,20 +1274,58 @@ footer.home-footer { padding-bottom: 40px; }
   </div>
 </div>
 
+<!-- ===== MODAL : Ajouter produit ===== -->
 <div class="overlay" id="overlayAddProd">
-  <div class="modal">
+  <div class="modal" style="max-width:560px">
     <button class="modal-close" onclick="closeModal('overlayAddProd')">&#x2715;</button>
     <div class="modal-title">Nouvel <span>Article</span></div>
     <div id="addProdErr" class="auth-err"></div>
-    <div class="field"><label>Titre</label><input id="apTitle" type="text" placeholder="Ex : Maillot de foot Juventus 2024"></div>
+
+    <!-- Image upload zone -->
+    <div id="apImgDropZone" style="border:2px dashed rgba(124,92,252,.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;cursor:pointer;transition:.2s;position:relative;overflow:hidden"
+      onclick="ge('apImgFile').click()"
+      ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+      ondragleave="this.style.borderColor='rgba(124,92,252,.3)'"
+      ondrop="handleImgDrop(event,'ap')">
+      <div id="apImgPreview" style="display:none;position:relative">
+        <img id="apImgPreviewImg" style="max-height:160px;border-radius:10px;max-width:100%;object-fit:cover">
+        <button onclick="event.stopPropagation();clearImgPreview('ap')" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);border:none;color:#fff;border-radius:6px;width:24px;height:24px;cursor:pointer;font-size:.8rem">✕</button>
+      </div>
+      <div id="apImgPlaceholder">
+        <div style="font-size:2rem;margin-bottom:8px">🖼️</div>
+        <div style="font-size:.82rem;color:var(--muted2);font-weight:600">Glisser une image ici</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:4px">ou cliquer pour choisir un fichier</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-top:6px">JPG, PNG, GIF, WEBP — max 5 Mo</div>
+      </div>
+      <input type="file" id="apImgFile" accept="image/*" style="display:none" onchange="handleImgFile(event,'ap')">
+    </div>
+
+    <div class="field"><label>Titre</label><input id="apTitle" type="text" placeholder="Ex : Maillot de foot Juventus 2024" oninput="updateAiBtn('ap')"></div>
     <div class="field"><label>Prix (€)</label><input id="apPrice" type="number" placeholder="30" min="0.01" step="0.01"></div>
     <div class="field"><label>Stock disponible</label><input id="apStock" type="number" placeholder="Ex : 3" min="1" step="1"></div>
-    <div class="field"><label>Description courte <span style="font-size:.65rem;color:var(--muted);text-transform:none;font-weight:400">(visible par tous)</span></label><input id="apShort" type="text" placeholder="Ex : Article en excellent état, jamais utilisé"></div>
+
+    <!-- Description publique -->
     <div class="field">
-      <label style="display:flex;align-items:center;gap:8px">Description complète <span style="background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.3);color:var(--accent);font-size:.6rem;padding:2px 8px;border-radius:980px;font-weight:700;letter-spacing:1px;text-transform:uppercase">BUYERS ONLY</span></label>
+      <label style="display:flex;align-items:center;justify-content:space-between">
+        <span>Description publique <span style="font-size:.65rem;color:var(--muted);text-transform:none;font-weight:400">(visible par tous)</span></span>
+        <button id="apAiPublicBtn" class="ai-gen-btn" onclick="generateAiDesc('ap','short')" disabled>
+          <span class="ai-btn-icon">✨</span> IA
+        </button>
+      </label>
+      <textarea id="apShort" placeholder="Description visible par tous les visiteurs..." style="min-height:80px"></textarea>
+    </div>
+
+    <!-- Description privée buyers only -->
+    <div class="field">
+      <label style="display:flex;align-items:center;justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:8px">Description complète <span style="background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.3);color:var(--accent);font-size:.6rem;padding:2px 8px;border-radius:980px;font-weight:700;letter-spacing:1px;text-transform:uppercase">BUYERS ONLY</span></span>
+        <button id="apAiPrivateBtn" class="ai-gen-btn" onclick="generateAiDesc('ap','full')" disabled>
+          <span class="ai-btn-icon">✨</span> IA
+        </button>
+      </label>
       <textarea id="apDesc" placeholder="Détails complets, informations...&#10;Envoyée uniquement aux acheteurs confirmés."></textarea>
     </div>
-    <div class="field"><label>URL Image <span style="font-size:.65rem;color:var(--muted);text-transform:none;font-weight:400">(optionnel)</span></label><input id="apImg" type="url" placeholder="https://exemple.com/image.jpg"></div>
+
     <div style="display:flex;gap:12px;margin-top:8px">
       <button class="btn btn-outline" onclick="closeModal('overlayAddProd')" style="flex:1">Annuler</button>
       <button class="btn btn-accent" onclick="doAddProduct()" style="flex:2">Publier l'article</button>
@@ -1145,20 +1333,55 @@ footer.home-footer { padding-bottom: 40px; }
   </div>
 </div>
 
+<!-- ===== MODAL : Modifier produit ===== -->
 <div class="overlay" id="overlayEditProd">
-  <div class="modal">
+  <div class="modal" style="max-width:560px">
     <button class="modal-close" onclick="closeModal('overlayEditProd')">&#x2715;</button>
     <div class="modal-title">Modifier <span>Article</span></div>
     <input type="hidden" id="epId">
-    <div class="field"><label>Titre</label><input id="epTitle" type="text"></div>
+
+    <!-- Image upload zone edit -->
+    <div id="epImgDropZone" style="border:2px dashed rgba(124,92,252,.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;cursor:pointer;transition:.2s;position:relative;overflow:hidden"
+      onclick="ge('epImgFile').click()"
+      ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+      ondragleave="this.style.borderColor='rgba(124,92,252,.3)'"
+      ondrop="handleImgDrop(event,'ep')">
+      <div id="epImgPreview" style="display:none;position:relative">
+        <img id="epImgPreviewImg" style="max-height:160px;border-radius:10px;max-width:100%;object-fit:cover">
+        <button onclick="event.stopPropagation();clearImgPreview('ep')" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);border:none;color:#fff;border-radius:6px;width:24px;height:24px;cursor:pointer;font-size:.8rem">✕</button>
+      </div>
+      <div id="epImgPlaceholder">
+        <div style="font-size:2rem;margin-bottom:8px">🖼️</div>
+        <div style="font-size:.82rem;color:var(--muted2);font-weight:600">Glisser une image ici</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:4px">ou cliquer pour choisir un fichier</div>
+      </div>
+      <input type="file" id="epImgFile" accept="image/*" style="display:none" onchange="handleImgFile(event,'ep')">
+    </div>
+
+    <div class="field"><label>Titre</label><input id="epTitle" type="text" oninput="updateAiBtn('ep')"></div>
     <div class="field"><label>Prix (€)</label><input id="epPrice" type="number" step="0.01"></div>
     <div class="field"><label>Stock</label><input id="epStock" type="number" min="0"></div>
-    <div class="field"><label>Description courte</label><input id="epShort" type="text"></div>
+
     <div class="field">
-      <label style="display:flex;align-items:center;gap:8px">Description complète <span style="background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.3);color:var(--accent);font-size:.6rem;padding:2px 8px;border-radius:980px;font-weight:700;letter-spacing:1px;text-transform:uppercase">BUYERS ONLY</span></label>
+      <label style="display:flex;align-items:center;justify-content:space-between">
+        <span>Description publique</span>
+        <button id="epAiPublicBtn" class="ai-gen-btn" onclick="generateAiDesc('ep','short')" disabled>
+          <span class="ai-btn-icon">✨</span> IA
+        </button>
+      </label>
+      <textarea id="epShort" style="min-height:80px"></textarea>
+    </div>
+
+    <div class="field">
+      <label style="display:flex;align-items:center;justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:8px">Description complète <span style="background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.3);color:var(--accent);font-size:.6rem;padding:2px 8px;border-radius:980px;font-weight:700;letter-spacing:1px;text-transform:uppercase">BUYERS ONLY</span></span>
+        <button id="epAiPrivateBtn" class="ai-gen-btn" onclick="generateAiDesc('ep','full')" disabled>
+          <span class="ai-btn-icon">✨</span> IA
+        </button>
+      </label>
       <textarea id="epDesc"></textarea>
     </div>
-    <div class="field"><label>URL Image</label><input id="epImg" type="url"></div>
+
     <div style="display:flex;gap:12px;margin-top:8px">
       <button class="btn btn-outline" onclick="closeModal('overlayEditProd')" style="flex:1">Annuler</button>
       <button class="btn btn-accent" onclick="doEditProduct()" style="flex:2">Sauvegarder</button>
@@ -1251,6 +1474,87 @@ footer.home-footer { padding-bottom: 40px; }
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- ========================
+     PAGE ORDERS (Historique commandes)
+     ======================== -->
+<div class="page" id="page-orders">
+  <div class="page-wrap" style="max-width:760px">
+    <div class="page-title" style="margin-bottom:8px">Mes <span>Commandes</span></div>
+    <div class="page-subtitle">Historique de vos achats confirmés.</div>
+    <div class="orders-grid" id="ordersGrid">
+      <div class="empty-msgs"><p>Aucune commande pour le moment.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     PAGE REFERRAL (Parrainage)
+     ======================== -->
+<div class="page" id="page-referral">
+  <div class="page-wrap" style="max-width:700px">
+    <div class="page-title" style="margin-bottom:8px">Parrai<span>nage</span></div>
+    <div class="page-subtitle">Invitez vos amis et gagnez des réductions exclusives.</div>
+
+    <div class="referral-card">
+      <div style="font-size:2.5rem;margin-bottom:12px">🎁</div>
+      <h2 style="font-family:var(--font-d);font-size:1.4rem;letter-spacing:2px;margin-bottom:10px">Votre lien de parrainage</h2>
+      <p style="font-size:.85rem;color:var(--muted2);line-height:1.7;margin-bottom:16px">
+        Partagez votre lien unique. Chaque ami qui s'inscrit via votre lien reçoit automatiquement un code de réduction de <strong style="color:var(--accent)">10%</strong> sur son premier achat.
+      </p>
+      <div class="referral-link-box" id="referralLinkBox">Chargement...</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-accent" onclick="copyReferralLink()">📋 Copier le lien</button>
+        <button class="btn btn-outline" onclick="shareReferralLink()">📤 Partager</button>
+      </div>
+      <div class="referral-stats">
+        <div class="ref-stat"><div class="ref-stat-n" id="refInvited">0</div><div class="ref-stat-l">Invités</div></div>
+        <div class="ref-stat"><div class="ref-stat-n" id="refConverted">0</div><div class="ref-stat-l">Inscrits</div></div>
+        <div class="ref-stat"><div class="ref-stat-n" id="refBonus">0%</div><div class="ref-stat-l">Bonus gagné</div></div>
+      </div>
+    </div>
+
+    <div class="info-panel">
+      <div class="info-panel-title">Comment ça marche</div>
+      <div class="info-row"><span class="info-label">1. Partagez</span><span class="info-val" style="font-size:.82rem;color:var(--muted2)">Envoyez votre lien à vos amis</span></div>
+      <div class="info-row"><span class="info-label">2. Inscription</span><span class="info-val" style="font-size:.82rem;color:var(--muted2)">Votre ami crée son compte</span></div>
+      <div class="info-row"><span class="info-label">3. Bonus filleul</span><span class="info-val" style="font-size:.82rem;color:var(--green)">Il reçoit −10% sur son achat</span></div>
+      <div class="info-row"><span class="info-label">4. Bonus parrain</span><span class="info-val" style="font-size:.82rem;color:var(--accent)">Vous gagnez des avantages</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     CHAT WIDGET
+     ======================== -->
+<div id="chatWidget">
+  <div id="chatBox">
+    <div class="chat-header">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0">X7</div>
+      <div style="flex:1">
+        <div class="chat-header-title">Support X77 SHOP</div>
+        <div class="chat-header-sub">● En ligne</div>
+      </div>
+      <button onclick="toggleChat()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg theirs">
+        👋 Bonjour ! Comment puis-je vous aider aujourd'hui ?
+        <div class="chat-msg-time">X77 SHOP</div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chatInput" placeholder="Votre message..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}"></textarea>
+      <button class="chat-send-btn" onclick="sendChatMsg()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+      </button>
+    </div>
+  </div>
+  <button id="chatToggleBtn" onclick="toggleChat()">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 3H3v13h5v4l4-4h9V3z"/></svg>
+    <div id="chatUnreadDot"></div>
+  </button>
+</div>
 
 <script>
 (function(){
@@ -1750,22 +2054,110 @@ function openProduct(id){
 // ============================================================
 // PRODUCTS CRUD
 // ============================================================
+// ============================================================
+// IMAGE UPLOAD — base64 storage
+// ============================================================
+var apImgBase64 = null;
+var epImgBase64 = null;
+
+function handleImgFile(event, prefix){
+  var file = event.target.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ toast('Image trop grande (max 5 Mo).','error'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e){ var b64=e.target.result; if(prefix==='ap') apImgBase64=b64; else epImgBase64=b64; showImgPreview(b64,prefix); };
+  reader.readAsDataURL(file);
+}
+function handleImgDrop(event, prefix){
+  event.preventDefault();
+  ge(prefix+'ImgDropZone').style.borderColor='rgba(124,92,252,.3)';
+  var file=event.dataTransfer.files[0];
+  if(!file||!file.type.startsWith('image/')){ toast('Fichier invalide.','error'); return; }
+  if(file.size>5*1024*1024){ toast('Image trop grande (max 5 Mo).','error'); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){ var b64=e.target.result; if(prefix==='ap') apImgBase64=b64; else epImgBase64=b64; showImgPreview(b64,prefix); };
+  reader.readAsDataURL(file);
+}
+function showImgPreview(b64, prefix){
+  ge(prefix+'ImgPreviewImg').src=b64; ge(prefix+'ImgPreview').style.display='block'; ge(prefix+'ImgPlaceholder').style.display='none';
+}
+function clearImgPreview(prefix){
+  if(prefix==='ap') apImgBase64=null; else epImgBase64=null;
+  ge(prefix+'ImgPreviewImg').src=''; ge(prefix+'ImgPreview').style.display='none'; ge(prefix+'ImgPlaceholder').style.display='block'; ge(prefix+'ImgFile').value='';
+}
+window.handleImgFile=handleImgFile; window.handleImgDrop=handleImgDrop; window.clearImgPreview=clearImgPreview;
+
+// ============================================================
+// AI DESCRIPTION GENERATION (Groq)
+// ============================================================
+var GROQ_KEY = 'REMPLACE_PAR_TA_NOUVELLE_CLE_GROQ'; // ⚠️ Régénère ta clé sur console.groq.com et colle-la ici
+
+function updateAiBtn(prefix){
+  var title=(ge(prefix+'Title').value||'').trim();
+  var ok=title.length>2;
+  if(ge(prefix+'AiPublicBtn')) ge(prefix+'AiPublicBtn').disabled=!ok;
+  if(ge(prefix+'AiPrivateBtn')) ge(prefix+'AiPrivateBtn').disabled=!ok;
+}
+window.updateAiBtn=updateAiBtn;
+
+function generateAiDesc(prefix, mode){
+  var title=(ge(prefix+'Title').value||'').trim();
+  if(!title){ toast('Entrez d\'abord un titre.','warning'); return; }
+  var btnId=prefix+'Ai'+(mode==='short'?'Public':'Private')+'Btn';
+  var targetId=mode==='short'?prefix+'Short':prefix+'Desc';
+  var btn=ge(btnId);
+  btn.innerHTML='<span style="display:inline-block;animation:aiSpin .7s linear infinite">⟳</span> Génération...';
+  btn.classList.add('loading');
+  var prompt=mode==='short'
+    ?'Génère une description publique courte (2-3 phrases, 60-80 mots) accrocheuse pour cet article : "'+title+'". Style moderne, direct. Français uniquement. Juste le texte.'
+    :'Génère une description complète (150-200 mots) pour cet article : "'+title+'". Inclus : état, caractéristiques, points forts. Style professionnel. Français uniquement. Juste le texte.';
+  fetch('https://api.groq.com/openai/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+    body:JSON.stringify({model:'llama3-8b-8192',messages:[{role:'user',content:prompt}],max_tokens:300,temperature:0.75})
+  }).then(function(r){ return r.json(); }).then(function(data){
+    var text=data.choices&&data.choices[0]&&data.choices[0].message.content;
+    if(!text) throw new Error('vide');
+    ge(targetId).value=text.trim();
+    btn.innerHTML='<span class="ai-btn-icon">✨</span> IA'; btn.classList.remove('loading');
+    toast('Description générée !','success');
+  }).catch(function(){
+    btn.innerHTML='<span class="ai-btn-icon">✨</span> IA'; btn.classList.remove('loading');
+    toast('Erreur IA. Vérifie ta clé Groq dans le code.','error');
+  });
+}
+window.generateAiDesc=generateAiDesc;
+
+// ============================================================
+// PRODUCT CRUD — image upload + AI + notifications
+// ============================================================
 function doAddProduct(){
   var title=gv('apTitle').trim(), price=gv('apPrice');
   var stock=gv('apStock'), shortDesc=gv('apShort').trim();
-  var desc=gv('apDesc').trim(), img=gv('apImg').trim();
+  var desc=gv('apDesc').trim();
+  var img=apImgBase64||'';
   var err=ge('addProdErr');
   if(!title||!price||!desc){ err.textContent='Titre, prix et description complète requis.'; err.style.display='block'; return; }
   err.style.display='none';
   db.products.push({ id:'p_'+Date.now(), title:title, price:parseFloat(price), stock:stock?parseInt(stock):null, shortDesc:shortDesc, desc:desc, img:img, buyers:[], createdAt:new Date().toISOString() });
-  saveDB().then(function(){ closeModal('overlayAddProd'); renderDashboard(); renderProducts(); renderFeatured(); toast('Article publié !','success'); ['apTitle','apPrice','apStock','apShort','apDesc','apImg'].forEach(function(i){ ge(i).value=''; }); });
+  if(!db.notifications) db.notifications=[];
+  db.notifications.unshift({ id:'gn_'+Date.now(), title:'🛍️ Nouvel article', body:'"'+title+'" vient d\'être ajouté à la boutique !', page:'shop', date:new Date().toISOString() });
+  if(db.notifications.length>20) db.notifications=db.notifications.slice(0,20);
+  saveDB().then(function(){
+    closeModal('overlayAddProd'); renderDashboard(); renderProducts(); renderFeatured();
+    toast('Article publié !','success');
+    ['apTitle','apPrice','apStock','apShort','apDesc'].forEach(function(i){ ge(i).value=''; });
+    clearImgPreview('ap'); apImgBase64=null;
+  });
 }
 
 function openEditProduct(id){
   var p=db.products.find(function(x){ return x.id===id; }); if(!p) return;
   ge('epId').value=id; ge('epTitle').value=p.title; ge('epPrice').value=p.price;
-  ge('epStock').value=p.stock||''; ge('epShort').value=p.shortDesc||'';
-  ge('epDesc').value=p.desc||''; ge('epImg').value=p.img||'';
+  ge('epStock').value=p.stock||''; ge('epShort').value=p.shortDesc||''; ge('epDesc').value=p.desc||'';
+  epImgBase64=null;
+  if(p.img){ showImgPreview(p.img,'ep'); epImgBase64=p.img; } else clearImgPreview('ep');
+  updateAiBtn('ep');
   openModal('overlayEditProd');
 }
 
@@ -1774,7 +2166,8 @@ function doEditProduct(){
   var p=db.products.find(function(x){ return x.id===id; }); if(!p) return;
   p.title=gv('epTitle').trim(); p.price=parseFloat(gv('epPrice'));
   var s=gv('epStock'); p.stock=s?parseInt(s):null;
-  p.shortDesc=gv('epShort').trim(); p.desc=gv('epDesc').trim(); p.img=gv('epImg').trim();
+  p.shortDesc=gv('epShort').trim(); p.desc=gv('epDesc').trim();
+  if(epImgBase64) p.img=epImgBase64;
   saveDB().then(function(){ closeModal('overlayEditProd'); renderDashboard(); renderProducts(); renderFeatured(); toast('Article modifié !','success'); });
 }
 
@@ -1783,6 +2176,145 @@ function deleteProduct(id){
   db.products=db.products.filter(function(p){ return p.id!==id; });
   saveDB().then(function(){ renderDashboard(); renderProducts(); renderFeatured(); toast('Article supprimé.','info'); });
 }
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+var notifications=[];
+try{ notifications=JSON.parse(localStorage.getItem('x77_notifs')||'[]'); }catch(e){}
+function saveNotifs(){ try{ localStorage.setItem('x77_notifs',JSON.stringify(notifications)); }catch(e){} }
+
+function loadGlobalNotifs(){
+  if(!db.notifications||!currentUser) return;
+  var key='x77_nseen_'+(currentUser.username||'');
+  var seen={}; try{ seen=JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){}
+  var added=0;
+  db.notifications.forEach(function(gn){
+    if(!seen[gn.id]){ seen[gn.id]=1; var already=notifications.find(function(n){ return n.id===gn.id; }); if(!already){ notifications.unshift(Object.assign({},gn,{read:false})); added++; } }
+  });
+  if(added){ try{ localStorage.setItem(key,JSON.stringify(seen)); }catch(e){} saveNotifs(); renderNotifs(); }
+}
+
+function renderNotifs(){
+  var list=ge('notifList'); var badge=ge('notifBadge');
+  if(!list) return;
+  var unread=notifications.filter(function(n){ return !n.read; }).length;
+  if(badge){ badge.textContent=unread>9?'9+':unread; badge.classList.toggle('show',unread>0); }
+  if(!notifications.length){ list.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:.8rem">Aucune notification</div>'; return; }
+  list.innerHTML=notifications.slice(0,10).map(function(n){
+    return '<div class="notif-item '+(n.read?'':'unread')+'" onclick="clickNotif(\''+n.id+'\',\''+n.page+'\')">'+
+      '<div class="notif-dot '+(n.read?'read':'')+'"></div>'+
+      '<div style="flex:1"><div class="notif-text"><strong>'+n.title+'</strong><br>'+n.body+'</div>'+
+      '<div class="notif-time">'+timeAgo(n.date)+'</div></div></div>';
+  }).join('');
+}
+function clickNotif(id,page){ var n=notifications.find(function(x){ return x.id===id; }); if(n) n.read=true; saveNotifs(); renderNotifs(); ge('notifPanel').classList.remove('show'); if(page) showPage(page); }
+function markAllNotifsRead(){ notifications.forEach(function(n){ n.read=true; }); saveNotifs(); renderNotifs(); }
+function toggleNotifPanel(){ ge('notifPanel').classList.toggle('show'); }
+function timeAgo(iso){ var diff=Date.now()-new Date(iso).getTime(); var m=Math.floor(diff/60000); if(m<1) return 'à l\'instant'; if(m<60) return m+'min'; var h=Math.floor(m/60); if(h<24) return h+'h'; return Math.floor(h/24)+'j'; }
+document.addEventListener('click',function(e){ var p=ge('notifPanel'),b=ge('notifBell'); if(p&&b&&!b.contains(e.target)&&!p.contains(e.target)) p.classList.remove('show'); });
+window.toggleNotifPanel=toggleNotifPanel; window.markAllNotifsRead=markAllNotifsRead; window.clickNotif=clickNotif;
+
+// ============================================================
+// ORDERS HISTORY
+// ============================================================
+function renderOrders(){
+  if(!currentUser) return;
+  var grid=ge('ordersGrid');
+  var dbU=db.users.find(function(u){ return u.username===currentUser.username; });
+  if(!dbU||!dbU.buyerProducts||!dbU.buyerProducts.length){
+    grid.innerHTML='<div class="empty-msgs"><p>Aucune commande pour le moment.<br><span style="font-size:.8rem;color:var(--muted)">Vos achats apparaîtront ici après confirmation.</span></p></div>'; return;
+  }
+  var orders=dbU.buyerProducts.map(function(pid){
+    var prod=db.products.find(function(p){ return p.id===pid; });
+    var msg=db.messages.find(function(m){ return m.to===currentUser.username&&m.subject&&prod&&m.subject.includes(prod.title); });
+    return { prod:prod, date:msg?msg.date:null };
+  }).filter(function(o){ return o.prod; }).sort(function(a,b){ return new Date(b.date||0)-new Date(a.date||0); });
+  grid.innerHTML=orders.map(function(o){
+    var p=o.prod;
+    return '<div class="order-card">'+
+      '<div class="order-img">'+(p.img?'<img src="'+p.img+'" alt="'+p.title+'">':'<span style="font-size:.65rem;color:rgba(124,92,252,.3);font-family:var(--font-d)">X77</span>')+'</div>'+
+      '<div class="order-info"><div class="order-title">'+p.title+'</div><div class="order-meta">Confirmé le '+(o.date?new Date(o.date).toLocaleDateString('fr-FR'):'—')+'</div></div>'+
+      '<div class="order-price">'+parseFloat(p.price).toFixed(2)+'€</div>'+
+      '<span class="order-status status-confirmed">✓ Confirmé</span>'+
+      '<button class="btn btn-outline btn-sm" onclick="showPage(\'inbox\')" style="border-radius:10px;font-size:.72rem;padding:6px 12px">Desc. →</button>'+
+    '</div>';
+  }).join('');
+}
+
+// ============================================================
+// REFERRAL SYSTEM
+// ============================================================
+function getReferralCode(){ if(!currentUser) return ''; return btoa(currentUser.username).replace(/[=+/]/g,'').substring(0,10).toUpperCase(); }
+function getReferralLink(){ return location.origin+location.pathname+'?ref='+getReferralCode(); }
+
+function renderReferral(){
+  if(!currentUser) return;
+  var link=getReferralLink();
+  ge('referralLinkBox').textContent=link;
+  var myCode=getReferralCode();
+  var referred=db.users.filter(function(u){ return u.referredBy===myCode; });
+  var converted=referred.filter(function(u){ return u.isBuyer; });
+  ge('refInvited').textContent=referred.length;
+  ge('refConverted').textContent=converted.length;
+  ge('refBonus').textContent=converted.length>0?'+'+converted.length*5+'%':'0%';
+}
+
+function copyReferralLink(){
+  var link=getReferralLink();
+  navigator.clipboard.writeText(link).then(function(){ toast('Lien copié !','success'); }).catch(function(){
+    var r=document.createRange(); r.selectNode(ge('referralLinkBox'));
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+    document.execCommand('copy'); window.getSelection().removeAllRanges();
+    toast('Lien copié !','success');
+  });
+}
+function shareReferralLink(){
+  var link=getReferralLink();
+  if(navigator.share) navigator.share({title:'X77 SHOP — Invitation',text:'Rejoins X77 SHOP et obtiens −10% sur ton premier achat !',url:link});
+  else copyReferralLink();
+}
+window.copyReferralLink=copyReferralLink; window.shareReferralLink=shareReferralLink;
+
+function checkReferralOnRegister(username){
+  var params=new URLSearchParams(location.search); var ref=params.get('ref');
+  if(!ref) return;
+  var user=db.users.find(function(u){ return u.username===username; });
+  if(!user||user.referredBy) return;
+  user.referredBy=ref;
+  if(!db.promoCodes) db.promoCodes=[];
+  var promoCode='REF'+username.toUpperCase().substring(0,4)+Math.random().toString(36).substring(2,6).toUpperCase();
+  db.promoCodes.push({ id:'promo_ref_'+Date.now(), code:promoCode, discount:10, maxUses:1, uses:0, active:true, createdAt:new Date().toISOString() });
+  db.messages.push({ id:'m_ref_'+Date.now(), to:username, subject:'🎁 Code de bienvenue parrainage !', body:'Bienvenue sur X77 SHOP !\n\nVotre ami vous a parrainé 🎉\n\n━━━━━━━━━━━━━━━━━\nCode promo : '+promoCode+'\nRéduction : −10% sur votre prochain achat\n━━━━━━━━━━━━━━━━━\n\nUtilisez ce code dans votre panier. Valable 1 fois.\n\nMerci — X77 SHOP', date:new Date().toISOString(), read:false });
+  toast('🎁 Code parrainage appliqué ! −10% offert dans vos messages.','success');
+}
+
+// ============================================================
+// CHAT WIDGET
+// ============================================================
+var chatOpen=false;
+function toggleChat(){
+  chatOpen=!chatOpen;
+  ge('chatBox').classList.toggle('open',chatOpen);
+  if(chatOpen){ ge('chatUnreadDot').classList.remove('show'); if(ge('chatInput')) ge('chatInput').focus(); }
+}
+function sendChatMsg(){
+  if(!currentUser){ toast('Connectez-vous pour utiliser le chat.','warning'); return; }
+  var input=ge('chatInput'); var text=(input.value||'').trim(); if(!text) return; input.value='';
+  appendChatMsg(text,true,currentUser.username);
+  if(!db.supportMessages) db.supportMessages=[];
+  db.supportMessages.push({ id:'sm_'+Date.now(), from:currentUser.username, text:text, date:new Date().toISOString(), replied:false });
+  saveDB();
+  var replies=['Merci pour votre message ! Nous vous répondrons très vite. ⚡','Bien reçu 👍 Notre équipe traite votre demande.','Message reçu ! Consultez vos messages privés pour la suite.'];
+  setTimeout(function(){ appendChatMsg(replies[Math.floor(Math.random()*replies.length)],false,'X77 SHOP'); if(!chatOpen) ge('chatUnreadDot').classList.add('show'); },1200+Math.random()*1600);
+}
+function appendChatMsg(text,mine,sender){
+  var msgs=ge('chatMessages'); var div=document.createElement('div');
+  div.className='chat-msg '+(mine?'mine':'theirs');
+  div.innerHTML=text+'<div class="chat-msg-time">'+sender+' · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div>';
+  msgs.appendChild(div); msgs.scrollTop=msgs.scrollHeight;
+}
+window.toggleChat=toggleChat; window.sendChatMsg=sendChatMsg;
 
 // ============================================================
 // PROMO CODES
