@@ -565,6 +565,32 @@ footer.home-footer { padding-bottom: 40px; }
   .products-grid { grid-template-columns: 1fr; }
   .hero-pills { display: none; }
 }
+
+/* DASH TABS */
+.dash-tab {
+  padding: 8px 18px; border-radius: 10px; border: none;
+  background: none; font-family: var(--font-b); font-size: .8rem; font-weight: 600;
+  color: var(--muted); cursor: pointer; transition: .2s; white-space: nowrap;
+}
+.dash-tab:hover { color: var(--text); background: rgba(255,255,255,.06); }
+.dash-tab.act { background: rgba(124,92,252,.25); color: var(--text); }
+
+/* ANALYTICS */
+.analytics-bar-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .82rem; }
+.analytics-bar-row:last-child { border: none; }
+.analytics-bar-label { min-width: 120px; color: var(--muted2); font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.analytics-bar-fill { height: 8px; border-radius: 4px; transition: width .6s cubic-bezier(.34,1.56,.64,1); }
+.analytics-bar-val { margin-left: auto; font-weight: 700; font-size: .8rem; white-space: nowrap; }
+
+/* LOG ENTRIES */
+.log-entry { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: .78rem; font-family: monospace; }
+.log-entry:last-child { border: none; }
+.log-badge { padding: 2px 8px; border-radius: 6px; font-size: .62rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+.log-ok { background: rgba(48,209,88,.15); color: var(--green); border: 1px solid rgba(48,209,88,.3); }
+.log-fail { background: rgba(255,69,58,.15); color: var(--red); border: 1px solid rgba(255,69,58,.3); }
+.log-owner { background: rgba(124,92,252,.15); color: var(--accent); border: 1px solid rgba(124,92,252,.3); }
+.log-ip { color: var(--muted); font-size: .7rem; margin-left: auto; white-space: nowrap; }
+.log-time { color: var(--muted); font-size: .7rem; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -909,6 +935,25 @@ footer.home-footer { padding-bottom: 40px; }
   </div>
 </div>
 
+<!-- MODAL : Paramètres Shop -->
+<div class="overlay" id="overlaySettings">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('overlaySettings')">&#x2715;</button>
+    <div class="modal-title">Paramètres <span>Shop</span></div>
+    <div id="settingsErr" class="auth-err"></div>
+    <div style="background:rgba(255,159,10,.08);border:1px solid rgba(255,159,10,.2);border-radius:12px;padding:12px 16px;font-size:.78rem;color:var(--orange);margin-bottom:20px;line-height:1.6">⚠️ Ces modifications s'appliquent immédiatement au site. Vérifiez bien avant de sauvegarder.</div>
+    <div class="field"><label>Nom du Shop</label><input id="setShopName" type="text" placeholder="X77 SHOP"></div>
+    <div class="field"><label>Identifiant PayPal</label><input id="setPaypal" type="text" placeholder="x77ss"></div>
+    <div class="field"><label>Pseudo Owner</label><input id="setOwnerName" type="text" placeholder="x77uhq"></div>
+    <div class="field"><label>Nouveau mot de passe Owner <span style="font-size:.65rem;color:var(--muted);text-transform:none;font-weight:400">(vide = inchangé)</span></label><input id="setOwnerPass" type="password" placeholder="••••••••"></div>
+    <div class="field" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)"><label>Confirmer avec mot de passe actuel</label><input id="setConfirmPass" type="password" placeholder="••••••••"></div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button class="btn btn-outline" onclick="closeModal('overlaySettings')" style="flex:1">Annuler</button>
+      <button class="btn btn-accent" onclick="doSaveSettings()" style="flex:2">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE DASHBOARD -->
 <div class="page" id="page-dashboard">
   <div class="dash-wrap">
@@ -922,10 +967,21 @@ footer.home-footer { padding-bottom: 40px; }
         <button class="btn btn-accent btn-sm" onclick="openModal('overlayAddProd')">+ Article</button>
         <button class="btn btn-sm" style="background:linear-gradient(135deg,rgba(255,159,10,.2),rgba(255,159,10,.1));border:1px solid rgba(255,159,10,.3);color:var(--orange)" onclick="openModal('overlayAddPromo')">+ Code promo</button>
         <button class="btn btn-sm" style="background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.3);color:var(--green)" onclick="openModal('overlayBuyer')">✓ Valider buyer</button>
+        <button class="btn btn-sm" style="background:rgba(124,92,252,.12);border:1px solid rgba(124,92,252,.3);color:var(--accent)" onclick="openSettingsModal()">⚙️ Paramètres</button>
       </div>
     </div>
 
-    <!-- Revenue estimate -->
+    <!-- Dashboard Tab Nav -->
+    <div style="display:flex;gap:4px;margin-bottom:24px;background:rgba(0,0,0,.3);border-radius:14px;padding:4px;width:fit-content;flex-wrap:wrap">
+      <button class="dash-tab act" id="dtab-overview" onclick="switchDashTab('overview')">Vue d'ensemble</button>
+      <button class="dash-tab" id="dtab-analytics" onclick="switchDashTab('analytics')">📊 Analytics</button>
+      <button class="dash-tab" id="dtab-logs" onclick="switchDashTab('logs')">🔐 Logs sécurité</button>
+    </div>
+
+    <!-- TAB: OVERVIEW -->
+    <div id="dtab-content-overview">
+
+    <!-- Revenue tile -->
     <div class="revenue-tile" id="revenueTile">
       <div class="rev-icon">💰</div>
       <div>
@@ -950,7 +1006,6 @@ footer.home-footer { padding-bottom: 40px; }
     </div>
 
     <div class="dash-grid">
-      <!-- Products panel -->
       <div class="dash-panel">
         <div class="dp-head">
           <div class="dp-title">Produits</div>
@@ -958,8 +1013,6 @@ footer.home-footer { padding-bottom: 40px; }
         </div>
         <div id="dashProdList"></div>
       </div>
-
-      <!-- Users panel -->
       <div class="dash-panel">
         <div class="dp-head">
           <div class="dp-title">Utilisateurs</div>
@@ -967,8 +1020,6 @@ footer.home-footer { padding-bottom: 40px; }
         </div>
         <div id="dashUserList"></div>
       </div>
-
-      <!-- Activity feed -->
       <div class="dash-panel full">
         <div class="dp-head">
           <div class="dp-title">Activité récente</div>
@@ -979,8 +1030,6 @@ footer.home-footer { padding-bottom: 40px; }
         </div>
         <div class="activity-chart-wrap" id="activityChart"></div>
       </div>
-
-      <!-- Promo Codes Panel -->
       <div class="dash-panel full">
         <div class="dp-head">
           <div class="dp-title">Codes de Réduction</div>
@@ -988,15 +1037,52 @@ footer.home-footer { padding-bottom: 40px; }
         </div>
         <div id="dashPromoList"></div>
       </div>
-
-      <!-- Message log -->
       <div class="dash-panel full">
-        <div class="dp-head">
-          <div class="dp-title">Historique messages</div>
-        </div>
+        <div class="dp-head"><div class="dp-title">Historique messages</div></div>
         <div id="dashMsgLog"></div>
       </div>
     </div>
+    </div><!-- end overview tab -->
+
+    <!-- TAB: ANALYTICS -->
+    <div id="dtab-content-analytics" style="display:none">
+      <div class="dash-grid">
+        <div class="dash-panel full">
+          <div class="dp-head"><div class="dp-title">Revenus sur 30 jours</div><div id="analyticsRevTotal" style="font-family:var(--font-d);font-size:1.2rem;color:var(--accent)">0.00 €</div></div>
+          <div id="analyticsRevChart" style="margin-top:8px"></div>
+        </div>
+        <div class="dash-panel">
+          <div class="dp-head"><div class="dp-title">Top Produits</div></div>
+          <div id="analyticsTopProds"></div>
+        </div>
+        <div class="dash-panel">
+          <div class="dp-head"><div class="dp-title">Inscriptions / 30j</div></div>
+          <div id="analyticsSignups"></div>
+        </div>
+        <div class="dash-panel full">
+          <div class="dp-head"><div class="dp-title">Note moyenne par produit</div></div>
+          <div id="analyticsRatings"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: LOGS -->
+    <div id="dtab-content-logs" style="display:none">
+      <div class="dash-grid">
+        <div class="dash-panel full">
+          <div class="dp-head">
+            <div class="dp-title">Logs de connexion</div>
+            <button class="btn btn-sm" style="background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.2);color:var(--red);font-size:.72rem" onclick="clearLogs()">Effacer les logs</button>
+          </div>
+          <div id="securityLogs"></div>
+        </div>
+        <div class="dash-panel full">
+          <div class="dp-head"><div class="dp-title">Tentatives échouées</div></div>
+          <div id="failedLogins"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1449,6 +1535,7 @@ function doLogin(){
   // Owner login — pas besoin du réseau
   if(u.toLowerCase()===OWNER.toLowerCase()&&p===OWNER_PASS){
     currentUser={username:OWNER,role:'owner',email:'owner@x77shop.com',joinDate:new Date().toISOString()};
+    getIP().then(function(ip){ addLog('login_owner', OWNER, ip, ''); });
     finishLogin();
     return;
   }
@@ -1457,9 +1544,10 @@ function doLogin(){
   loadDB().then(function(){
     setLoginLoading(false);
     var user=db.users.find(function(x){ return x.username.toLowerCase()===u.toLowerCase()&&x.password===hash(p); });
-    if(!user){ showAuthErr('Identifiants incorrects.'); return; }
-    if(user.banned){ showAuthErr('Votre compte a été banni.'); return; }
+    if(!user){ getIP().then(function(ip){ addLog('login_fail',u,ip,'Identifiants incorrects'); }); showAuthErr('Identifiants incorrects.'); return; }
+    if(user.banned){ getIP().then(function(ip){ addLog('login_fail',u,ip,'Compte banni'); }); showAuthErr('Votre compte a été banni.'); return; }
     currentUser=JSON.parse(JSON.stringify(user));
+    getIP().then(function(ip){ addLog('login_ok',u,ip,''); });
     finishLogin();
   });
 }
@@ -1478,6 +1566,7 @@ function doRegister(){
     getIP().then(function(ip){
       var nu={ id:'u_'+Date.now(), username:u, email:simpleEncrypt(e), city:simpleEncrypt(city), ip:simpleEncrypt(ip), password:hash(p), role:'user', joinDate:new Date().toISOString(), isBuyer:false, buyerProducts:[], banned:false, pendingReview:false };
       db.users.push(nu);
+      addLog('register', u, ip, 'Nouvelle inscription');
       saveDB().then(function(){ setRegisterLoading(false); currentUser=JSON.parse(JSON.stringify(nu)); finishLogin(); });
     });
   });
@@ -2008,9 +2097,247 @@ function svgBan(){ return '<svg width="13" height="13" fill="none" stroke="curre
 function ge(id){ return document.getElementById(id); }
 function gv(id){ return (ge(id)&&ge(id).value)||''; }
 
+
+// ============================================================
+// DYNAMIC CONFIG (settings)
+// ============================================================
+var shopConfig = {
+  shopName: 'X77 SHOP',
+  paypal: 'x77ss',
+  ownerName: 'x77uhq',
+  ownerPass: 'x77'
+};
+
+// Load config from localStorage on boot
+function loadConfig(){
+  try {
+    var c = localStorage.getItem('x77_config');
+    if(c){ shopConfig = Object.assign(shopConfig, JSON.parse(c)); }
+    // Apply dynamic values
+    OWNER = shopConfig.ownerName;
+    OWNER_PASS = shopConfig.ownerPass;
+    PAYPAL = shopConfig.paypal;
+  } catch(e){}
+}
+
+function openSettingsModal(){
+  ge('setShopName').value = shopConfig.shopName;
+  ge('setPaypal').value = shopConfig.paypal;
+  ge('setOwnerName').value = shopConfig.ownerName;
+  ge('setOwnerPass').value = '';
+  ge('setConfirmPass').value = '';
+  ge('settingsErr').style.display = 'none';
+  openModal('overlaySettings');
+}
+
+function doSaveSettings(){
+  var confirmP = gv('setConfirmPass');
+  var err = ge('settingsErr');
+  if(confirmP !== shopConfig.ownerPass){ err.textContent='Mot de passe actuel incorrect.'; err.style.display='block'; return; }
+  var newName = gv('setShopName').trim() || shopConfig.shopName;
+  var newPP = gv('setPaypal').trim() || shopConfig.paypal;
+  var newOwner = gv('setOwnerName').trim() || shopConfig.ownerName;
+  var newPass = gv('setOwnerPass').trim();
+  shopConfig.shopName = newName;
+  shopConfig.paypal = newPP;
+  shopConfig.ownerName = newOwner;
+  if(newPass.length >= 4) shopConfig.ownerPass = newPass;
+  else if(newPass.length > 0){ err.textContent='Nouveau mot de passe trop court (4 min).'; err.style.display='block'; return; }
+  // Apply
+  OWNER = shopConfig.ownerName;
+  OWNER_PASS = shopConfig.ownerPass;
+  PAYPAL = shopConfig.paypal;
+  // Update visuals
+  document.querySelectorAll('.logo, .auth-logo, .footer-logo').forEach(function(el){ el.textContent = shopConfig.shopName; });
+  document.title = shopConfig.shopName + ' — Boutique Officielle';
+  localStorage.setItem('x77_config', JSON.stringify(shopConfig));
+  closeModal('overlaySettings');
+  toast('Paramètres sauvegardés !', 'success');
+}
+
+window.openSettingsModal = openSettingsModal;
+window.doSaveSettings = doSaveSettings;
+
+// ============================================================
+// DASHBOARD TABS
+// ============================================================
+function switchDashTab(tab){
+  ['overview','analytics','logs'].forEach(function(t){
+    var btn = ge('dtab-'+t);
+    var cnt = ge('dtab-content-'+t);
+    if(btn) btn.classList.toggle('act', t===tab);
+    if(cnt) cnt.style.display = t===tab ? 'block' : 'none';
+  });
+  if(tab==='analytics') renderAnalytics();
+  if(tab==='logs') renderLogs();
+}
+window.switchDashTab = switchDashTab;
+
+// ============================================================
+// ANALYTICS
+// ============================================================
+function renderAnalytics(){
+  // Revenue over 30 days
+  var now = new Date();
+  var days30 = [];
+  var totalRev = 0;
+  for(var i=29;i>=0;i--){
+    var d = new Date(now); d.setDate(d.getDate()-i);
+    var ds = d.toISOString().substring(0,10);
+    var label = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});
+    // revenue = buyers validated that day (msgs sent that day) * product price approx
+    var dayMsgs = db.messages.filter(function(m){ return m.date&&m.date.startsWith(ds); }).length;
+    // estimate avg product price
+    var avgPrice = db.products.length ? db.products.reduce(function(s,p){ return s+parseFloat(p.price||0); },0)/db.products.length : 0;
+    var dayRev = dayMsgs * avgPrice;
+    totalRev += dayRev;
+    days30.push({label:label, rev:dayRev, msgs:dayMsgs});
+  }
+  ge('analyticsRevTotal').textContent = totalRev.toFixed(2)+' €';
+
+  // Revenue chart
+  var maxRev = Math.max(1, Math.max.apply(null, days30.map(function(d){ return d.rev; })));
+  var revChart = ge('analyticsRevChart');
+  if(revChart){
+    var recentDays = days30.slice(-14); // show last 14 for readability
+    revChart.innerHTML = '<div style="display:flex;align-items:flex-end;gap:5px;height:80px;padding-bottom:4px">' +
+      recentDays.map(function(d){
+        var h = Math.max(3, Math.round((d.rev/maxRev)*72));
+        return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">' +
+          '<div title="'+d.label+' : '+(d.rev).toFixed(2)+'€ ('+d.msgs+' vente(s))" style="width:100%;height:'+h+'px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--accent),rgba(124,92,252,.3));cursor:default"></div>' +
+          '<div style="font-size:.55rem;color:var(--muted);writing-mode:vertical-lr;transform:rotate(180deg);height:30px;overflow:hidden">'+d.label+'</div>' +
+        '</div>';
+      }).join('') +
+    '</div>';
+  }
+
+  // Top products by buyers
+  var topProds = db.products.slice().sort(function(a,b){ return (b.buyers||[]).length-(a.buyers||[]).length; }).slice(0,5);
+  var maxBuyers = Math.max(1, topProds.length ? (topProds[0].buyers||[]).length : 1);
+  var topEl = ge('analyticsTopProds');
+  if(topEl){
+    topEl.innerHTML = topProds.length ? topProds.map(function(p){
+      var b = (p.buyers||[]).length;
+      var pct = Math.round((b/maxBuyers)*100);
+      var rev = b * parseFloat(p.price||0);
+      return '<div class="analytics-bar-row">' +
+        '<div class="analytics-bar-label" title="'+p.title+'">'+p.title+'</div>' +
+        '<div style="flex:1;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden;height:8px">' +
+          '<div class="analytics-bar-fill" style="width:'+pct+'%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>' +
+        '</div>' +
+        '<div class="analytics-bar-val" style="color:var(--accent)">'+b+' acheteur'+(b>1?'s':'')+' · '+rev.toFixed(2)+'€</div>' +
+      '</div>';
+    }).join('') : '<p style="font-size:.8rem;color:var(--muted);text-align:center;padding:20px">Aucun achat.</p>';
+  }
+
+  // Signups per day (last 30)
+  var maxSig = Math.max(1, Math.max.apply(null, days30.map(function(d){
+    var ds2 = d.label; return db.users.filter(function(u){ return u.joinDate&&u.joinDate.includes(ds2.split('/').reverse().join('-')); }).length;
+  })));
+  var sigEl = ge('analyticsSignups');
+  if(sigEl){
+    var totalSig = db.users.length;
+    var recentSig = db.users.filter(function(u){ var d=new Date(u.joinDate||0); return (now-d)<30*86400000; }).length;
+    sigEl.innerHTML = '<div style="margin-bottom:14px"><div style="font-family:var(--font-d);font-size:1.8rem;color:var(--accent2)">'+recentSig+'</div><div style="font-size:.72rem;color:var(--muted);margin-top:4px">inscriptions sur 30 jours · '+totalSig+' total</div></div>' +
+      days30.filter(function(_,i){ return i%3===0; }).map(function(d){
+        var cnt = db.users.filter(function(u){ return u.joinDate&&u.joinDate.substring(0,7)===d.label.split('/').reverse().join('-').substring(0,7); }).length;
+        return '<div class="analytics-bar-row"><div class="analytics-bar-label">'+d.label+'</div><div style="flex:1"></div><div class="analytics-bar-val" style="color:var(--accent2)">'+cnt+'</div></div>';
+      }).slice(-10).join('');
+  }
+
+  // Avg rating per product
+  var ratingEl = ge('analyticsRatings');
+  if(ratingEl){
+    var prodsWithReviews = db.products.map(function(p){
+      var revs = (db.reviews||[]).filter(function(r){ return r.productId===p.id&&r.stars>0; });
+      var avg = revs.length ? revs.reduce(function(s,r){ return s+r.stars; },0)/revs.length : 0;
+      return { title:p.title, avg:avg, count:revs.length };
+    }).filter(function(p){ return p.count>0; }).sort(function(a,b){ return b.avg-a.avg; });
+
+    ratingEl.innerHTML = prodsWithReviews.length ? prodsWithReviews.map(function(p){
+      var stars = '';
+      for(var i=1;i<=5;i++) stars += '<span style="color:'+(i<=Math.round(p.avg)?'var(--orange)':'var(--muted)')+'">★</span>';
+      return '<div class="analytics-bar-row">' +
+        '<div class="analytics-bar-label">'+p.title+'</div>' +
+        '<div style="display:flex;gap:1px;font-size:.9rem">'+stars+'</div>' +
+        '<div class="analytics-bar-val" style="color:var(--orange)">'+p.avg.toFixed(1)+'/5 <span style="color:var(--muted);font-weight:400">('+p.count+' avis)</span></div>' +
+      '</div>';
+    }).join('') : '<p style="font-size:.8rem;color:var(--muted);text-align:center;padding:20px">Aucun avis avec note pour le moment.</p>';
+  }
+}
+
+// ============================================================
+// SECURITY LOGS
+// ============================================================
+// Logs are stored in sessionStorage (reset each session, not persisted to JSONBin)
+var secLogs = [];
+try { secLogs = JSON.parse(sessionStorage.getItem('x77_logs')||'[]'); } catch(e){}
+
+function addLog(type, username, ip, extra){
+  var entry = { type:type, username:username, ip:ip||'N/A', extra:extra||'', ts: new Date().toISOString() };
+  secLogs.unshift(entry);
+  if(secLogs.length > 200) secLogs = secLogs.slice(0,200);
+  try { sessionStorage.setItem('x77_logs', JSON.stringify(secLogs)); } catch(e){}
+}
+
+function renderLogs(){
+  var el = ge('securityLogs');
+  var el2 = ge('failedLogins');
+  if(!el||!el2) return;
+
+  var allLogs = secLogs.filter(function(l){ return l.type==='login_ok'||l.type==='login_owner'||l.type==='register'||l.type==='login_fail'; });
+  var failLogs = secLogs.filter(function(l){ return l.type==='login_fail'; });
+
+  if(!allLogs.length){
+    el.innerHTML = '<p style="font-size:.8rem;color:var(--muted);text-align:center;padding:20px">Aucun log cette session. Les logs se réinitialisent à chaque fermeture de navigateur.</p>';
+  } else {
+    el.innerHTML = allLogs.slice(0,50).map(function(l){
+      var badgeClass = l.type==='login_ok'?'log-ok':l.type==='login_owner'?'log-owner':l.type==='register'?'log-ok':'log-fail';
+      var badgeText = l.type==='login_ok'?'CONNEXION':l.type==='login_owner'?'OWNER':l.type==='register'?'INSCRIPTION':'ÉCHEC';
+      var time = new Date(l.ts).toLocaleString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit'});
+      return '<div class="log-entry">' +
+        '<span class="log-badge '+badgeClass+'">'+badgeText+'</span>' +
+        '<span style="color:var(--muted2);font-weight:600">'+l.username+'</span>' +
+        (l.extra?'<span style="color:var(--muted);font-size:.7rem">'+l.extra+'</span>':'') +
+        '<span class="log-ip">'+l.ip+'</span>' +
+        '<span class="log-time">'+time+'</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  if(!failLogs.length){
+    el2.innerHTML = '<p style="font-size:.8rem;color:var(--green);text-align:center;padding:20px">✓ Aucune tentative échouée cette session.</p>';
+  } else {
+    // Group by username
+    var byUser = {};
+    failLogs.forEach(function(l){ byUser[l.username]=(byUser[l.username]||0)+1; });
+    el2.innerHTML = Object.keys(byUser).map(function(u){
+      var count = byUser[u];
+      var isAlert = count >= 3;
+      return '<div class="analytics-bar-row">' +
+        '<div class="analytics-bar-label" style="color:'+(isAlert?'var(--red)':'var(--muted2)')+'">'+u+(isAlert?' ⚠️':'')+'</div>' +
+        '<div style="flex:1"></div>' +
+        '<div class="analytics-bar-val" style="color:'+(isAlert?'var(--red)':'var(--orange)')+'">'+count+' tentative'+(count>1?'s':'')+' échouée'+(count>1?'s':'')+'</div>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+function clearLogs(){
+  if(!confirm('Effacer tous les logs de cette session ?')) return;
+  secLogs = [];
+  try { sessionStorage.removeItem('x77_logs'); } catch(e){}
+  renderLogs();
+  toast('Logs effacés.','info');
+}
+window.clearLogs = clearLogs;
+
 // ============================================================
 // EXPOSE GLOBALS
 // ============================================================
+window.openSettingsModal=openSettingsModal; window.doSaveSettings=doSaveSettings;
+window.switchDashTab=switchDashTab;
+window.clearLogs=clearLogs;
 window.switchTab=switchTab;
 window.doLogin=doLogin; window.doRegister=doRegister; window.logout=logout;
 window.openProduct=openProduct; window.openModal=openModal; window.closeModal=closeModal;
@@ -2023,11 +2350,13 @@ window.banUser=banUser; window.unbanUser=unbanUser; window.deleteUser=deleteUser
 window.openDecrypt=openDecrypt; window.doDecrypt=doDecrypt;
 window.setStar=setStar; window.submitReview=submitReview; window.dismissBuyerPopup=dismissBuyerPopup;
 window.renderProducts=renderProducts;
+window.switchDashTab=switchDashTab; window.clearLogs=clearLogs; window.openSettingsModal=openSettingsModal; window.doSaveSettings=doSaveSettings;
 
 // ============================================================
 // INIT
 // ============================================================
 function init(){
+  loadConfig();
   // Restore session
   try{ var s=localStorage.getItem('x77_session'); if(s) currentUser=JSON.parse(s); }catch(e){}
 
