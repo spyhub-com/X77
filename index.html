@@ -3,4009 +3,1495 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Astral | Hosting ™ — Galaxy Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<title>7x | Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   ASTRAL HOSTING — GALAXY THEME
-   Ultra Complete Admin Dashboard
-   Violet / Rose / Noir — Space Edition
-   ============================================================ */
-
-:root {
-  --void: #000000;
-  --deep-space: #04020d;
-  --nebula-dark: #0a0515;
-  --nebula-mid: #130a28;
-  --nebula-light: #1e1040;
-  --violet-core: #7c3aed;
-  --violet-bright: #8b5cf6;
-  --violet-glow: #a78bfa;
-  --violet-soft: #c4b5fd;
-  --pink-core: #db2777;
-  --pink-bright: #ec4899;
-  --pink-glow: #f472b6;
-  --pink-soft: #fbcfe8;
-  --cyan-accent: #06b6d4;
-  --cyan-glow: #67e8f9;
-  --gold-accent: #f59e0b;
-  --green-status: #10b981;
-  --red-status: #ef4444;
-  --orange-warn: #f97316;
-  --text-primary: #f0e6ff;
-  --text-secondary: #c4b5fd;
-  --text-muted: #7c6fa0;
-  --text-dim: #4a4268;
-  --border-subtle: rgba(124, 58, 237, 0.2);
-  --border-mid: rgba(139, 92, 246, 0.4);
-  --border-bright: rgba(167, 139, 250, 0.7);
-  --glass-bg: rgba(10, 5, 21, 0.8);
-  --glass-card: rgba(19, 10, 40, 0.9);
-  --sidebar-w: 240px;
-  --topbar-h: 64px;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --shadow-violet: 0 0 40px rgba(124, 58, 237, 0.3);
-  --shadow-pink: 0 0 40px rgba(219, 39, 119, 0.3);
-  --shadow-glow: 0 0 80px rgba(139, 92, 246, 0.15);
-  --transition: cubic-bezier(0.4, 0, 0.2, 1);
-  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Rajdhani', sans-serif;
-  background: var(--deep-space);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--nebula-dark); }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--violet-core), var(--pink-core));
-  border-radius: 99px;
-}
-
-/* ============================================================
-   CANVAS — GALAXY BACKGROUND
-   ============================================================ */
-#galaxy-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* ============================================================
-   NEBULA BLOBS
-   ============================================================ */
-.nebula-blob {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.12;
-  pointer-events: none;
-  z-index: 0;
-  animation: nebulaDrift 20s ease-in-out infinite alternate;
-}
-.nebula-blob.n1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, var(--violet-core), transparent 70%);
-  top: -100px; left: -100px;
-  animation-delay: 0s;
-}
-.nebula-blob.n2 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, var(--pink-core), transparent 70%);
-  bottom: -100px; right: -100px;
-  animation-delay: -7s;
-}
-.nebula-blob.n3 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, var(--cyan-accent), transparent 70%);
-  top: 40%; left: 50%;
-  transform: translate(-50%,-50%);
-  animation-delay: -14s;
-  opacity: 0.07;
-}
-
-@keyframes nebulaDrift {
-  0%   { transform: translate(0,0) scale(1); }
-  100% { transform: translate(40px, 30px) scale(1.1); }
-}
-
-/* ============================================================
-   LAYOUT WRAPPER
-   ============================================================ */
-.layout {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  min-height: 100vh;
-}
-
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
-.sidebar {
-  width: var(--sidebar-w);
-  min-height: 100vh;
-  background: rgba(4, 2, 13, 0.95);
-  border-right: 1px solid var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  left: 0; top: 0; bottom: 0;
-  z-index: 100;
-  backdrop-filter: blur(24px);
-  transition: transform 0.4s var(--transition);
-  overflow: hidden;
-}
-
-.sidebar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg,
-    rgba(124, 58, 237, 0.05) 0%,
-    transparent 40%,
-    rgba(219, 39, 119, 0.05) 100%);
-  pointer-events: none;
-}
-
-.sidebar::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(180deg,
-    transparent,
-    var(--violet-core) 30%,
-    var(--pink-core) 70%,
-    transparent);
-  opacity: 0.5;
-}
-
-/* Logo */
-.sidebar-logo {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  position: relative;
-}
-
-.logo-icon {
-  width: 42px; height: 42px;
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-  animation: logoPulse 3s ease-in-out infinite;
-}
-
-@keyframes logoPulse {
-  0%,100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.5); }
-  50%      { box-shadow: 0 0 35px rgba(219, 39, 119, 0.7), 0 0 60px rgba(124, 58, 237, 0.3); }
-}
-
-.logo-icon::before {
-  content: '';
-  position: absolute;
-  inset: -50%;
-  background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.2), transparent);
-  animation: logoSpin 4s linear infinite;
-}
-
-@keyframes logoSpin {
-  to { transform: rotate(360deg); }
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-name {
-  font-family: 'Orbitron', monospace;
-  font-size: 14px;
-  font-weight: 800;
-  background: linear-gradient(90deg, var(--violet-glow), var(--pink-glow));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 2px;
-  line-height: 1;
-}
-
-.logo-sub {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  color: var(--text-muted);
-  letter-spacing: 3px;
-  margin-top: 3px;
-}
-
-/* Server Selector */
-.server-selector {
-  margin: 16px 16px 8px;
-  background: var(--nebula-mid);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 12px 14px;
-  cursor: pointer;
-  transition: all 0.3s var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.server-selector:hover {
-  border-color: var(--border-mid);
-  background: var(--nebula-light);
-}
-
-.server-selector::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(124,58,237,0.05), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s;
-}
-
-.server-selector:hover::before { transform: translateX(100%); }
-
-.server-sel-label {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  font-family: 'Share Tech Mono', monospace;
-}
-
-.server-sel-name {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-primary);
-}
-
-.server-sel-dot {
-  width: 8px; height: 8px;
-  background: var(--green-status);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--green-status);
-  animation: statusPulse 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
-
-@keyframes statusPulse {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.3); }
-}
-
-.server-sel-arrow {
-  margin-left: auto;
-  color: var(--text-muted);
-  font-size: 12px;
-  transition: transform 0.3s;
-}
-
-/* Nav */
-.nav-section {
-  padding: 8px 16px 4px;
-  margin-top: 8px;
-}
-
-.nav-section-label {
-  font-size: 9px;
-  font-family: 'Share Tech Mono', monospace;
-  color: var(--text-dim);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  padding: 0 8px;
-  margin-bottom: 4px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all 0.25s var(--transition);
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
-  color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  margin-bottom: 2px;
-}
-
-.nav-item::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 50%;
-  transform: translateY(-50%);
-  width: 3px; height: 0;
-  background: linear-gradient(180deg, var(--violet-bright), var(--pink-bright));
-  border-radius: 0 3px 3px 0;
-  transition: height 0.3s var(--spring);
-}
-
-.nav-item:hover::before,
-.nav-item.active::before {
-  height: 60%;
-}
-
-.nav-item .nav-ripple {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(124,58,237,0.08), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.nav-item:hover .nav-ripple,
-.nav-item.active .nav-ripple {
-  opacity: 1;
-}
-
-.nav-item:hover, .nav-item.active {
-  color: var(--text-secondary);
-  background: rgba(124, 58, 237, 0.08);
-}
-
-.nav-item.active {
-  color: var(--violet-glow);
-  background: rgba(124, 58, 237, 0.12);
-}
-
-.nav-icon {
-  width: 18px;
-  text-align: center;
-  font-size: 16px;
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-}
-
-.nav-label {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-}
-
-.nav-badge {
-  position: relative;
-  z-index: 1;
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  color: white;
-  font-size: 9px;
-  font-family: 'Orbitron', monospace;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 99px;
-  letter-spacing: 1px;
-}
-
-/* Sidebar Footer */
-.sidebar-footer {
-  margin-top: auto;
-  padding: 16px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.user-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  background: var(--nebula-mid);
-  border: 1px solid var(--border-subtle);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.user-card:hover {
-  border-color: var(--border-mid);
-  background: var(--nebula-light);
-}
-
-.user-avatar {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'Orbitron', monospace;
-  color: white;
-  flex-shrink: 0;
-  box-shadow: 0 0 14px rgba(124,58,237,0.4);
-}
-
-.user-info { flex: 1; min-width: 0; }
-.user-name {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.user-role {
-  font-size: 10px;
-  color: var(--violet-glow);
-  letter-spacing: 1px;
-  font-family: 'Share Tech Mono', monospace;
-}
-
-/* ============================================================
-   MAIN CONTENT
-   ============================================================ */
-.main {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ============================================================
-   TOPBAR
-   ============================================================ */
-.topbar {
-  height: var(--topbar-h);
-  background: rgba(4, 2, 13, 0.9);
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  padding: 0 28px;
-  gap: 16px;
-  position: sticky;
-  top: 0;
-  z-index: 90;
-  backdrop-filter: blur(24px);
-}
-
-.topbar-server {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-}
-
-.topbar-dot {
-  width: 10px; height: 10px;
-  background: var(--green-status);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--green-status);
-  animation: statusPulse 2s ease-in-out infinite;
-}
-
-.topbar-server-name {
-  font-family: 'Orbitron', monospace;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-}
-
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: var(--radius-sm);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  border: none;
-  transition: all 0.25s var(--transition);
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0.05);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.btn:hover::after { opacity: 1; }
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  color: white;
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
-}
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.5);
-}
-
-.btn-secondary {
-  background: var(--nebula-mid);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-mid);
-}
-.btn-secondary:hover {
-  border-color: var(--violet-bright);
-  color: var(--violet-glow);
-  background: var(--nebula-light);
-}
-
-.btn-danger {
-  background: linear-gradient(135deg, #7f1d1d, var(--red-status));
-  color: white;
-  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-}
-.btn-danger:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 28px rgba(239, 68, 68, 0.5);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-}
-.btn-ghost:hover {
-  color: var(--text-secondary);
-  border-color: var(--border-mid);
-  background: rgba(124,58,237,0.06);
-}
-
-.btn-sm { padding: 6px 14px; font-size: 12px; }
-.btn-icon {
-  padding: 8px;
-  background: var(--nebula-mid);
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  width: 38px; height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.btn-icon:hover {
-  color: var(--violet-glow);
-  border-color: var(--border-mid);
-  background: var(--nebula-light);
-}
-
-/* Notification Bell */
-.notif-btn {
-  position: relative;
-}
-
-.notif-count {
-  position: absolute;
-  top: -4px; right: -4px;
-  background: linear-gradient(135deg, var(--pink-core), var(--pink-bright));
-  color: white;
-  font-size: 9px;
-  font-family: 'Orbitron', monospace;
-  font-weight: 700;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 8px rgba(219,39,119,0.6);
-  animation: notifBounce 2s ease-in-out infinite;
-}
-
-@keyframes notifBounce {
-  0%,100% { transform: scale(1); }
-  50%      { transform: scale(1.15); }
-}
-
-/* ============================================================
-   PAGE CONTENT
-   ============================================================ */
-.page-content {
-  padding: 28px;
-  flex: 1;
-}
-
-.page { display: none; }
-.page.active { display: block; animation: pageIn 0.4s var(--transition); }
-
-@keyframes pageIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Page Header */
-.page-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 28px;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.page-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 22px;
-  font-weight: 800;
-  background: linear-gradient(90deg, var(--violet-glow), var(--pink-glow));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 1px;
-}
-
-.page-subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  font-family: 'Share Tech Mono', monospace;
-  letter-spacing: 1px;
-}
-
-/* ============================================================
-   STAT CARDS
-   ============================================================ */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.stat-card {
-  background: var(--glass-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 22px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.35s var(--transition);
-  backdrop-filter: blur(12px);
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(124,58,237,0.06), transparent, rgba(219,39,119,0.04));
-  pointer-events: none;
-}
-
-.stat-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--violet-bright), var(--pink-bright), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-mid);
-  box-shadow: 0 12px 40px rgba(124,58,237,0.2), 0 0 0 1px rgba(124,58,237,0.1);
-}
-
-.stat-card:hover::after { opacity: 1; }
-
-.stat-card.accent-violet { border-color: rgba(124,58,237,0.3); }
-.stat-card.accent-pink   { border-color: rgba(219,39,119,0.3); }
-.stat-card.accent-cyan   { border-color: rgba(6,182,212,0.3); }
-.stat-card.accent-green  { border-color: rgba(16,185,129,0.3); }
-
-.stat-icon {
-  width: 44px; height: 44px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
-  position: relative;
-}
-
-.stat-icon.vi { background: rgba(124,58,237,0.2); box-shadow: 0 0 20px rgba(124,58,237,0.2); }
-.stat-icon.pi { background: rgba(219,39,119,0.2); box-shadow: 0 0 20px rgba(219,39,119,0.2); }
-.stat-icon.ci { background: rgba(6,182,212,0.2);  box-shadow: 0 0 20px rgba(6,182,212,0.2); }
-.stat-icon.gi { background: rgba(16,185,129,0.2); box-shadow: 0 0 20px rgba(16,185,129,0.2); }
-
-.stat-value {
-  font-family: 'Orbitron', monospace;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-family: 'Share Tech Mono', monospace;
-}
-
-.stat-change {
-  margin-top: 12px;
-  font-size: 11px;
-  font-family: 'Share Tech Mono', monospace;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.stat-change.up { color: var(--green-status); }
-.stat-change.down { color: var(--red-status); }
-
-/* ============================================================
-   CARDS
-   ============================================================ */
-.card {
-  background: var(--glass-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  backdrop-filter: blur(12px);
-  transition: border-color 0.3s;
-}
-
-.card:hover { border-color: var(--border-mid); }
-
-.card-header {
-  padding: 18px 22px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.card-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.card-title-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--violet-bright), var(--pink-bright));
-  box-shadow: 0 0 6px var(--violet-bright);
-}
-
-.card-body { padding: 20px 22px; }
-
-/* ============================================================
-   GRID LAYOUTS
-   ============================================================ */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-
-/* ============================================================
-   TERMINAL
-   ============================================================ */
-.terminal-wrapper {
-  background: #000;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  font-family: 'Share Tech Mono', monospace;
-  position: relative;
-}
-
-.terminal-topbar {
-  background: var(--nebula-mid);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.t-dot {
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: filter 0.2s;
-}
-.t-dot:hover { filter: brightness(1.3); }
-.t-dot.red   { background: #ff5f57; }
-.t-dot.yellow{ background: #febc2e; }
-.t-dot.green { background: #28c840; }
-
-.terminal-title {
-  flex: 1;
-  text-align: center;
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 2px;
-}
-
-.terminal-body {
-  padding: 20px;
-  min-height: 280px;
-  max-height: 400px;
-  overflow-y: auto;
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.t-line { display: flex; gap: 8px; margin-bottom: 4px; }
-.t-prompt { color: var(--violet-bright); flex-shrink: 0; }
-.t-cmd { color: var(--cyan-glow); }
-.t-output { color: #7ec8a4; padding-left: 0; }
-.t-error { color: var(--red-status); }
-.t-info { color: var(--text-muted); font-style: italic; }
-
-.terminal-input-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  border-top: 1px solid var(--border-subtle);
-  background: rgba(0,0,0,0.5);
-}
-
-.t-prompt-live { color: var(--violet-bright); font-family: 'Share Tech Mono', monospace; font-size: 13px; }
-
-.terminal-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  color: var(--cyan-glow);
-  caret-color: var(--violet-glow);
-}
-
-/* ============================================================
-   PROGRESS BARS
-   ============================================================ */
-.resource-item {
-  margin-bottom: 18px;
-}
-
-.resource-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.resource-name {
-  font-size: 12px;
-  font-family: 'Share Tech Mono', monospace;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.resource-val {
-  font-family: 'Orbitron', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.progress-track {
-  height: 8px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 99px;
-  overflow: hidden;
-  position: relative;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 99px;
-  position: relative;
-  transition: width 1.2s var(--spring);
-  background: linear-gradient(90deg, var(--violet-core), var(--pink-bright));
-}
-
-.progress-fill.warn  { background: linear-gradient(90deg, var(--orange-warn), var(--gold-accent)); }
-.progress-fill.good  { background: linear-gradient(90deg, #059669, var(--green-status)); }
-.progress-fill.low   { background: linear-gradient(90deg, var(--cyan-accent), var(--cyan-glow)); }
-
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 20px;
-  background: rgba(255,255,255,0.3);
-  filter: blur(4px);
-  border-radius: 99px;
-}
-
-/* ============================================================
-   SERVER LIST TABLE
-   ============================================================ */
-.table-wrapper { overflow-x: auto; }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead th {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-subtle);
-  white-space: nowrap;
-}
-
-tbody tr {
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background 0.2s;
-  cursor: pointer;
-}
-
-tbody tr:hover { background: rgba(124,58,237,0.05); }
-tbody tr:last-child { border-bottom: none; }
-
-tbody td {
-  padding: 14px 16px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-.td-server {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.td-server-icon {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  box-shadow: 0 0 12px rgba(124,58,237,0.3);
-}
-
-.td-server-name {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 13px;
-}
-
-.td-server-id {
-  font-size: 10px;
-  color: var(--text-dim);
-  font-family: 'Share Tech Mono', monospace;
-}
-
-/* Status Badges */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: 99px;
-  font-size: 10px;
-  font-family: 'Share Tech Mono', monospace;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.badge::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.badge-online  { background: rgba(16,185,129,0.15); color: var(--green-status); border: 1px solid rgba(16,185,129,0.3); }
-.badge-online::before { background: var(--green-status); box-shadow: 0 0 6px var(--green-status); }
-.badge-offline { background: rgba(239,68,68,0.15);  color: var(--red-status);   border: 1px solid rgba(239,68,68,0.3); }
-.badge-offline::before { background: var(--red-status); }
-.badge-warn    { background: rgba(249,115,22,0.15); color: var(--orange-warn);  border: 1px solid rgba(249,115,22,0.3); }
-.badge-warn::before { background: var(--orange-warn); }
-.badge-pending { background: rgba(124,58,237,0.15); color: var(--violet-glow);  border: 1px solid rgba(124,58,237,0.3); }
-.badge-pending::before { background: var(--violet-glow); animation: statusPulse 1.5s infinite; }
-
-/* ============================================================
-   ACTIVITY LOG
-   ============================================================ */
-.activity-list { display: flex; flex-direction: column; gap: 1px; }
-
-.activity-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border-subtle);
-  position: relative;
-  transition: background 0.2s;
-}
-
-.activity-item:last-child { border-bottom: none; }
-
-.activity-icon {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.ai-violet { background: rgba(124,58,237,0.2); box-shadow: 0 0 12px rgba(124,58,237,0.2); }
-.ai-pink   { background: rgba(219,39,119,0.2); box-shadow: 0 0 12px rgba(219,39,119,0.2); }
-.ai-green  { background: rgba(16,185,129,0.2); box-shadow: 0 0 12px rgba(16,185,129,0.2); }
-.ai-red    { background: rgba(239,68,68,0.2);  box-shadow: 0 0 12px rgba(239,68,68,0.2); }
-.ai-cyan   { background: rgba(6,182,212,0.2);  box-shadow: 0 0 12px rgba(6,182,212,0.2); }
-
-.activity-body { flex: 1; min-width: 0; }
-.activity-title { font-size: 13px; color: var(--text-primary); font-weight: 500; }
-.activity-sub   { font-size: 11px; color: var(--text-muted); font-family: 'Share Tech Mono', monospace; margin-top: 3px; }
-.activity-time  { font-size: 10px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; flex-shrink: 0; }
-
-/* ============================================================
-   CHARTS AREA
-   ============================================================ */
-.chart-container { position: relative; width: 100%; }
-
-/* ============================================================
-   MODALS / POPUPS
-   ============================================================ */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s var(--transition);
-}
-
-.modal-overlay.open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.modal {
-  background: var(--nebula-dark);
-  border: 1px solid var(--border-mid);
-  border-radius: var(--radius-xl);
-  width: 100%;
-  max-width: 480px;
-  position: relative;
-  overflow: hidden;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.4s var(--spring);
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6), var(--shadow-violet);
-}
-
-.modal-overlay.open .modal {
-  transform: scale(1) translateY(0);
-}
-
-.modal-glow {
-  position: absolute;
-  top: -60px; left: 50%;
-  transform: translateX(-50%);
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%);
-  pointer-events: none;
-}
-
-.modal-header {
-  padding: 24px 24px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.modal-icon {
-  width: 48px; height: 48px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-
-.modal-icon.violet { background: rgba(124,58,237,0.2); box-shadow: 0 0 20px rgba(124,58,237,0.3); }
-.modal-icon.pink   { background: rgba(219,39,119,0.2); box-shadow: 0 0 20px rgba(219,39,119,0.3); }
-.modal-icon.red    { background: rgba(239,68,68,0.2);  box-shadow: 0 0 20px rgba(239,68,68,0.3); }
-.modal-icon.green  { background: rgba(16,185,129,0.2); box-shadow: 0 0 20px rgba(16,185,129,0.3); }
-
-.modal-title-group { flex: 1; }
-.modal-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 0.5px;
-}
-.modal-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-family: 'Share Tech Mono', monospace; }
-
-.modal-close {
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-.modal-close:hover { background: rgba(239,68,68,0.15); color: var(--red-status); }
-
-.modal-body { padding: 20px 24px; }
-.modal-footer {
-  padding: 16px 24px 24px;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-/* ============================================================
-   NOTIFICATIONS / TOASTS
-   ============================================================ */
-.toast-container {
-  position: fixed;
-  top: 80px;
-  right: 24px;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  pointer-events: none;
-}
-
-.toast {
-  background: var(--nebula-mid);
-  border: 1px solid var(--border-mid);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  min-width: 300px;
-  max-width: 380px;
-  pointer-events: all;
-  transform: translateX(120%);
-  opacity: 0;
-  transition: all 0.4s var(--spring);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.toast.show {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.toast-bar {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-}
-
-.toast.t-success .toast-bar { background: var(--green-status); box-shadow: 0 0 8px var(--green-status); }
-.toast.t-error   .toast-bar { background: var(--red-status);   box-shadow: 0 0 8px var(--red-status); }
-.toast.t-info    .toast-bar { background: var(--violet-bright); box-shadow: 0 0 8px var(--violet-bright); }
-.toast.t-warn    .toast-bar { background: var(--orange-warn);   box-shadow: 0 0 8px var(--orange-warn); }
-
-.toast-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.toast-content { flex: 1; min-width: 0; }
-.toast-title   { font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
-.toast-msg     { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-family: 'Share Tech Mono', monospace; }
-.toast-dismiss {
-  cursor: pointer;
-  color: var(--text-dim);
-  font-size: 14px;
-  background: none;
-  border: none;
-  padding: 0;
-  margin-left: 4px;
-  transition: color 0.2s;
-  flex-shrink: 0;
-}
-.toast-dismiss:hover { color: var(--text-muted); }
-
-/* Progress bar in toast */
-.toast-progress {
-  position: absolute;
-  bottom: 0; left: 0;
-  height: 2px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-}
-.toast-progress-fill {
-  height: 100%;
-  background: rgba(255,255,255,0.3);
-  border-radius: inherit;
-  animation: toastCountdown 4s linear forwards;
-}
-@keyframes toastCountdown { from { width: 100%; } to { width: 0%; } }
-
-/* ============================================================
-   FORMS & INPUTS
-   ============================================================ */
-.form-group { margin-bottom: 18px; }
-.form-label {
-  display: block;
-  font-size: 11px;
-  font-family: 'Share Tech Mono', monospace;
-  color: var(--text-muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.form-input {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  color: var(--text-primary);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.25s;
-}
-.form-input:focus {
-  border-color: var(--violet-bright);
-  background: rgba(124,58,237,0.06);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
-}
-.form-input::placeholder { color: var(--text-dim); }
-.form-select {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  color: var(--text-primary);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 14px;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.25s;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237c6fa0'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 10px;
-}
-.form-select:focus {
-  border-color: var(--violet-bright);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
-}
-.form-select option { background: var(--nebula-dark); }
-
-/* Toggle Switch */
-.toggle-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
-.toggle-row:last-child { border-bottom: none; }
-.toggle-info { flex: 1; }
-.toggle-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-.toggle-desc { font-size: 11px; color: var(--text-muted); font-family: 'Share Tech Mono', monospace; margin-top: 2px; }
-
-.toggle {
-  position: relative;
-  width: 44px; height: 24px;
-  flex-shrink: 0;
-}
-.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
-.toggle-track {
-  display: block;
-  width: 44px; height: 24px;
-  background: var(--nebula-mid);
-  border: 1px solid var(--border-mid);
-  border-radius: 99px;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-}
-.toggle-track::after {
-  content: '';
-  position: absolute;
-  top: 3px; left: 3px;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  background: var(--text-dim);
-  transition: all 0.3s var(--spring);
-}
-.toggle input:checked + .toggle-track {
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  border-color: var(--violet-bright);
-  box-shadow: 0 0 12px rgba(124,58,237,0.4);
-}
-.toggle input:checked + .toggle-track::after {
-  transform: translateX(20px);
-  background: white;
-}
-
-/* ============================================================
-   USERS PAGE
-   ============================================================ */
-.user-list-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background 0.2s;
-  cursor: pointer;
-}
-.user-list-item:hover { background: rgba(124,58,237,0.05); }
-.user-list-item:last-child { border-bottom: none; }
-
-.user-list-avatar {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Orbitron', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
-}
-
-.user-list-info { flex: 1; min-width: 0; }
-.user-list-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-.user-list-email { font-size: 11px; color: var(--text-muted); font-family: 'Share Tech Mono', monospace; }
-.user-list-actions { display: flex; gap: 6px; }
-
-/* ============================================================
-   FILES PAGE
-   ============================================================ */
-.file-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 22px;
-  border-bottom: 1px solid var(--border-subtle);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px;
-  flex-wrap: wrap;
-}
-.bc-sep { color: var(--text-dim); }
-.bc-item {
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 0.2s;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-.bc-item:hover { color: var(--violet-glow); background: rgba(124,58,237,0.1); }
-.bc-item.current { color: var(--violet-glow); }
-
-.file-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-  padding: 20px 22px;
-}
-
-.file-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 8px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all 0.25s;
-  border: 1px solid transparent;
-  text-align: center;
-}
-.file-item:hover {
-  background: rgba(124,58,237,0.08);
-  border-color: var(--border-subtle);
-  transform: translateY(-2px);
-}
-
-.file-icon { font-size: 36px; margin-bottom: 8px; }
-.file-name { font-size: 11px; color: var(--text-secondary); word-break: break-all; line-height: 1.3; }
-.file-size { font-size: 10px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; margin-top: 3px; }
-
-/* ============================================================
-   NOTIFICATION DROPDOWN
-   ============================================================ */
-.notif-dropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  width: 340px;
-  background: var(--nebula-dark);
-  border: 1px solid var(--border-mid);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), var(--shadow-violet);
-  z-index: 300;
-  overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px) scale(0.96);
-  transition: all 0.3s var(--spring);
-  transform-origin: top right;
-}
-
-.notif-dropdown.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-}
-
-.notif-drop-header {
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.notif-drop-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-}
-.notif-mark-all { font-size: 10px; color: var(--violet-glow); cursor: pointer; font-family: 'Share Tech Mono', monospace; letter-spacing: 1px; }
-.notif-mark-all:hover { color: var(--violet-bright); text-decoration: underline; }
-
-.notif-item {
-  display: flex;
-  gap: 12px;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border-subtle);
-  cursor: pointer;
-  transition: background 0.2s;
-  position: relative;
-}
-.notif-item.unread::after {
-  content: '';
-  position: absolute;
-  left: 8px; top: 50%;
-  transform: translateY(-50%);
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--violet-bright);
-  box-shadow: 0 0 6px var(--violet-bright);
-}
-.notif-item:hover { background: rgba(124,58,237,0.06); }
-.notif-item:last-child { border-bottom: none; }
-
-.notif-icon { font-size: 20px; flex-shrink: 0; }
-.notif-text { flex: 1; min-width: 0; }
-.notif-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
-.notif-body { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: 'Share Tech Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.notif-time { font-size: 10px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; flex-shrink: 0; }
-
-/* ============================================================
-   QUICK ACCESS FLOATING BUTTON
-   ============================================================ */
-.fab {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 500;
-}
-
-.fab-main {
-  width: 54px; height: 54px;
-  background: linear-gradient(135deg, var(--violet-core), var(--pink-core));
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  box-shadow: 0 6px 24px rgba(124,58,237,0.5);
-  transition: all 0.3s var(--spring);
-  position: relative;
-  z-index: 1;
-}
-
-.fab-main:hover {
-  transform: scale(1.08) rotate(45deg);
-  box-shadow: 0 10px 36px rgba(124,58,237,0.7);
-}
-
-.fab-main::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--violet-core), var(--pink-core), var(--violet-core));
-  z-index: -1;
-  animation: fabRotate 3s linear infinite;
-  opacity: 0.5;
-}
-
-@keyframes fabRotate { to { transform: rotate(360deg); } }
-
-.fab-menu {
-  position: absolute;
-  bottom: 60px;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-end;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition: all 0.3s var(--spring);
-}
-
-.fab.open .fab-menu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.fab-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  animation: fabItemIn 0.3s var(--spring) both;
-}
-
-.fab-item:nth-child(1) { animation-delay: 0.05s; }
-.fab-item:nth-child(2) { animation-delay: 0.1s; }
-.fab-item:nth-child(3) { animation-delay: 0.15s; }
-.fab-item:nth-child(4) { animation-delay: 0.2s; }
-
-@keyframes fabItemIn {
-  from { opacity: 0; transform: scale(0.7) translateX(20px); }
-  to   { opacity: 1; transform: scale(1) translateX(0); }
-}
-
-.fab-label {
-  background: var(--nebula-dark);
-  border: 1px solid var(--border-mid);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-family: 'Share Tech Mono', monospace;
-  padding: 5px 12px;
-  border-radius: 99px;
-  white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-}
-
-.fab-btn {
-  width: 42px; height: 42px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  flex-shrink: 0;
-}
-.fab-btn:hover { transform: scale(1.1); }
-
-/* ============================================================
-   GLITCH EFFECT
-   ============================================================ */
-.glitch {
-  position: relative;
-  display: inline-block;
-}
-.glitch::before, .glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background: linear-gradient(90deg, var(--violet-glow), var(--pink-glow));
-}
-.glitch::before {
-  animation: glitchA 4s infinite;
-  clip-path: polygon(0 25%,100% 25%,100% 30%,0 30%);
-}
-.glitch::after {
-  animation: glitchB 4s infinite;
-  clip-path: polygon(0 65%,100% 65%,100% 70%,0 70%);
-}
-@keyframes glitchA {
-  0%,95%,100% { transform: translate(0); }
-  96% { transform: translate(-2px, 1px); }
-  97% { transform: translate(2px, -1px); }
-  98% { transform: translate(0); }
-}
-@keyframes glitchB {
-  0%,95%,100% { transform: translate(0); }
-  96% { transform: translate(2px, 1px); }
-  97% { transform: translate(-1px, -2px); }
-  98% { transform: translate(0); }
-}
-
-/* ============================================================
-   SKELETON LOADER
-   ============================================================ */
-.skeleton {
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0.03) 25%,
-    rgba(124,58,237,0.08) 50%,
-    rgba(255,255,255,0.03) 75%);
-  background-size: 200% 100%;
-  animation: skeleton 1.5s infinite;
-  border-radius: var(--radius-sm);
-}
-@keyframes skeleton {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* ============================================================
-   RESPONSIVE TWEAKS
-   ============================================================ */
-@media (max-width: 900px) {
-  .sidebar {
-    transform: translateX(-100%);
+  :root {
+    --bg: #070711;
+    --bg2: #0d0d1a;
+    --bg3: #111127;
+    --accent: #5865f2;
+    --accent2: #7289da;
+    --neon: #00d4ff;
+    --neon2: #bf00ff;
+    --gold: #ffd700;
+    --red: #ed4245;
+    --green: #57f287;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --border: rgba(88,101,242,0.25);
+    --glow: 0 0 20px rgba(88,101,242,0.4);
+    --glow2: 0 0 40px rgba(0,212,255,0.2);
   }
-  .sidebar.open {
-    transform: translateX(0);
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
+
+  /* ═══════════════════════════════ BACKGROUND ═══════════════════════════════ */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(88,101,242,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(88,101,242,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-orb1 {
+    position: fixed; top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(88,101,242,0.15) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .bg-orb2 {
+    position: fixed; bottom: -200px; right: -200px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(191,0,255,0.1) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+    animation: orbFloat 10s ease-in-out infinite reverse;
+  }
+  @keyframes orbFloat {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(30px, 30px); }
+  }
+
+  /* ═══════════════════════════════ LOGIN PAGE ═══════════════════════════════ */
+  #login-page {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #login-page.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .login-card {
+    width: 420px;
+    max-width: 95vw;
+    background: linear-gradient(135deg, rgba(13,13,26,0.95) 0%, rgba(17,17,39,0.95) 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    position: relative;
+    box-shadow: 0 0 60px rgba(88,101,242,0.15), 0 20px 60px rgba(0,0,0,0.5);
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform: translateY(40px) scale(0.95); }
+    to { opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  .login-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--neon), var(--accent), transparent);
+    border-radius: 50%;
+  }
+
+  .login-logo {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .login-logo .logo-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--accent), var(--neon2));
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 16px;
+    box-shadow: 0 0 30px rgba(88,101,242,0.5);
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%,100% { box-shadow: 0 0 30px rgba(88,101,242,0.5); }
+    50% { box-shadow: 0 0 50px rgba(88,101,242,0.8), 0 0 80px rgba(0,212,255,0.3); }
+  }
+  .login-logo h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, var(--neon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+  }
+  .login-logo p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  .form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(88,101,242,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  .form-group input:focus {
+    border-color: var(--accent);
+    background: rgba(88,101,242,0.08);
+    box-shadow: 0 0 20px rgba(88,101,242,0.2);
+  }
+  .form-group input::placeholder { color: var(--muted); }
+
+  .login-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--neon2));
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .login-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s ease;
+  }
+  .login-btn:hover::before { left: 100%; }
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(88,101,242,0.5);
+  }
+  .login-btn:active { transform: translateY(0); }
+
+  .login-error {
+    color: var(--red);
+    font-size: 13px;
+    text-align: center;
+    margin-top: 12px;
+    font-family: 'Inter', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    min-height: 20px;
+  }
+  .login-error.show { opacity: 1; }
+
+  /* ═══════════════════════════════ MAIN APP ═══════════════════════════════ */
+  #app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 68px;
+    background: rgba(7,7,17,0.8);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-logo .icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--neon2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900; font-size: 13px;
+    box-shadow: 0 0 16px rgba(88,101,242,0.4);
+  }
+  .nav-logo span {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700; font-size: 16px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #fff, var(--neon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .nav-user {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-user .user-badge {
+    background: rgba(88,101,242,0.15);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent2);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-user .user-badge .dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity:1; } 50% { opacity:0.3; }
+  }
+  .logout-btn {
+    background: rgba(237,66,69,0.12);
+    border: 1px solid rgba(237,66,69,0.3);
+    color: var(--red);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .logout-btn:hover {
+    background: rgba(237,66,69,0.22);
+    box-shadow: 0 0 12px rgba(237,66,69,0.3);
+  }
+
+  /* MAIN CONTENT */
   .main {
-    margin-left: 0;
+    flex: 1;
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
   }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-}
 
-/* ============================================================
-   ANIMATIONS KEYFRAMES (misc)
-   ============================================================ */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  .page-header {
+    margin-bottom: 40px;
+  }
+  .page-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, var(--neon) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+  }
 
-@keyframes slideInRight {
-  from { transform: translateX(30px); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
-}
+  /* STEPS */
+  .steps-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 0;
+  }
+  .step {
+    display: flex; align-items: center; gap: 8px;
+    flex: 1;
+    position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(50% + 16px);
+    right: calc(-50% + 16px);
+    top: 50%; transform: translateY(-50%);
+    height: 1px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .step.done:not(:last-child)::after { background: var(--accent); }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--muted);
+    background: var(--bg2);
+    transition: all 0.3s;
+    flex-shrink: 0;
+    position: relative; z-index: 1;
+  }
+  .step.active .step-num {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(88,101,242,0.15);
+    box-shadow: 0 0 16px rgba(88,101,242,0.4);
+  }
+  .step.done .step-num {
+    border-color: var(--green);
+    background: rgba(87,242,135,0.15);
+    color: var(--green);
+  }
+  .step-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .step.active .step-label { color: var(--text); }
+  .step.done .step-label { color: var(--green); }
 
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
-}
+  /* CARD */
+  .card {
+    background: linear-gradient(135deg, rgba(13,13,26,0.8) 0%, rgba(17,17,39,0.8) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity:0; transform: translateY(10px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--neon), var(--neon2));
+  }
 
-/* Stagger children */
-.stagger > * { animation: slideInRight 0.4s var(--transition) both; }
-.stagger > *:nth-child(1) { animation-delay: 0.05s; }
-.stagger > *:nth-child(2) { animation-delay: 0.10s; }
-.stagger > *:nth-child(3) { animation-delay: 0.15s; }
-.stagger > *:nth-child(4) { animation-delay: 0.20s; }
-.stagger > *:nth-child(5) { animation-delay: 0.25s; }
-.stagger > *:nth-child(6) { animation-delay: 0.30s; }
+  .card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 10px;
+    color: #fff;
+  }
+  .card h3 .icon {
+    font-size: 20px;
+  }
 
-/* Divider */
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-mid), transparent);
-  margin: 20px 0;
-}
+  /* FORM ELEMENTS */
+  .f-group {
+    margin-bottom: 22px;
+  }
+  .f-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  .f-label .required { color: var(--accent); margin-left: 3px; }
 
-/* Spacer */
-.spacer { margin-bottom: 20px; }
+  .f-input, .f-select, .f-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(88,101,242,0.2);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 500;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  .f-input:focus, .f-select:focus, .f-textarea:focus {
+    border-color: var(--accent);
+    background: rgba(88,101,242,0.08);
+    box-shadow: 0 0 20px rgba(88,101,242,0.15);
+  }
+  .f-textarea {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .f-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b8a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+  }
+  .f-select option { background: #1a1a2e; }
 
-/* Chip */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(124,58,237,0.12);
-  border: 1px solid rgba(124,58,237,0.25);
-  color: var(--violet-glow);
-  font-size: 11px;
-  font-family: 'Share Tech Mono', monospace;
-  padding: 3px 10px;
-  border-radius: 99px;
-  letter-spacing: 0.5px;
-}
+  /* CHANNEL SELECT */
+  .channel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .channel-option {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(88,101,242,0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+    position: relative;
+  }
+  .channel-option:hover {
+    border-color: rgba(88,101,242,0.4);
+    background: rgba(88,101,242,0.06);
+  }
+  .channel-option.selected {
+    border-color: var(--accent);
+    background: rgba(88,101,242,0.12);
+    box-shadow: 0 0 16px rgba(88,101,242,0.2);
+  }
+  .channel-option input[type="radio"] {
+    display: none;
+  }
+  .channel-check {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .channel-option.selected .channel-check {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .channel-option.selected .channel-check::after {
+    content: '✓';
+    font-size: 10px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .channel-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+  }
 
-/* Online count */
-.online-count {
-  font-family: 'Orbitron', monospace;
-  font-size: 11px;
-  color: var(--green-status);
-  letter-spacing: 1px;
-}
+  /* COLOR PICKER ROW */
+  .color-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .color-chip {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .color-chip.selected {
+    border-color: #fff;
+    box-shadow: 0 0 12px rgba(255,255,255,0.4);
+    transform: scale(1.15);
+  }
+  .color-chip-custom {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px dashed var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .color-chip-custom:hover { border-color: var(--accent); }
+  #custom-color-input { display: none; }
 
-/* ============================================================
-   CONFIRM DANGER MODAL SHAKE
-   ============================================================ */
-@keyframes shake {
-  0%,100% { transform: scale(1) translateX(0); }
-  20%      { transform: scale(1) translateX(-6px) rotate(-1deg); }
-  40%      { transform: scale(1) translateX(6px)  rotate(1deg); }
-  60%      { transform: scale(1) translateX(-4px); }
-  80%      { transform: scale(1) translateX(4px); }
-}
-.modal.shake { animation: shake 0.5s var(--transition); }
+  /* TOGGLE */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(88,101,242,0.15);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+  .toggle-info { flex: 1; }
+  .toggle-info strong { display: block; font-size: 14px; font-weight: 600; }
+  .toggle-info span { font-size: 12px; color: var(--muted); font-family: 'Inter', sans-serif; }
+  .toggle {
+    width: 44px; height: 24px;
+    background: rgba(88,101,242,0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+  .toggle.on::after { left: 23px; }
 
-/* ============================================================
-   HEADER SCANLINES (subtle)
-   ============================================================ */
-.scanlines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.05) 2px,
-    rgba(0,0,0,0.05) 4px
-  );
-  pointer-events: none;
-  z-index: 0;
-}
+  /* EMBED PREVIEW */
+  .embed-preview {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(88,101,242,0.15);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    min-height: 80px;
+  }
+  .embed-preview .embed-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--accent);
+    border-radius: 2px 0 0 2px;
+  }
+  .embed-preview .embed-inner {
+    padding-left: 12px;
+  }
+  .embed-preview .embed-author {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .embed-preview .embed-author .av {
+    width: 16px; height: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--neon2));
+    border-radius: 50%;
+  }
+  .embed-preview .embed-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--accent2);
+    font-family: 'Rajdhani', sans-serif;
+  }
+  .embed-preview .embed-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .embed-preview .embed-image {
+    margin-top: 12px;
+    border-radius: 6px;
+    max-width: 100%; max-height: 200px;
+    object-fit: cover;
+  }
+  .embed-preview .embed-footer {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .embed-preview .embed-ping {
+    display: inline-block;
+    background: rgba(88,101,242,0.2);
+    color: var(--accent2);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 6px;
+  }
 
-/* Settings page specific */
-.settings-section {
-  margin-bottom: 28px;
-}
-.settings-section-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-subtle);
-}
+  /* BUTTONS */
+  .btn-row {
+    display: flex; gap: 12px; justify-content: flex-end;
+    margin-top: 32px;
+  }
+  .btn-secondary {
+    padding: 13px 28px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  .btn-primary {
+    padding: 13px 32px;
+    background: linear-gradient(135deg, var(--accent), var(--neon2));
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.4s;
+  }
+  .btn-primary:hover::before { left: 100%; }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(88,101,242,0.5);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5; cursor: not-allowed; transform: none;
+  }
 
-/* Plan badge */
-.plan-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(219,39,119,0.2));
-  border: 1px solid rgba(124,58,237,0.4);
-  color: var(--violet-glow);
-  font-family: 'Orbitron', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 99px;
-  letter-spacing: 2px;
-  box-shadow: 0 0 14px rgba(124,58,237,0.2);
-}
+  /* SUCCESS */
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(7,7,17,0.85);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .success-overlay.show { display: flex; }
+  .success-box {
+    text-align: center;
+    animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes popIn {
+    from { opacity:0; transform: scale(0.7); }
+    to { opacity:1; transform: scale(1); }
+  }
+  .success-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, rgba(87,242,135,0.2), rgba(87,242,135,0.05));
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 40px rgba(87,242,135,0.3);
+  }
+  .success-box h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .success-box p {
+    color: var(--muted);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 24px;
+  }
+  .success-channel {
+    background: rgba(88,101,242,0.1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 24px;
+    display: inline-block;
+  }
 
-/* ============================================================
-   MOBILE MENU TOGGLE
-   ============================================================ */
-.mobile-toggle {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 38px; height: 38px;
-  background: var(--nebula-mid);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--text-muted);
-  font-size: 18px;
-  transition: all 0.2s;
-}
+  /* HISTORY */
+  .history-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  .history-section h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .history-list {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .history-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(88,101,242,0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+  }
+  .history-item .hi-left { display: flex; align-items: center; gap: 10px; }
+  .history-item .hi-channel { color: var(--accent2); font-weight: 600; }
+  .history-item .hi-title { color: var(--muted); }
+  .history-item .hi-time { color: var(--muted); font-size: 11px; }
 
-@media (max-width: 900px) {
-  .mobile-toggle { display: flex; }
-}
+  /* IMAGE UPLOAD */
+  .image-drop {
+    border: 2px dashed rgba(88,101,242,0.25);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .image-drop:hover { border-color: var(--accent); background: rgba(88,101,242,0.04); }
+  .image-drop input { position: absolute; inset:0; opacity:0; cursor:pointer; }
+  .image-drop .drop-icon { font-size: 28px; margin-bottom: 8px; }
+  .image-drop .drop-text { font-size: 13px; color: var(--muted); font-family: 'Inter', sans-serif; }
+  .image-drop .drop-text span { color: var(--accent); }
+  .image-preview-wrap {
+    display: none;
+    margin-top: 10px;
+    position: relative;
+  }
+  .image-preview-wrap img {
+    border-radius: 8px;
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+  }
+  .image-remove {
+    position: absolute; top: 6px; right: 6px;
+    width: 24px; height: 24px;
+    background: var(--red);
+    border-radius: 50%;
+    border: none; cursor: pointer;
+    color: #fff; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-/* Overlay pour mobile */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 99;
-  backdrop-filter: blur(4px);
-}
-.sidebar-overlay.show { display: block; }
+  /* LOADING */
+  .btn-loader { display: none; }
+  .btn-primary.loading .btn-loader { display: inline; }
+  .btn-primary.loading .btn-text { display: none; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px;
+    background: rgba(17,17,39,0.95);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    z-index: 300;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .toast.show { transform: translateX(0); }
+  .toast.success { border-color: rgba(87,242,135,0.4); }
+  .toast.error { border-color: rgba(237,66,69,0.4); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(88,101,242,0.3); border-radius: 3px; }
 </style>
 </head>
 <body>
 
-<!-- Canvas Galaxy Background -->
-<canvas id="galaxy-canvas"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-orb1"></div>
+<div class="bg-orb2"></div>
 
-<!-- Nebula blobs -->
-<div class="nebula-blob n1"></div>
-<div class="nebula-blob n2"></div>
-<div class="nebula-blob n3"></div>
-
-<!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
-
-<!-- Sidebar Overlay (mobile) -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-<!-- Layout -->
-<div class="layout">
-
-  <!-- ═══════════════════════════════════════════════════════
-       SIDEBAR
-       ═══════════════════════════════════════════════════════ -->
-  <aside class="sidebar" id="sidebar">
-
-    <!-- Logo -->
-    <a class="sidebar-logo" href="#">
-      <div class="logo-icon">🌌</div>
-      <div class="logo-text">
-        <span class="logo-name">ASTRAL</span>
-        <span class="logo-sub">HOSTING ™</span>
-      </div>
-    </a>
-
-    <!-- Server Selector -->
-    <div class="server-selector" onclick="showModal('serverSelectModal')">
-      <div class="server-sel-label">Serveur actif</div>
-      <div class="server-sel-name">
-        <div class="server-sel-dot"></div>
-        Server-de-X77
-        <span class="server-sel-arrow">▼</span>
-      </div>
+<!-- ═══════════════════════════ LOGIN ═══════════════════════════ -->
+<div id="login-page">
+  <div class="bg-grid"></div>
+  <div class="bg-orb1"></div>
+  <div class="bg-orb2"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">7X</div>
+      <h1>7x | HUB</h1>
+      <p>Announcement System</p>
     </div>
-
-    <!-- Nav: Main -->
-    <div class="nav-section">
-      <div class="nav-section-label">Principal</div>
-      <a class="nav-item active" onclick="switchPage('dashboard', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">⬡</span>
-        <span class="nav-label">Dashboard</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('terminal', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">▸</span>
-        <span class="nav-label">Terminal</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('files', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◫</span>
-        <span class="nav-label">Fichiers</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('databases', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◉</span>
-        <span class="nav-label">Bases de données</span>
-      </a>
+    <div class="form-group">
+      <label>Identifiant</label>
+      <input type="text" id="login-user" placeholder="Ton username..." autocomplete="username">
     </div>
-
-    <!-- Nav: Gestion -->
-    <div class="nav-section">
-      <div class="nav-section-label">Gestion</div>
-      <a class="nav-item" onclick="switchPage('schedules', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◷</span>
-        <span class="nav-label">Planifications</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('users', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◎</span>
-        <span class="nav-label">Utilisateurs</span>
-        <span class="nav-badge">3</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('backups', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">⬡</span>
-        <span class="nav-label">Sauvegardes</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('network', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◈</span>
-        <span class="nav-label">Réseau</span>
-      </a>
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
     </div>
-
-    <!-- Nav: Config -->
-    <div class="nav-section">
-      <div class="nav-section-label">Config</div>
-      <a class="nav-item" onclick="switchPage('startup', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◆</span>
-        <span class="nav-label">Démarrage</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('settings', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">◬</span>
-        <span class="nav-label">Paramètres</span>
-      </a>
-      <a class="nav-item" onclick="switchPage('activity', this)">
-        <div class="nav-ripple"></div>
-        <span class="nav-icon">∿</span>
-        <span class="nav-label">Activité</span>
-      </a>
-    </div>
-
-    <!-- Sidebar Footer -->
-    <div class="sidebar-footer">
-      <div class="user-card" onclick="switchPage('account', document.querySelector('[onclick*=account]'))">
-        <div class="user-avatar">X</div>
-        <div class="user-info">
-          <div class="user-name">X77 Admin</div>
-          <div class="user-role">SUPER ADMIN</div>
-        </div>
-        <span style="color:var(--text-dim);font-size:14px;">⋯</span>
-      </div>
-    </div>
-
-  </aside>
-
-  <!-- ═══════════════════════════════════════════════════════
-       MAIN
-       ═══════════════════════════════════════════════════════ -->
-  <main class="main">
-
-    <!-- Topbar -->
-    <header class="topbar">
-      <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
-      <div class="topbar-server">
-        <div class="topbar-dot" id="topbarDot"></div>
-        <span class="topbar-server-name glitch" data-text="Server-de-X77">Server-de-X77</span>
-        <span class="chip" style="margin-left:8px">MINECRAFT JAVA</span>
-      </div>
-      <div class="topbar-actions">
-        <!-- Start -->
-        <button class="btn btn-primary btn-sm" onclick="startServer()">▶ Démarrer</button>
-        <!-- Restart -->
-        <button class="btn btn-secondary btn-sm" onclick="restartServer()">↺ Redémarrer</button>
-        <!-- Stop -->
-        <button class="btn btn-danger btn-sm" onclick="showModal('stopModal')">■ Arrêter</button>
-        <!-- Notifications -->
-        <div style="position:relative;" id="notifContainer">
-          <button class="btn btn-icon notif-btn" id="notifBtn" onclick="toggleNotifDropdown()">
-            🔔
-            <span class="notif-count" id="notifCount">3</span>
-          </button>
-          <!-- Dropdown notifs -->
-          <div class="notif-dropdown" id="notifDropdown">
-            <div class="notif-drop-header">
-              <span class="notif-drop-title">NOTIFICATIONS</span>
-              <span class="notif-mark-all" onclick="markAllRead()">Tout lire</span>
-            </div>
-            <div class="notif-item unread">
-              <span class="notif-icon">⚠️</span>
-              <div class="notif-text">
-                <div class="notif-title">RAM élevée — 89%</div>
-                <div class="notif-body">Server-de-X77 consomme 890 MiB</div>
-              </div>
-              <span class="notif-time">2m</span>
-            </div>
-            <div class="notif-item unread">
-              <span class="notif-icon">💾</span>
-              <div class="notif-text">
-                <div class="notif-title">Sauvegarde complète</div>
-                <div class="notif-body">backup-2026-05-10.tar.gz créé</div>
-              </div>
-              <span class="notif-time">14m</span>
-            </div>
-            <div class="notif-item unread">
-              <span class="notif-icon">👤</span>
-              <div class="notif-text">
-                <div class="notif-title">Nouvelle connexion admin</div>
-                <div class="notif-body">AstralDev s'est connecté</div>
-              </div>
-              <span class="notif-time">1h</span>
-            </div>
-            <div class="notif-item">
-              <span class="notif-icon">✅</span>
-              <div class="notif-text">
-                <div class="notif-title">Redémarrage réussi</div>
-                <div class="notif-body">Uptime 3j 7h 12m</div>
-              </div>
-              <span class="notif-time">3h</span>
-            </div>
-            <div class="notif-item">
-              <span class="notif-icon">📦</span>
-              <div class="notif-text">
-                <div class="notif-title">Mise à jour disponible</div>
-                <div class="notif-body">Paper 1.21.4 build 112</div>
-              </div>
-              <span class="notif-time">1j</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- ═════════════════════════════════
-         PAGE: DASHBOARD
-         ═════════════════════════════════ -->
-    <div class="page-content">
-
-    <div class="page active" id="page-dashboard">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Vue d'ensemble</div>
-          <div class="page-subtitle">// ASTRAL-HOSTING :: SERVER-DE-X77 :: ONLINE</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-ghost btn-sm" onclick="showModal('consoleModal')">📋 Console</button>
-          <button class="btn btn-ghost btn-sm" onclick="showToast('info','Export lancé','Génération du rapport...')">📊 Export</button>
-        </div>
-      </div>
-
-      <!-- Stats Cards -->
-      <div class="stats-grid stagger">
-        <div class="stat-card accent-violet">
-          <div class="stat-icon vi">🖥️</div>
-          <div class="stat-value" id="cpuVal">24<span style="font-size:16px;color:var(--text-muted)">%</span></div>
-          <div class="stat-label">CPU Usage</div>
-          <div class="stat-change up">↑ +3% depuis 1h</div>
-        </div>
-        <div class="stat-card accent-pink">
-          <div class="stat-icon pi">🧠</div>
-          <div class="stat-value" id="ramVal">512<span style="font-size:14px;color:var(--text-muted)">MiB</span></div>
-          <div class="stat-label">Mémoire</div>
-          <div class="stat-change up">↑ 51.2% utilisé</div>
-        </div>
-        <div class="stat-card accent-cyan">
-          <div class="stat-icon ci">💽</div>
-          <div class="stat-value">2.4<span style="font-size:14px;color:var(--text-muted)">GB</span></div>
-          <div class="stat-label">Stockage</div>
-          <div class="stat-change down">↓ 2.4 / 10 GB</div>
-        </div>
-        <div class="stat-card accent-green">
-          <div class="stat-icon gi">🌐</div>
-          <div class="stat-value">3j<span style="font-size:14px;color:var(--text-muted)"> 7h</span></div>
-          <div class="stat-label">Uptime</div>
-          <div class="stat-change up">↑ 99.8% ce mois</div>
-        </div>
-        <div class="stat-card accent-violet">
-          <div class="stat-icon vi">👥</div>
-          <div class="stat-value" id="playersVal">12<span style="font-size:14px;color:var(--text-muted)">/20</span></div>
-          <div class="stat-label">Joueurs</div>
-          <div class="stat-change up">↑ Peak: 18</div>
-        </div>
-        <div class="stat-card accent-pink">
-          <div class="stat-icon pi">📶</div>
-          <div class="stat-value">4.2<span style="font-size:14px;color:var(--text-muted)">ms</span></div>
-          <div class="stat-label">Latence TPS</div>
-          <div class="stat-change up">↑ TPS 19.8</div>
-        </div>
-      </div>
-
-      <!-- Charts Row -->
-      <div class="grid-2 spacer" style="margin-bottom:20px;">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="card-title-dot"></span>CPU · 24h</div>
-            <div style="display:flex;gap:6px;">
-              <span class="chip">LIVE</span>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="chart-container" style="height:180px;">
-              <canvas id="cpuChart"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="card-title-dot"></span>RAM · 24h</div>
-          </div>
-          <div class="card-body">
-            <div class="chart-container" style="height:180px;">
-              <canvas id="ramChart"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resources + Activity -->
-      <div class="grid-2" style="margin-bottom:20px;">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="card-title-dot"></span>Ressources</div>
-          </div>
-          <div class="card-body">
-            <div class="resource-item">
-              <div class="resource-header">
-                <span class="resource-name">CPU</span>
-                <span class="resource-val">24%</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill good" style="width:24%"></div>
-              </div>
-            </div>
-            <div class="resource-item">
-              <div class="resource-header">
-                <span class="resource-name">RAM</span>
-                <span class="resource-val">512 / 1000 MiB</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill" style="width:51%"></div>
-              </div>
-            </div>
-            <div class="resource-item">
-              <div class="resource-header">
-                <span class="resource-name">Disque</span>
-                <span class="resource-val">2.4 / 10 GB</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill low" style="width:24%"></div>
-              </div>
-            </div>
-            <div class="resource-item">
-              <div class="resource-header">
-                <span class="resource-name">Réseau ↓</span>
-                <span class="resource-val">12.4 KB/s</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill low" style="width:12%"></div>
-              </div>
-            </div>
-            <div class="resource-item" style="margin-bottom:0;">
-              <div class="resource-header">
-                <span class="resource-name">Réseau ↑</span>
-                <span class="resource-val">8.1 KB/s</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill low" style="width:8%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="card-title-dot"></span>Activité Récente</div>
-          </div>
-          <div class="card-body" style="padding:0 22px 20px;">
-            <div class="activity-list">
-              <div class="activity-item">
-                <div class="activity-icon ai-green">✅</div>
-                <div class="activity-body">
-                  <div class="activity-title">X77 a rejoint le serveur</div>
-                  <div class="activity-sub">root@server-x77 :: [+login]</div>
-                </div>
-                <span class="activity-time">2m</span>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon ai-violet">💾</div>
-                <div class="activity-body">
-                  <div class="activity-title">Sauvegarde automatique</div>
-                  <div class="activity-sub">backup-daily-0510.tar.gz</div>
-                </div>
-                <span class="activity-time">14m</span>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon ai-pink">🔄</div>
-                <div class="activity-body">
-                  <div class="activity-title">Redémarrage planifié</div>
-                  <div class="activity-sub">cron:daily-restart :: OK</div>
-                </div>
-                <span class="activity-time">3h</span>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon ai-cyan">📦</div>
-                <div class="activity-body">
-                  <div class="activity-title">Plugin installé</div>
-                  <div class="activity-sub">EssentialsX-2.21.0.jar</div>
-                </div>
-                <span class="activity-time">1j</span>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon ai-red">🚨</div>
-                <div class="activity-body">
-                  <div class="activity-title">Alerte RAM — 91%</div>
-                  <div class="activity-sub">WARN :: heap overflow near</div>
-                </div>
-                <span class="activity-time">2j</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Servers Table -->
-      <div class="card spacer">
-        <div class="card-header">
-          <div class="card-title"><span class="card-title-dot"></span>Mes Serveurs</div>
-          <button class="btn btn-primary btn-sm" onclick="showModal('newServerModal')">+ Nouveau Serveur</button>
-        </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Serveur</th>
-                <th>Type</th>
-                <th>RAM</th>
-                <th>CPU</th>
-                <th>Statut</th>
-                <th>Uptime</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr onclick="showToast('info','Server-de-X77','Navigation vers ce serveur...')">
-                <td>
-                  <div class="td-server">
-                    <div class="td-server-icon">🌌</div>
-                    <div>
-                      <div class="td-server-name">Server-de-X77</div>
-                      <div class="td-server-id">#x77-mc-001</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="chip">Minecraft Java</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">512 / 1000 MiB</span></td>
-                <td><span style="font-family:'Orbitron',monospace;font-size:12px;color:var(--green-status);">24%</span></td>
-                <td><span class="badge badge-online">Online</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-muted);">3j 7h</span></td>
-                <td>
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();showModal('consoleModal')">Console</button>
-                    <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();showModal('stopModal')">Stop</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="td-server">
-                    <div class="td-server-icon">🌙</div>
-                    <div>
-                      <div class="td-server-name">Astral-Proxy</div>
-                      <div class="td-server-id">#astral-bungee-01</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="chip">BungeeCord</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">256 / 512 MiB</span></td>
-                <td><span style="font-family:'Orbitron',monospace;font-size:12px;color:var(--green-status);">8%</span></td>
-                <td><span class="badge badge-online">Online</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-muted);">7j 2h</span></td>
-                <td>
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">Console</button>
-                    <button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">Stop</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="td-server">
-                    <div class="td-server-icon">🔮</div>
-                    <div>
-                      <div class="td-server-name">Lobby-Hub</div>
-                      <div class="td-server-id">#lobby-main-01</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="chip">Paper 1.21</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">128 / 512 MiB</span></td>
-                <td><span style="font-family:'Orbitron',monospace;font-size:12px;color:var(--text-muted);">—</span></td>
-                <td><span class="badge badge-offline">Offline</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-muted);">—</span></td>
-                <td>
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();startServer()">Start</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="td-server">
-                    <div class="td-server-icon">⚡</div>
-                    <div>
-                      <div class="td-server-name">SkyBlock-1</div>
-                      <div class="td-server-id">#sky-001</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="chip">Spigot 1.20</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">890 / 1000 MiB</span></td>
-                <td><span style="font-family:'Orbitron',monospace;font-size:12px;color:var(--orange-warn);">78%</span></td>
-                <td><span class="badge badge-warn">Warn</span></td>
-                <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-muted);">12h</span></td>
-                <td>
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">Console</button>
-                    <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();restartServer()">Restart</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Network Chart -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="card-title-dot"></span>Réseau · Trafic Live</div>
-          <div class="online-count">● 12 connectés</div>
-        </div>
-        <div class="card-body">
-          <div class="chart-container" style="height:160px;">
-            <canvas id="networkChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: TERMINAL
-         ═════════════════════════════════ -->
-    <div class="page" id="page-terminal">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Terminal</div>
-          <div class="page-subtitle">// CONSOLE INTERACTIVE :: SERVER-DE-X77</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost btn-sm" onclick="clearTerminal()">Effacer</button>
-          <button class="btn btn-ghost btn-sm" onclick="showToast('info','Export','Logs exportés en .txt')">Export Logs</button>
-        </div>
-      </div>
-
-      <div class="terminal-wrapper">
-        <div class="terminal-topbar">
-          <div class="t-dot red"   title="Fermer"></div>
-          <div class="t-dot yellow" title="Réduire"></div>
-          <div class="t-dot green"  title="Plein écran"></div>
-          <div class="terminal-title">bash — server-x77@astral — 80×24</div>
-        </div>
-        <div class="terminal-body" id="terminalBody">
-          <div class="t-line"><span class="t-info">Astral Hosting ™ — Server Console v2.4.1</span></div>
-          <div class="t-line"><span class="t-info">Connecté à Server-de-X77 · PID 1482 · Java 21</span></div>
-          <div class="t-line"><span class="t-info">─────────────────────────────────────────────</span></div>
-          <div class="t-line"><span class="t-output">[08:00:01] [Server thread/INFO]: Starting minecraft server version 1.21.4</span></div>
-          <div class="t-line"><span class="t-output">[08:00:02] [Server thread/INFO]: Loading libraries, please wait...</span></div>
-          <div class="t-line"><span class="t-output">[08:00:04] [Server thread/INFO]: Environment: authHost=...</span></div>
-          <div class="t-line"><span class="t-output">[08:00:05] [Server thread/INFO]: Loaded 0 recipes</span></div>
-          <div class="t-line"><span class="t-output">[08:00:06] [Paper] [INFO]: Enabled patch: AsyncChunks</span></div>
-          <div class="t-line"><span class="t-output">[08:00:08] [Server thread/INFO]: Done (6.342s)! For help, type "help"</span></div>
-          <div class="t-line"><span class="t-output">[08:00:08] [Server thread/INFO]: Starting remote control listener</span></div>
-          <div class="t-line"><span class="t-output">[10:32:11] [Server thread/INFO]: X77 joined the game</span></div>
-          <div class="t-line"><span class="t-output">[10:45:22] [Server thread/INFO]: AstralDev joined the game</span></div>
-          <div class="t-line"><span class="t-output">[11:00:00] [Scheduled] INFO: Daily restart in 5 minutes</span></div>
-        </div>
-        <div class="terminal-input-row">
-          <span class="t-prompt-live">server@x77:~$</span>
-          <input class="terminal-input" id="terminalInput" type="text"
-            placeholder="Entrez une commande..." autocomplete="off"
-            onkeydown="handleTerminalInput(event)">
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: FILES
-         ═════════════════════════════════ -->
-    <div class="page" id="page-files">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Fichiers</div>
-          <div class="page-subtitle">// GESTIONNAIRE DE FICHIERS :: /home/container</div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-primary btn-sm" onclick="showModal('uploadModal')">⬆ Téléverser</button>
-          <button class="btn btn-ghost btn-sm" onclick="showModal('newFileModal')">+ Nouveau</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="file-breadcrumb">
-          <span class="bc-item" onclick="showToast('info','Navigation','/')">⌂</span>
-          <span class="bc-sep">/</span>
-          <span class="bc-item current">container</span>
-        </div>
-        <div class="file-grid">
-          <div class="file-item" ondblclick="showToast('info','Plugins','Ouverture...')">
-            <div class="file-icon">📁</div>
-            <div class="file-name">plugins</div>
-            <div class="file-size">Dossier</div>
-          </div>
-          <div class="file-item" ondblclick="showToast('info','World','Ouverture...')">
-            <div class="file-icon">🌍</div>
-            <div class="file-name">world</div>
-            <div class="file-size">Dossier</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📁</div>
-            <div class="file-name">world_nether</div>
-            <div class="file-size">Dossier</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📁</div>
-            <div class="file-name">logs</div>
-            <div class="file-size">Dossier</div>
-          </div>
-          <div class="file-item" onclick="showModal('editFileModal')">
-            <div class="file-icon">⚙️</div>
-            <div class="file-name">server.properties</div>
-            <div class="file-size">4.2 KB</div>
-          </div>
-          <div class="file-item" onclick="showModal('editFileModal')">
-            <div class="file-icon">📄</div>
-            <div class="file-name">paper.yml</div>
-            <div class="file-size">12.1 KB</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📦</div>
-            <div class="file-name">paper-1.21.4.jar</div>
-            <div class="file-size">46.2 MB</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📄</div>
-            <div class="file-name">eula.txt</div>
-            <div class="file-size">1 KB</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📄</div>
-            <div class="file-name">ops.json</div>
-            <div class="file-size">0.5 KB</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📄</div>
-            <div class="file-name">banned-players.json</div>
-            <div class="file-size">0.2 KB</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">📄</div>
-            <div class="file-name">whitelist.json</div>
-            <div class="file-size">0.8 KB</div>
-          </div>
-          <div class="file-item">
-            <div class="file-icon">🔧</div>
-            <div class="file-name">spigot.yml</div>
-            <div class="file-size">6.7 KB</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: DATABASES
-         ═════════════════════════════════ -->
-    <div class="page" id="page-databases">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Bases de données</div>
-          <div class="page-subtitle">// MySQL · MariaDB :: GESTION BDD</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="showModal('newDbModal')">+ Créer BDD</button>
-      </div>
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Nom</th><th>Hôte</th><th>Port</th><th>Taille</th><th>Connexions</th><th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span style="font-family:'Share Tech Mono',monospace;color:var(--violet-glow);">s1_main</span></td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">mysql.astral.host</span></td>
-              <td><span class="chip">3306</span></td>
-              <td>124 MB</td>
-              <td><span class="badge badge-online">2 / 10</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="btn btn-ghost btn-sm">Détails</button>
-                  <button class="btn btn-danger btn-sm" onclick="showModal('deleteDbModal')">Suppr.</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><span style="font-family:'Share Tech Mono',monospace;color:var(--violet-glow);">s1_economy</span></td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">mysql.astral.host</span></td>
-              <td><span class="chip">3306</span></td>
-              <td>45 MB</td>
-              <td><span class="badge badge-online">1 / 10</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="btn btn-ghost btn-sm">Détails</button>
-                  <button class="btn btn-danger btn-sm" onclick="showModal('deleteDbModal')">Suppr.</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: USERS
-         ═════════════════════════════════ -->
-    <div class="page" id="page-users">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Utilisateurs</div>
-          <div class="page-subtitle">// GESTION DES ACCÈS SOUS-UTILISATEURS</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="showModal('newUserModal')">+ Inviter</button>
-      </div>
-      <div class="card">
-        <div class="user-list-item">
-          <div class="user-list-avatar" style="background:linear-gradient(135deg,var(--violet-core),var(--pink-core));">X</div>
-          <div class="user-list-info">
-            <div class="user-list-name">X77 Admin</div>
-            <div class="user-list-email">admin@astral.host</div>
-          </div>
-          <span class="plan-badge">OWNER</span>
-          <div class="user-list-actions">
-            <button class="btn btn-ghost btn-sm" onclick="showModal('userPermModal')">Permissions</button>
-          </div>
-        </div>
-        <div class="user-list-item">
-          <div class="user-list-avatar" style="background:linear-gradient(135deg,var(--cyan-accent),var(--violet-bright));">A</div>
-          <div class="user-list-info">
-            <div class="user-list-name">AstralDev</div>
-            <div class="user-list-email">dev@astral.host</div>
-          </div>
-          <span class="badge badge-online">Admin</span>
-          <div class="user-list-actions">
-            <button class="btn btn-ghost btn-sm" onclick="showModal('userPermModal')">Permissions</button>
-            <button class="btn btn-danger btn-sm" onclick="showModal('deleteUserModal')">Retirer</button>
-          </div>
-        </div>
-        <div class="user-list-item">
-          <div class="user-list-avatar" style="background:linear-gradient(135deg,var(--pink-core),var(--orange-warn));">M</div>
-          <div class="user-list-info">
-            <div class="user-list-name">Moderator1</div>
-            <div class="user-list-email">mod1@astral.host</div>
-          </div>
-          <span class="badge badge-pending">Modérateur</span>
-          <div class="user-list-actions">
-            <button class="btn btn-ghost btn-sm" onclick="showModal('userPermModal')">Permissions</button>
-            <button class="btn btn-danger btn-sm" onclick="showModal('deleteUserModal')">Retirer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: BACKUPS
-         ═════════════════════════════════ -->
-    <div class="page" id="page-backups">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Sauvegardes</div>
-          <div class="page-subtitle">// 5 SAUVEGARDES · LIMITE 5</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="showModal('newBackupModal')">+ Créer Backup</button>
-      </div>
-      <div class="card">
-        <table>
-          <thead>
-            <tr><th>Nom</th><th>Taille</th><th>Date</th><th>État</th><th>Actions</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span style="font-family:'Share Tech Mono',monospace;">backup-2026-05-10.tar.gz</span></td>
-              <td>1.2 GB</td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">2026-05-10 08:00</span></td>
-              <td><span class="badge badge-online">Complète</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="btn btn-ghost btn-sm" onclick="showModal('restoreModal')">Restaurer</button>
-                  <button class="btn btn-ghost btn-sm" onclick="showToast('info','Téléchargement','Préparation du fichier...')">⬇ DL</button>
-                  <button class="btn btn-danger btn-sm" onclick="showModal('deleteBackupModal')">Suppr.</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><span style="font-family:'Share Tech Mono',monospace;">backup-2026-05-09.tar.gz</span></td>
-              <td>1.1 GB</td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">2026-05-09 08:00</span></td>
-              <td><span class="badge badge-online">Complète</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="btn btn-ghost btn-sm" onclick="showModal('restoreModal')">Restaurer</button>
-                  <button class="btn btn-ghost btn-sm">⬇ DL</button>
-                  <button class="btn btn-danger btn-sm" onclick="showModal('deleteBackupModal')">Suppr.</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: NETWORK
-         ═════════════════════════════════ -->
-    <div class="page" id="page-network">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Réseau</div>
-          <div class="page-subtitle">// ALLOCATIONS IP :: PORTS EXPOSÉS</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="showToast('info','Réseau','Création de port...')">+ Port</button>
-      </div>
-      <div class="card">
-        <table>
-          <thead><tr><th>Adresse IP</th><th>Port</th><th>Alias</th><th>Primaire</th><th>Actions</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><span style="font-family:'Share Tech Mono',monospace;color:var(--violet-glow);">█████████████</span></td>
-              <td><span class="chip">25565</span></td>
-              <td>play.astral.host</td>
-              <td><span class="badge badge-online">Oui</span></td>
-              <td><button class="btn btn-ghost btn-sm">Éditer</button></td>
-            </tr>
-            <tr>
-              <td><span style="font-family:'Share Tech Mono',monospace;color:var(--text-muted);">█████████████</span></td>
-              <td><span class="chip">19132</span></td>
-              <td>bedrock.astral.host</td>
-              <td><span class="badge badge-offline">Non</span></td>
-              <td><button class="btn btn-ghost btn-sm">Éditer</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: SCHEDULES
-         ═════════════════════════════════ -->
-    <div class="page" id="page-schedules">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Planifications</div>
-          <div class="page-subtitle">// TÂCHES CRON AUTOMATISÉES</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="showModal('newScheduleModal')">+ Créer</button>
-      </div>
-      <div class="card">
-        <table>
-          <thead><tr><th>Nom</th><th>Cron</th><th>Prochaine exéc.</th><th>Statut</th><th>Actions</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><span style="font-weight:600;">Redémarrage Quotidien</span></td>
-              <td><span class="chip">0 8 * * *</span></td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">2026-05-11 08:00</span></td>
-              <td><span class="badge badge-online">Actif</span></td>
-              <td><div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-sm">Éditer</button><button class="btn btn-danger btn-sm">Suppr.</button></div></td>
-            </tr>
-            <tr>
-              <td><span style="font-weight:600;">Sauvegarde Auto</span></td>
-              <td><span class="chip">0 */6 * * *</span></td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">2026-05-10 14:00</span></td>
-              <td><span class="badge badge-online">Actif</span></td>
-              <td><div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-sm">Éditer</button><button class="btn btn-danger btn-sm">Suppr.</button></div></td>
-            </tr>
-            <tr>
-              <td><span style="font-weight:600;">Alerte RAM</span></td>
-              <td><span class="chip">*/5 * * * *</span></td>
-              <td><span style="font-family:'Share Tech Mono',monospace;font-size:12px;">2026-05-10 12:05</span></td>
-              <td><span class="badge badge-warn">Pause</span></td>
-              <td><div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-sm">Éditer</button><button class="btn btn-danger btn-sm">Suppr.</button></div></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: STARTUP
-         ═════════════════════════════════ -->
-    <div class="page" id="page-startup">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Démarrage</div>
-          <div class="page-subtitle">// VARIABLES D'ENVIRONNEMENT & OPTIONS JVM</div>
-        </div>
-      </div>
-      <div class="card spacer">
-        <div class="card-header"><div class="card-title"><span class="card-title-dot"></span>Commande de démarrage</div></div>
-        <div class="card-body">
-          <div style="background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px 16px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyan-glow);line-height:1.7;">
-            java -Xms128M -Xmx{{SERVER_MEMORY}}M -XX:+UseG1GC -XX:+ParallelRefProcEnabled -jar {{SERVER_JARFILE}} --nogui
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="card-title-dot"></span>Variables</div></div>
-        <div class="card-body">
-          <div class="form-group">
-            <label class="form-label">SERVER_JARFILE</label>
-            <input class="form-input" value="paper-1.21.4.jar">
-          </div>
-          <div class="form-group">
-            <label class="form-label">SERVER_MEMORY (MiB)</label>
-            <input class="form-input" value="1000" type="number">
-          </div>
-          <div class="form-group">
-            <label class="form-label">JAVA_VERSION</label>
-            <select class="form-select">
-              <option>Java 21 (LTS)</option>
-              <option>Java 17 (LTS)</option>
-              <option>Java 11</option>
-              <option>Java 8</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" onclick="showToast('success','Variables sauvegardées','Les changements prendront effet au prochain démarrage')">Sauvegarder</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: SETTINGS
-         ═════════════════════════════════ -->
-    <div class="page" id="page-settings">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Paramètres</div>
-          <div class="page-subtitle">// CONFIGURATION DU SERVEUR</div>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <div class="card spacer">
-            <div class="card-header"><div class="card-title"><span class="card-title-dot"></span>Général</div></div>
-            <div class="card-body">
-              <div class="settings-section">
-                <div class="settings-section-title">Identité</div>
-                <div class="form-group">
-                  <label class="form-label">Nom du serveur</label>
-                  <input class="form-input" value="Server-de-X77">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Description</label>
-                  <input class="form-input" placeholder="Description optionnelle">
-                </div>
-              </div>
-              <div class="settings-section">
-                <div class="settings-section-title">Options</div>
-                <div class="toggle-row">
-                  <div class="toggle-info">
-                    <div class="toggle-name">SFTP Activé</div>
-                    <div class="toggle-desc">Accès fichiers via SFTP</div>
-                  </div>
-                  <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
-                </div>
-                <div class="toggle-row">
-                  <div class="toggle-info">
-                    <div class="toggle-name">Redémarrage auto</div>
-                    <div class="toggle-desc">Si le serveur plante</div>
-                  </div>
-                  <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
-                </div>
-                <div class="toggle-row">
-                  <div class="toggle-info">
-                    <div class="toggle-name">Mode maintenance</div>
-                    <div class="toggle-desc">Bloque les connexions joueurs</div>
-                  </div>
-                  <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
-                </div>
-              </div>
-              <button class="btn btn-primary" onclick="showToast('success','Paramètres sauvegardés','Configuration mise à jour')">Sauvegarder</button>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="card spacer">
-            <div class="card-header"><div class="card-title"><span class="card-title-dot"></span>Danger Zone</div></div>
-            <div class="card-body">
-              <div class="settings-section">
-                <div class="settings-section-title" style="color:var(--red-status);">Actions irréversibles</div>
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md);">
-                    <div>
-                      <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Réinstaller le serveur</div>
-                      <div style="font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;margin-top:2px;">Efface les fichiers et réinstalle</div>
-                    </div>
-                    <button class="btn btn-danger btn-sm" onclick="showModal('reinstallModal')">Réinstaller</button>
-                  </div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md);">
-                    <div>
-                      <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Supprimer le serveur</div>
-                      <div style="font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;margin-top:2px;">Action permanente et irréversible</div>
-                    </div>
-                    <button class="btn btn-danger btn-sm" onclick="showModal('deleteServerModal')">Supprimer</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: ACTIVITY
-         ═════════════════════════════════ -->
-    <div class="page" id="page-activity">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Activité</div>
-          <div class="page-subtitle">// JOURNAL D'AUDIT COMPLET</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="showToast('info','Export','Journal exporté en CSV')">Export CSV</button>
-      </div>
-      <div class="card">
-        <div class="card-body" style="padding-bottom:0;">
-          <div class="activity-list">
-            <div class="activity-item">
-              <div class="activity-icon ai-green">✅</div>
-              <div class="activity-body">
-                <div class="activity-title">Connexion administrateur</div>
-                <div class="activity-sub">X77 Admin · IP: 192.168.█.█ · Session: abc123</div>
-              </div>
-              <span class="activity-time">Aujourd'hui 12:01</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon ai-violet">⚙️</div>
-              <div class="activity-body">
-                <div class="activity-title">Modification server.properties</div>
-                <div class="activity-sub">max-players: 15 → 20</div>
-              </div>
-              <span class="activity-time">Aujourd'hui 11:48</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon ai-pink">🔄</div>
-              <div class="activity-body">
-                <div class="activity-title">Redémarrage du serveur</div>
-                <div class="activity-sub">Initié par cron:daily-restart</div>
-              </div>
-              <span class="activity-time">Aujourd'hui 08:00</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon ai-cyan">📦</div>
-              <div class="activity-body">
-                <div class="activity-title">Sauvegarde créée</div>
-                <div class="activity-sub">backup-2026-05-10.tar.gz — 1.2 GB</div>
-              </div>
-              <span class="activity-time">Aujourd'hui 08:00</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon ai-green">👤</div>
-              <div class="activity-body">
-                <div class="activity-title">Sous-utilisateur ajouté</div>
-                <div class="activity-sub">AstralDev ajouté en tant qu'Admin</div>
-              </div>
-              <span class="activity-time">Hier 18:30</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon ai-red">🚨</div>
-              <div class="activity-body">
-                <div class="activity-title">Alerte RAM critique</div>
-                <div class="activity-sub">91% utilisé — SkyBlock-1</div>
-              </div>
-              <span class="activity-time">Hier 14:22</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon ai-violet">💽</div>
-              <div class="activity-body">
-                <div class="activity-title">Base de données créée</div>
-                <div class="activity-sub">s1_economy · mysql.astral.host:3306</div>
-              </div>
-              <span class="activity-time">Il y a 3j</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═════════════════════════════════
-         PAGE: ACCOUNT
-         ═════════════════════════════════ -->
-    <div class="page" id="page-account">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Mon Compte</div>
-          <div class="page-subtitle">// PARAMÈTRES DU PROFIL</div>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title"><span class="card-title-dot"></span>Profil</div></div>
-          <div class="card-body">
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
-              <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--violet-core),var(--pink-core));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:28px;font-weight:700;box-shadow:0 0 28px rgba(124,58,237,0.4);">X</div>
-              <div>
-                <div style="font-family:'Orbitron',monospace;font-size:16px;font-weight:700;">X77 Admin</div>
-                <div style="font-size:12px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;margin-top:4px;">admin@astral.host</div>
-                <div style="margin-top:8px;"><span class="plan-badge">✨ OWNER</span></div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nom d'utilisateur</label>
-              <input class="form-input" value="X77 Admin">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input class="form-input" value="admin@astral.host" type="email">
-            </div>
-            <button class="btn btn-primary" onclick="showToast('success','Profil mis à jour','Changements sauvegardés')">Sauvegarder</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title"><span class="card-title-dot"></span>Sécurité</div></div>
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-label">Mot de passe actuel</label>
-              <input class="form-input" type="password" placeholder="••••••••">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nouveau mot de passe</label>
-              <input class="form-input" type="password" placeholder="••••••••">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Confirmer</label>
-              <input class="form-input" type="password" placeholder="••••••••">
-            </div>
-            <div class="divider"></div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <div class="toggle-name">Authentification 2FA</div>
-                <div class="toggle-desc">TOTP via Google Authenticator</div>
-              </div>
-              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
-            </div>
-            <div style="margin-top:16px;">
-              <button class="btn btn-primary" onclick="showToast('success','Mot de passe changé','Sécurité mise à jour')">Changer MDP</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    </div><!-- end page-content -->
-  </main>
-</div><!-- end layout -->
-
-<!-- ============================================================
-     FAB (Floating Action Button)
-     ============================================================ -->
-<div class="fab" id="fab">
-  <div class="fab-menu">
-    <div class="fab-item">
-      <span class="fab-label">Nouveau Serveur</span>
-      <button class="fab-btn" style="background:linear-gradient(135deg,var(--violet-core),var(--violet-bright));" onclick="showModal('newServerModal');closeFab()">🌌</button>
-    </div>
-    <div class="fab-item">
-      <span class="fab-label">Créer Backup</span>
-      <button class="fab-btn" style="background:linear-gradient(135deg,var(--pink-core),var(--pink-bright));" onclick="showModal('newBackupModal');closeFab()">💾</button>
-    </div>
-    <div class="fab-item">
-      <span class="fab-label">Inviter Utilisateur</span>
-      <button class="fab-btn" style="background:linear-gradient(135deg,var(--cyan-accent),var(--violet-bright));" onclick="showModal('newUserModal');closeFab()">👤</button>
-    </div>
-    <div class="fab-item">
-      <span class="fab-label">Console Rapide</span>
-      <button class="fab-btn" style="background:linear-gradient(135deg,#1a1a2e,var(--violet-core));" onclick="showModal('consoleModal');closeFab()">▸</button>
-    </div>
-  </div>
-  <button class="fab-main" onclick="toggleFab()">✦</button>
-</div>
-
-<!-- ============================================================
-     MODALS
-     ============================================================ -->
-
-<!-- Stop Server -->
-<div class="modal-overlay" id="stopModal">
-  <div class="modal">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon red">⚠️</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Arrêter le serveur</div>
-        <div class="modal-subtitle">Cette action déconnectera tous les joueurs</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('stopModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;">Êtes-vous sûr de vouloir arrêter <strong style="color:var(--text-primary);">Server-de-X77</strong> ? Tous les joueurs connectés seront déconnectés et les données non sauvegardées seront perdues.</p>
-      <div style="margin-top:16px;padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--red-status);">⚠ 12 joueurs actuellement connectés</span>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('stopModal')">Annuler</button>
-      <button class="btn btn-danger" onclick="stopServer()">■ Arrêter maintenant</button>
-    </div>
+    <button class="login-btn" onclick="doLogin()">SE CONNECTER</button>
+    <div class="login-error" id="login-error">❌ Identifiants incorrects.</div>
   </div>
 </div>
 
-<!-- New Server -->
-<div class="modal-overlay" id="newServerModal">
-  <div class="modal" style="max-width:520px;">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon violet">🌌</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Nouveau Serveur</div>
-        <div class="modal-subtitle">Configurer un nouveau serveur de jeu</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('newServerModal')">✕</button>
+<!-- ═══════════════════════════ APP ═══════════════════════════ -->
+<div id="app">
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="icon">7X</div>
+      <span>7x | HUB</span>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Nom du serveur</label>
-        <input class="form-input" placeholder="Mon-Serveur-Epic">
+    <div class="nav-user">
+      <div class="user-badge">
+        <div class="dot"></div>
+        <span id="nav-username">—</span>
       </div>
-      <div class="form-group">
-        <label class="form-label">Type de jeu</label>
-        <select class="form-select">
-          <option>Minecraft Java</option>
-          <option>Minecraft Bedrock</option>
-          <option>Rust</option>
-          <option>Valheim</option>
-          <option>ARK</option>
-          <option>CS2</option>
-          <option>Garry's Mod</option>
-        </select>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div class="form-group">
-          <label class="form-label">RAM (MiB)</label>
-          <input class="form-input" type="number" placeholder="1024">
-        </div>
-        <div class="form-group">
-          <label class="form-label">CPU (%)</label>
-          <input class="form-input" type="number" placeholder="100">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Disque (MB)</label>
-        <input class="form-input" type="number" placeholder="10240">
-      </div>
+      <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('newServerModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('newServerModal');showToast('success','Serveur créé !','Déploiement en cours...')">Déployer ▶</button>
-    </div>
-  </div>
-</div>
+  </nav>
 
-<!-- Console Modal -->
-<div class="modal-overlay" id="consoleModal">
-  <div class="modal" style="max-width:620px;">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon violet">▸</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Console Rapide</div>
-        <div class="modal-subtitle">Envoi de commandes en temps réel</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('consoleModal')">✕</button>
+  <div class="main">
+    <div class="page-header">
+      <h2>📣 NOUVELLE ANNONCE</h2>
+      <p>Publie un message embed dans un salon Discord via webhook</p>
     </div>
-    <div class="modal-body" style="padding-bottom:0;">
-      <div style="background:#000;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden;">
-        <div style="padding:10px 14px;border-bottom:1px solid var(--border-subtle);background:var(--nebula-mid);font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;">SERVER-DE-X77 :: CONSOLE LIVE</div>
-        <div style="padding:14px;min-height:150px;max-height:200px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.7;">
-          <div style="color:#7ec8a4;">[INFO] Server started in 6.3s</div>
-          <div style="color:#7ec8a4;">[INFO] X77 joined the game</div>
-          <div style="color:var(--text-muted);">[INFO] X77: Hello world</div>
-          <div style="color:#7ec8a4;">[INFO] 12 players online</div>
-        </div>
-        <div style="display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border-subtle);background:rgba(0,0,0,0.3);">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--violet-bright);">/</span>
-          <input id="consoleInput" style="flex:1;background:transparent;border:none;outline:none;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyan-glow);" placeholder="say Hello, say ..." onkeydown="if(event.key==='Enter'){showToast('success','Commande envoyée',this.value);this.value='';}">
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('consoleModal')">Fermer</button>
-      <button class="btn btn-primary" onclick="document.getElementById('consoleInput').focus()">Envoyer</button>
-    </div>
-  </div>
-</div>
 
-<!-- Server Select -->
-<div class="modal-overlay" id="serverSelectModal">
-  <div class="modal" style="max-width:400px;">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon violet">🌌</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Changer de Serveur</div>
-        <div class="modal-subtitle">Sélectionner un serveur actif</div>
+    <!-- STEPS -->
+    <div class="steps-bar">
+      <div class="step active" id="step-ind-1">
+        <div class="step-num">1</div>
+        <div class="step-label">Salon</div>
       </div>
-      <button class="modal-close" onclick="closeModal('serverSelectModal')">✕</button>
+      <div class="step" id="step-ind-2">
+        <div class="step-num">2</div>
+        <div class="step-label">Contenu</div>
+      </div>
+      <div class="step" id="step-ind-3">
+        <div class="step-num">3</div>
+        <div class="step-label">Embed</div>
+      </div>
+      <div class="step" id="step-ind-4">
+        <div class="step-num">4</div>
+        <div class="step-label">Options</div>
+      </div>
+      <div class="step" id="step-ind-5">
+        <div class="step-num">5</div>
+        <div class="step-label">Aperçu</div>
+      </div>
     </div>
-    <div class="modal-body" style="padding:0;">
-      <div style="display:flex;flex-direction:column;">
-        <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;background:rgba(124,58,237,0.1);border-left:3px solid var(--violet-bright);" onclick="closeModal('serverSelectModal');showToast('success','Serveur sélectionné','Server-de-X77')">
-          <div class="td-server-icon">🌌</div>
-          <div>
-            <div style="font-weight:600;font-size:13px;">Server-de-X77</div>
-            <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--green-status);margin-top:2px;">● Online</div>
-          </div>
-          <span style="margin-left:auto;color:var(--violet-glow);font-size:12px;">✓ Actuel</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--border-subtle);transition:background 0.2s;" onmouseover="this.style.background='rgba(124,58,237,0.05)'" onmouseout="this.style.background=''" onclick="closeModal('serverSelectModal');showToast('info','Serveur sélectionné','Astral-Proxy')">
-          <div class="td-server-icon">🌙</div>
-          <div>
-            <div style="font-weight:600;font-size:13px;">Astral-Proxy</div>
-            <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--green-status);margin-top:2px;">● Online</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--border-subtle);transition:background 0.2s;" onmouseover="this.style.background='rgba(124,58,237,0.05)'" onmouseout="this.style.background=''" onclick="closeModal('serverSelectModal');showToast('warn','Serveur hors ligne','Lobby-Hub est offline')">
-          <div class="td-server-icon">🔮</div>
-          <div>
-            <div style="font-weight:600;font-size:13px;">Lobby-Hub</div>
-            <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--red-status);margin-top:2px;">● Offline</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='rgba(124,58,237,0.05)'" onmouseout="this.style.background=''">
-          <div class="td-server-icon">⚡</div>
-          <div>
-            <div style="font-weight:600;font-size:13px;">SkyBlock-1</div>
-            <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--orange-warn);margin-top:2px;">⚠ Warning</div>
-          </div>
+
+    <!-- STEP 1: CHANNEL -->
+    <div id="step-1" class="card">
+      <h3><span class="icon">📡</span> CHOISIR LE SALON</h3>
+      <div class="f-group">
+        <label class="f-label">Dans quel salon publier ?<span class="required">*</span></label>
+        <div class="channel-grid" id="channel-grid"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goStep(2)"><span class="btn-text">SUIVANT →</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 2: CONTENT -->
+    <div id="step-2" class="card" style="display:none">
+      <h3><span class="icon">✍️</span> CONTENU DE L'ANNONCE</h3>
+      <div class="f-group">
+        <label class="f-label">Titre de l'embed<span class="required">*</span></label>
+        <input class="f-input" id="embed-title" placeholder="Ex: 🔥 Nouvelle mise à jour disponible !" oninput="updatePreview()">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Description<span class="required">*</span></label>
+        <textarea class="f-textarea" id="embed-desc" placeholder="Détail de l'annonce... (markdown Discord supporté)" oninput="updatePreview()"></textarea>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Nom de l'auteur (optionnel)</label>
+        <input class="f-input" id="embed-author" placeholder="Ex: 7x Team" oninput="updatePreview()">
+      </div>
+      <div class="f-group">
+        <label class="f-label">URL du footer (optionnel)</label>
+        <input class="f-input" id="embed-footer" placeholder="Ex: 7x.gg • Annonce officielle" oninput="updatePreview()">
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goStep(1)">← RETOUR</button>
+        <button class="btn-primary" onclick="goStep(3)"><span class="btn-text">SUIVANT →</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 3: EMBED STYLE -->
+    <div id="step-3" class="card" style="display:none">
+      <h3><span class="icon">🎨</span> STYLE DE L'EMBED</h3>
+      <div class="f-group">
+        <label class="f-label">Couleur de la barre</label>
+        <div class="color-row" id="color-row">
+          <div class="color-chip selected" style="background:#5865f2" data-color="#5865f2" onclick="pickColor(this)"></div>
+          <div class="color-chip" style="background:#57f287" data-color="#57f287" onclick="pickColor(this)"></div>
+          <div class="color-chip" style="background:#ed4245" data-color="#ed4245" onclick="pickColor(this)"></div>
+          <div class="color-chip" style="background:#ffd700" data-color="#ffd700" onclick="pickColor(this)"></div>
+          <div class="color-chip" style="background:#00d4ff" data-color="#00d4ff" onclick="pickColor(this)"></div>
+          <div class="color-chip" style="background:#bf00ff" data-color="#bf00ff" onclick="pickColor(this)"></div>
+          <div class="color-chip" style="background:#ff6b35" data-color="#ff6b35" onclick="pickColor(this)"></div>
+          <div class="color-chip-custom" onclick="document.getElementById('custom-color-input').click()" title="Couleur personnalisée">🎨</div>
+          <input type="color" id="custom-color-input" onchange="customColor(this)">
         </div>
       </div>
+      <div class="f-group">
+        <label class="f-label">Image dans l'embed (optionnel)</label>
+        <div class="image-drop" id="image-drop">
+          <input type="file" accept="image/*" onchange="handleImage(event)">
+          <div class="drop-icon">🖼️</div>
+          <div class="drop-text">Clique ou glisse une image ici<br><span>PNG, JPG, GIF, WEBP</span></div>
+        </div>
+        <div class="image-preview-wrap" id="img-preview-wrap">
+          <img id="img-preview-el" src="" alt="preview">
+          <button class="image-remove" onclick="removeImage()">✕</button>
+        </div>
+      </div>
+      <div class="f-group">
+        <label class="f-label">URL d'image (alternative)</label>
+        <input class="f-input" id="embed-img-url" placeholder="https://..." oninput="updatePreview()">
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goStep(2)">← RETOUR</button>
+        <button class="btn-primary" onclick="goStep(4)"><span class="btn-text">SUIVANT →</span></button>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- New Backup Modal -->
-<div class="modal-overlay" id="newBackupModal">
-  <div class="modal">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon green">💾</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Créer une Sauvegarde</div>
-        <div class="modal-subtitle">Sauvegarde manuelle du serveur</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('newBackupModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Nom de la sauvegarde</label>
-        <input class="form-input" placeholder="backup-manuel-2026-05-10">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ignorer des fichiers (optionnel)</label>
-        <input class="form-input" placeholder="logs/*, cache/*">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('newBackupModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('newBackupModal');showToast('info','Sauvegarde en cours','Cela peut prendre quelques minutes...')">💾 Créer</button>
-    </div>
-  </div>
-</div>
-
-<!-- New User Modal -->
-<div class="modal-overlay" id="newUserModal">
-  <div class="modal">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon violet">👤</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Inviter un Utilisateur</div>
-        <div class="modal-subtitle">Donner accès à ce serveur</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('newUserModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Email de l'utilisateur</label>
-        <input class="form-input" type="email" placeholder="user@example.com">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('newUserModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('newUserModal');showToast('success','Invitation envoyée','L\'utilisateur recevra un email')">Inviter</button>
-    </div>
-  </div>
-</div>
-
-<!-- Reinstall Modal -->
-<div class="modal-overlay" id="reinstallModal">
-  <div class="modal">
-    <div class="modal-glow" style="background:radial-gradient(circle,rgba(239,68,68,0.3),transparent 70%)"></div>
-    <div class="modal-header">
-      <div class="modal-icon red">🔥</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Réinstaller le Serveur</div>
-        <div class="modal-subtitle">Action irréversible — Confirmez</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('reinstallModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;">La réinstallation va <strong style="color:var(--red-status);">supprimer tous les fichiers</strong> du serveur et réinstaller depuis zéro. Créez une sauvegarde avant de continuer.</p>
-      <div style="margin-top:14px;">
-        <label class="form-label">Tapez "REINSTALLER" pour confirmer</label>
-        <input class="form-input" id="reinstallConfirm" placeholder="REINSTALLER">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('reinstallModal')">Annuler</button>
-      <button class="btn btn-danger" onclick="confirmReinstall()">🔥 Réinstaller</button>
-    </div>
-  </div>
-</div>
-
-<!-- Delete Server Modal -->
-<div class="modal-overlay" id="deleteServerModal">
-  <div class="modal">
-    <div class="modal-glow" style="background:radial-gradient(circle,rgba(239,68,68,0.3),transparent 70%)"></div>
-    <div class="modal-header">
-      <div class="modal-icon red">💀</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Supprimer le Serveur</div>
-        <div class="modal-subtitle">Cette action est permanente</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('deleteServerModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;">Vous êtes sur le point de <strong style="color:var(--red-status);">supprimer définitivement</strong> le serveur <strong style="color:var(--text-primary);">Server-de-X77</strong>. Toutes les données, fichiers et configurations seront perdus.</p>
-      <div style="margin-top:14px;">
-        <label class="form-label">Tapez le nom du serveur pour confirmer</label>
-        <input class="form-input" placeholder="Server-de-X77">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('deleteServerModal')">Annuler</button>
-      <button class="btn btn-danger" onclick="closeModal('deleteServerModal');showToast('error','Serveur supprimé','Server-de-X77 a été supprimé')">💀 Supprimer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Restore Modal -->
-<div class="modal-overlay" id="restoreModal">
-  <div class="modal">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon pink">↩️</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Restaurer la Sauvegarde</div>
-        <div class="modal-subtitle">backup-2026-05-10.tar.gz</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('restoreModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;">La restauration va <strong style="color:var(--orange-warn);">remplacer les fichiers actuels</strong> par ceux de cette sauvegarde. Le serveur sera arrêté pendant l'opération.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('restoreModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('restoreModal');showToast('info','Restauration en cours','Le serveur va redémarrer...')">↩ Restaurer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Delete Backup Modal -->
-<div class="modal-overlay" id="deleteBackupModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon red">🗑️</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Supprimer la Sauvegarde</div>
-        <div class="modal-subtitle">Action irréversible</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('deleteBackupModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;">Supprimer <strong style="color:var(--text-primary);">backup-2026-05-10.tar.gz</strong> (1.2 GB) ?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('deleteBackupModal')">Annuler</button>
-      <button class="btn btn-danger" onclick="closeModal('deleteBackupModal');showToast('warn','Sauvegarde supprimée','Libération de 1.2 GB')">Supprimer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Delete DB Modal -->
-<div class="modal-overlay" id="deleteDbModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon red">💣</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Supprimer la Base de données</div>
-        <div class="modal-subtitle">Toutes les tables seront perdues</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('deleteDbModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;">Cette action <strong style="color:var(--red-status);">supprimera définitivement</strong> la base de données et toutes ses données.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('deleteDbModal')">Annuler</button>
-      <button class="btn btn-danger" onclick="closeModal('deleteDbModal');showToast('error','BDD supprimée','Base de données détruite')">Supprimer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Delete User Modal -->
-<div class="modal-overlay" id="deleteUserModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon red">👤</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Retirer l'utilisateur</div>
-        <div class="modal-subtitle">Révoquer l'accès au serveur</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('deleteUserModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:14px;">Retirer <strong style="color:var(--text-primary);">AstralDev</strong> de ce serveur ? Il perdra tous ses accès.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('deleteUserModal')">Annuler</button>
-      <button class="btn btn-danger" onclick="closeModal('deleteUserModal');showToast('warn','Utilisateur retiré','AstralDev n\'a plus accès')">Retirer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Upload Modal -->
-<div class="modal-overlay" id="uploadModal">
-  <div class="modal">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon violet">⬆</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Téléverser un Fichier</div>
-        <div class="modal-subtitle">/home/container</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('uploadModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="border:2px dashed var(--border-mid);border-radius:var(--radius-md);padding:40px;text-align:center;cursor:pointer;transition:all 0.3s;" onclick="showToast('info','Upload','Sélection du fichier...')" onmouseover="this.style.borderColor='var(--violet-bright)';this.style.background='rgba(124,58,237,0.06)'" onmouseout="this.style.borderColor='var(--border-mid)';this.style.background=''">
-        <div style="font-size:40px;margin-bottom:12px;">📂</div>
-        <div style="font-size:14px;color:var(--text-primary);font-weight:600;">Glissez un fichier ici</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:6px;font-family:'Share Tech Mono',monospace;">ou cliquez pour parcourir · Max 100MB</div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('uploadModal')">Fermer</button>
-    </div>
-  </div>
-</div>
-
-<!-- New File Modal -->
-<div class="modal-overlay" id="newFileModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon violet">📄</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Nouveau Fichier / Dossier</div>
-        <div class="modal-subtitle">Créer dans /home/container</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('newFileModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Type</label>
-        <select class="form-select">
-          <option>📄 Fichier</option>
-          <option>📁 Dossier</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nom</label>
-        <input class="form-input" placeholder="mon-fichier.yml">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('newFileModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('newFileModal');showToast('success','Fichier créé','Le fichier a été créé')">Créer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Edit File Modal -->
-<div class="modal-overlay" id="editFileModal">
-  <div class="modal" style="max-width:640px;">
-    <div class="modal-header">
-      <div class="modal-icon cyan" style="background:rgba(6,182,212,0.2);box-shadow:0 0 20px rgba(6,182,212,0.3);">⚙️</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Éditer : server.properties</div>
-        <div class="modal-subtitle">/home/container/server.properties</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('editFileModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <textarea style="width:100%;height:240px;background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;color:var(--cyan-glow);font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.7;outline:none;resize:vertical;">enable-jmx-monitoring=false
-rcon.port=25575
-level-seed=
-gamemode=survival
-enable-command-block=false
-enable-query=false
-generator-settings={}
-enforce-secure-profile=true
-level-name=world
-motd=\u00A7dAstral \u00A7fHosting \u00A7d\u2605 Powered by Galaxy
-pvp=true
-generate-structures=true
-max-chained-neighbor-updates=1000000
-difficulty=easy
-network-compression-threshold=256
-max-tick-time=60000
-max-players=20
-use-native-transport=true
-online-mode=true
-enable-status=true
-allow-flight=false
-broadcast-rcon-to-ops=true
-view-distance=10
-server-ip=
-resource-pack-prompt=
-allow-nether=true
-server-port=25565
-enable-rcon=false</textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('editFileModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('editFileModal');showToast('success','Fichier sauvegardé','server.properties mis à jour')">💾 Sauvegarder</button>
-    </div>
-  </div>
-</div>
-
-<!-- User Permissions Modal -->
-<div class="modal-overlay" id="userPermModal">
-  <div class="modal" style="max-width:500px;">
-    <div class="modal-glow"></div>
-    <div class="modal-header">
-      <div class="modal-icon violet">🔐</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Permissions — AstralDev</div>
-        <div class="modal-subtitle">Gérer les droits d'accès</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('userPermModal')">✕</button>
-    </div>
-    <div class="modal-body">
+    <!-- STEP 4: OPTIONS -->
+    <div id="step-4" class="card" style="display:none">
+      <h3><span class="icon">⚙️</span> OPTIONS DE PUBLICATION</h3>
       <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Console</div><div class="toggle-desc">Accès à la console du serveur</div></div>
-        <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+        <div class="toggle-info">
+          <strong>🔔 Ping @everyone</strong>
+          <span>Notifie tous les membres du serveur</span>
+        </div>
+        <div class="toggle" id="toggle-everyone" onclick="this.classList.toggle('on'); updatePreview()"></div>
       </div>
       <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Fichiers (lecture)</div><div class="toggle-desc">Parcourir les fichiers</div></div>
-        <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+        <div class="toggle-info">
+          <strong>📌 Épingler le message</strong>
+          <span>Épingle automatiquement l'annonce</span>
+        </div>
+        <div class="toggle" id="toggle-pin" onclick="this.classList.toggle('on')"></div>
       </div>
       <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Fichiers (écriture)</div><div class="toggle-desc">Modifier et créer des fichiers</div></div>
-        <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+        <div class="toggle-info">
+          <strong>🗓️ Afficher la date</strong>
+          <span>Ajoute un timestamp dans le footer</span>
+        </div>
+        <div class="toggle on" id="toggle-date" onclick="this.classList.toggle('on'); updatePreview()"></div>
       </div>
       <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Bases de données</div><div class="toggle-desc">Accès aux BDD</div></div>
-        <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+        <div class="toggle-info">
+          <strong>👤 Afficher l'username</strong>
+          <span>Montre le nom de l'utilisateur connecté dans l'auteur</span>
+        </div>
+        <div class="toggle on" id="toggle-user" onclick="this.classList.toggle('on'); updatePreview()"></div>
       </div>
-      <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Sauvegardes</div><div class="toggle-desc">Créer et restaurer des sauvegardes</div></div>
-        <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+      <div class="f-group" style="margin-top:22px">
+        <label class="f-label">Nom du webhook (affiché sur Discord)</label>
+        <input class="f-input" id="webhook-name" placeholder="Ex: 7x Announcements" value="7x | Hub">
       </div>
-      <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Gestion utilisateurs</div><div class="toggle-desc">Inviter ou retirer des membres</div></div>
-        <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+      <div class="f-group">
+        <label class="f-label">Avatar URL du webhook (optionnel)</label>
+        <input class="f-input" id="webhook-avatar" placeholder="https://...">
       </div>
-      <div class="toggle-row">
-        <div class="toggle-info"><div class="toggle-name">Contrôle alimentation</div><div class="toggle-desc">Démarrer / Arrêter / Redémarrer</div></div>
-        <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goStep(3)">← RETOUR</button>
+        <button class="btn-primary" onclick="goStep(5)"><span class="btn-text">APERÇU →</span></button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('userPermModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('userPermModal');showToast('success','Permissions sauvegardées','AstralDev mis à jour')">Sauvegarder</button>
+
+    <!-- STEP 5: PREVIEW & SEND -->
+    <div id="step-5" class="card" style="display:none">
+      <h3><span class="icon">👁️</span> APERÇU & ENVOI</h3>
+      <div class="f-group">
+        <label class="f-label">Aperçu de l'embed Discord</label>
+        <div class="embed-preview" id="embed-preview-final">
+          <div class="embed-bar" id="preview-bar"></div>
+          <div class="embed-inner">
+            <div id="preview-ping" class="embed-ping" style="display:none">@everyone</div>
+            <div class="embed-author" id="preview-author"><div class="av"></div><span id="preview-author-text"></span></div>
+            <div class="embed-title" id="preview-title">Titre de l'embed</div>
+            <div class="embed-desc" id="preview-desc">Description ici...</div>
+            <img id="preview-image" class="embed-image" style="display:none" src="" alt="">
+            <div class="embed-footer" id="preview-footer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Salon cible</label>
+        <div style="background:rgba(88,101,242,0.08); border:1px solid var(--border); border-radius:10px; padding:13px 16px; color:var(--accent2); font-weight:600;" id="preview-channel-label">—</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goStep(4)">← MODIFIER</button>
+        <button class="btn-primary" id="send-btn" onclick="sendWebhook()">
+          <span class="btn-text">🚀 PUBLIER L'ANNONCE</span>
+          <span class="btn-loader">⏳ Envoi...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="history-section">
+      <h3>📋 HISTORIQUE DES ANNONCES</h3>
+      <div class="history-list" id="history-list">
+        <div style="color:var(--muted); font-size:13px; font-family:'Inter',sans-serif;">Aucune annonce envoyée pour l'instant.</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- New Schedule Modal -->
-<div class="modal-overlay" id="newScheduleModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon violet">◷</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Nouvelle Planification</div>
-        <div class="modal-subtitle">Tâche automatisée</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('newScheduleModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Nom</label>
-        <input class="form-input" placeholder="Ma tâche">
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;">
-        <div class="form-group" style="margin:0;"><label class="form-label" style="font-size:9px;">Min</label><input class="form-input" placeholder="*"></div>
-        <div class="form-group" style="margin:0;"><label class="form-label" style="font-size:9px;">Heure</label><input class="form-input" placeholder="*"></div>
-        <div class="form-group" style="margin:0;"><label class="form-label" style="font-size:9px;">Jour</label><input class="form-input" placeholder="*"></div>
-        <div class="form-group" style="margin:0;"><label class="form-label" style="font-size:9px;">Mois</label><input class="form-input" placeholder="*"></div>
-        <div class="form-group" style="margin:0;"><label class="form-label" style="font-size:9px;">Semaine</label><input class="form-input" placeholder="*"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Action</label>
-        <select class="form-select">
-          <option>Redémarrer le serveur</option>
-          <option>Créer une sauvegarde</option>
-          <option>Envoyer une commande</option>
-          <option>Couper l'alimentation</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('newScheduleModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('newScheduleModal');showToast('success','Planification créée','Tâche cron activée')">Créer</button>
-    </div>
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-box">
+    <div class="success-icon">✅</div>
+    <h3>ANNONCE PUBLIÉE !</h3>
+    <p>Ton message a été envoyé avec succès.</p>
+    <div class="success-channel" id="success-channel-name">—</div>
+    <button class="btn-primary" onclick="resetForm()">+ NOUVELLE ANNONCE</button>
   </div>
 </div>
 
-<!-- New DB Modal -->
-<div class="modal-overlay" id="newDbModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon violet">◉</div>
-      <div class="modal-title-group">
-        <div class="modal-title">Créer une Base de Données</div>
-        <div class="modal-subtitle">MySQL / MariaDB</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('newDbModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Nom de la base</label>
-        <input class="form-input" placeholder="ma_database">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Hôte autorisé (%)</label>
-        <input class="form-input" value="%" placeholder="%">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('newDbModal')">Annuler</button>
-      <button class="btn btn-primary" onclick="closeModal('newDbModal');showToast('success','Base créée','BDD prête à l\'emploi')">Créer</button>
-    </div>
-  </div>
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon">✅</span>
+  <span id="toast-msg">Message envoyé</span>
 </div>
 
-<!-- ============================================================
-     JAVASCRIPT
-     ============================================================ -->
 <script>
-/* ── GALAXY CANVAS ── */
-(function() {
-  const canvas = document.getElementById('galaxy-canvas');
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Stars
-  const stars = [];
-  for (let i = 0; i < 280; i++) {
-    stars.push({
-      x: Math.random(),
-      y: Math.random(),
-      r: Math.random() * 1.6 + 0.3,
-      o: Math.random() * 0.7 + 0.1,
-      sp: Math.random() * 0.015 + 0.005,
-      ph: Math.random() * Math.PI * 2
-    });
-  }
-
-  // Shooting stars
-  const shoots = [];
-  function spawnShoot() {
-    shoots.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height * 0.5,
-      len: Math.random() * 120 + 60,
-      speed: Math.random() * 8 + 4,
-      angle: Math.PI / 5 + (Math.random() - 0.5) * 0.3,
-      life: 1, decay: Math.random() * 0.04 + 0.02
-    });
-  }
-  setInterval(spawnShoot, 2400);
-
-  let t = 0;
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Stars
-    stars.forEach(s => {
-      const flicker = Math.sin(t * s.sp + s.ph) * 0.35 + 0.65;
-      ctx.beginPath();
-      ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,180,255,${s.o * flicker})`;
-      ctx.fill();
-    });
-
-    // Shooting stars
-    for (let i = shoots.length - 1; i >= 0; i--) {
-      const sh = shoots[i];
-      const grd = ctx.createLinearGradient(
-        sh.x, sh.y,
-        sh.x - Math.cos(sh.angle) * sh.len,
-        sh.y - Math.sin(sh.angle) * sh.len
-      );
-      grd.addColorStop(0, `rgba(200,150,255,${sh.life * 0.9})`);
-      grd.addColorStop(1, 'transparent');
-      ctx.beginPath();
-      ctx.moveTo(sh.x, sh.y);
-      ctx.lineTo(sh.x - Math.cos(sh.angle) * sh.len, sh.y - Math.sin(sh.angle) * sh.len);
-      ctx.strokeStyle = grd;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      sh.x += Math.cos(sh.angle) * sh.speed;
-      sh.y += Math.sin(sh.angle) * sh.speed;
-      sh.life -= sh.decay;
-      if (sh.life <= 0) shoots.splice(i, 1);
-    }
-
-    t++;
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-/* ── NAVIGATION ── */
-function switchPage(name, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById('page-' + name);
-  if (target) target.classList.add('active');
-
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  if (el && el.classList) el.classList.add('active');
-
-  // Close sidebar on mobile
-  if (window.innerWidth <= 900) closeSidebar();
-}
-
-/* ── SIDEBAR MOBILE ── */
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarOverlay').classList.toggle('show');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebarOverlay').classList.remove('show');
-}
-
-/* ── MODALS ── */
-function showModal(id) {
-  const el = document.getElementById(id);
-  if (el) {
-    el.classList.add('open');
-    el.addEventListener('click', function bgClick(e) {
-      if (e.target === el) { closeModal(id); el.removeEventListener('click', bgClick); }
-    });
-  }
-}
-function closeModal(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove('open');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-    document.querySelectorAll('.notif-dropdown.open').forEach(d => d.classList.remove('open'));
-  }
-});
-
-/* ── TOASTS ── */
-let toastId = 0;
-function showToast(type, title, msg) {
-  const icons = { success:'✅', error:'❌', info:'ℹ️', warn:'⚠️' };
-  const id = 'toast-' + (++toastId);
-  const div = document.createElement('div');
-  div.className = `toast t-${type}`;
-  div.id = id;
-  div.innerHTML = `
-    <div class="toast-bar"></div>
-    <span class="toast-icon">${icons[type]||'📢'}</span>
-    <div class="toast-content">
-      <div class="toast-title">${title}</div>
-      ${msg ? `<div class="toast-msg">${msg}</div>` : ''}
-    </div>
-    <button class="toast-dismiss" onclick="dismissToast('${id}')">✕</button>
-    <div class="toast-progress"><div class="toast-progress-fill"></div></div>
-  `;
-  document.getElementById('toastContainer').appendChild(div);
-  requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('show')));
-  setTimeout(() => dismissToast(id), 4200);
-}
-function dismissToast(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove('show');
-  setTimeout(() => el.remove(), 400);
-}
-
-/* ── NOTIFICATIONS DROPDOWN ── */
-function toggleNotifDropdown() {
-  document.getElementById('notifDropdown').classList.toggle('open');
-}
-function markAllRead() {
-  document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread'));
-  document.getElementById('notifCount').style.display = 'none';
-  showToast('success','Notifications lues','Toutes les notifs marquées comme lues');
-}
-document.addEventListener('click', e => {
-  const container = document.getElementById('notifContainer');
-  if (container && !container.contains(e.target)) {
-    document.getElementById('notifDropdown').classList.remove('open');
-  }
-});
-
-/* ── FAB ── */
-let fabOpen = false;
-function toggleFab() {
-  fabOpen = !fabOpen;
-  document.getElementById('fab').classList.toggle('open', fabOpen);
-}
-function closeFab() {
-  fabOpen = false;
-  document.getElementById('fab').classList.remove('open');
-}
-
-/* ── SERVER ACTIONS ── */
-function startServer() {
-  document.getElementById('topbarDot').style.background = 'var(--green-status)';
-  document.getElementById('topbarDot').style.boxShadow = '0 0 10px var(--green-status)';
-  showToast('success', 'Serveur démarré', 'Server-de-X77 est en ligne');
-}
-function restartServer() {
-  showToast('info', 'Redémarrage en cours', 'Le serveur redémarre...');
-  setTimeout(() => showToast('success', 'Redémarrage terminé', 'Server-de-X77 est de retour'), 2200);
-}
-function stopServer() {
-  closeModal('stopModal');
-  document.getElementById('topbarDot').style.background = 'var(--red-status)';
-  document.getElementById('topbarDot').style.boxShadow = '0 0 10px var(--red-status)';
-  showToast('warn', 'Serveur arrêté', 'Server-de-X77 est hors ligne');
-}
-function confirmReinstall() {
-  const val = document.getElementById('reinstallConfirm').value;
-  if (val === 'REINSTALLER') {
-    closeModal('reinstallModal');
-    showToast('warn', 'Réinstallation lancée', 'Suppression des fichiers en cours...');
-  } else {
-    const m = document.querySelector('#reinstallModal .modal');
-    m.style.animation = 'none';
-    requestAnimationFrame(() => { m.style.animation = 'shake 0.5s ease'; });
-    showToast('error', 'Erreur', 'Tapez exactement "REINSTALLER"');
-  }
-}
-
-/* ── TERMINAL ── */
-const termCmds = {
-  'help': ['Commandes disponibles:', '  list — liste des joueurs', '  say <msg> — envoyer un message', '  op <player> — donner op', '  stop — arrêter le serveur', '  version — version du serveur', '  tps — afficher le TPS'],
-  'list': ['Joueurs en ligne (12/20):', '  X77, AstralDev, Player3, Player4, ...'],
-  'version': ['Server: Paper 1.21.4 (build 110)', 'API: 1.21.4-R0.1-SNAPSHOT'],
-  'tps': ['TPS: 19.85, 19.90, 19.80 | MSPT: 4.21ms'],
-  'stop': ['[WARN] Stopping server...'],
-  'clear': null,
+// ════════════════════════════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════════════════════════════
+const USERS = {
+  'Kairo': '7x_Kairo',
+  'x77': 'x77uhq'
 };
-function handleTerminalInput(e) {
-  if (e.key !== 'Enter') return;
-  const input = document.getElementById('terminalInput');
-  const cmd = input.value.trim();
-  if (!cmd) return;
-  input.value = '';
-  const body = document.getElementById('terminalBody');
 
-  // Add command line
-  const cmdLine = document.createElement('div');
-  cmdLine.className = 't-line';
-  cmdLine.innerHTML = `<span class="t-prompt">root@server-x77:~$</span><span class="t-cmd">${cmd}</span>`;
-  body.appendChild(cmdLine);
+const CHANNELS = [
+  { id: 'support',     label: '🎫 • support',     url: 'https://discord.com/api/webhooks/1506761234366861402/KUU5ROP5BgfF1jzYHNu27_ofPE6e_vthhyRDx__018QreuU-oAggFDZ6t9IhL3AOuIXh' },
+  { id: 'price',       label: '💶 • price',        url: 'https://discord.com/api/webhooks/1506761562256314418/3jYRx9b_-MeFmunQN6pBoXy_a75acVuW0WSXTps1NQDjY1JS4bT99pmhWFsPCNEzCwtX' },
+  { id: 'update',      label: '📄 • update',       url: 'https://discord.com/api/webhooks/1506761213730881687/QFzMvEqYbHgy6GM6cVKVStHy4PKIMKM3JCO7Ifb44yiLg6aCKuSdi5FtANr53k3M7w8-' },
+  { id: 'bot-status',  label: '📡 • bot-status',   url: 'https://discord.com/api/webhooks/1506761219002863648/TKJXiTueWZdRxKw9cqg3Z6B_2E1lGqV97mGbjZd8h2EPOzVKIigdwHhZEAcBbLKHVeS2' },
+  { id: 'staff-news',  label: '📬 • staff news',   url: 'https://discord.com/api/webhooks/1506761231699284179/_hVG5EJdvOSAgBjMITfQFdoBSKENnBpGYzCYaxnNb26tQEeoFwiEaEwPIpKC6ugrbopm' },
+  { id: 'announcement',label: '🔔 • announcement', url: 'https://discord.com/api/webhooks/1506761211633729658/CSW9OxRuqcZK0dr01Y_n1IrsU9x3F5wAZUuC6AX3_kIzY7xdEvpyMdNGxDxYrGUTAw1U' },
+  { id: 'link',        label: '🔗 • link',          url: 'https://discord.com/api/webhooks/1506761230595919944/o1xXv9seutWh9u5dS_n3CO-MFdIAh9t4EfLjj5DsCZNycp9eMUz4Q5RX_IB3WiArElyz' }
+];
 
-  const base = cmd.toLowerCase().split(' ')[0];
-  if (base === 'clear') { body.innerHTML = ''; return; }
+// ════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════
+let currentUser = null;
+let currentStep = 1;
+let selectedChannel = null;
+let embedColor = '#5865f2';
+let imageBase64 = null;
+let history = [];
 
-  const replies = termCmds[base] || [`[ERROR] Commande inconnue: ${base}`];
-  replies.forEach(r => {
-    const line = document.createElement('div');
-    line.className = 't-line';
-    line.innerHTML = `<span class="${r.startsWith('[ERROR]') ? 't-error' : 't-output'}">${r}</span>`;
-    body.appendChild(line);
+// ════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  buildChannelGrid();
+  const saved = sessionStorage.getItem('7xhub_user');
+  if (saved) {
+    currentUser = saved;
+    showApp();
+  }
+  // Enter key on login
+  document.getElementById('login-pass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
   });
+  document.getElementById('login-user').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('login-pass').focus();
+  });
+});
 
-  if (base === 'say') {
-    const msg = cmd.slice(4).trim();
-    if (msg) {
-      const l = document.createElement('div'); l.className = 't-line';
-      l.innerHTML = `<span class="t-output">[Server] ${msg}</span>`;
-      body.appendChild(l);
+function buildChannelGrid() {
+  const grid = document.getElementById('channel-grid');
+  CHANNELS.forEach(ch => {
+    const el = document.createElement('div');
+    el.className = 'channel-option';
+    el.dataset.id = ch.id;
+    el.innerHTML = `
+      <div class="channel-check"></div>
+      <div class="channel-name">${ch.label}</div>
+    `;
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.channel-option').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedChannel = ch;
+      document.getElementById('preview-channel-label').textContent = ch.label;
+    });
+    grid.appendChild(el);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════════════════════
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  if (USERS[u] && USERS[u] === p) {
+    currentUser = u;
+    sessionStorage.setItem('7xhub_user', u);
+    err.classList.remove('show');
+    showApp();
+  } else {
+    err.classList.add('show');
+    document.getElementById('login-pass').style.borderColor = 'var(--red)';
+    setTimeout(() => document.getElementById('login-pass').style.borderColor = '', 1500);
+  }
+}
+
+function showApp() {
+  document.getElementById('login-page').classList.add('hidden');
+  document.getElementById('nav-username').textContent = currentUser;
+  updatePreview();
+}
+
+function doLogout() {
+  sessionStorage.removeItem('7xhub_user');
+  currentUser = null;
+  document.getElementById('login-page').classList.remove('hidden');
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+// ════════════════════════════════════════════════════════════════
+//  STEPS
+// ════════════════════════════════════════════════════════════════
+function goStep(n) {
+  // Validate
+  if (n > currentStep) {
+    if (currentStep === 1 && !selectedChannel) {
+      showToast('❗ Sélectionne un salon !', 'error'); return;
+    }
+    if (currentStep === 2) {
+      if (!document.getElementById('embed-title').value.trim()) {
+        showToast('❗ Le titre est obligatoire !', 'error'); return;
+      }
+      if (!document.getElementById('embed-desc').value.trim()) {
+        showToast('❗ La description est obligatoire !', 'error'); return;
+      }
     }
   }
-  body.scrollTop = body.scrollHeight;
-}
-function clearTerminal() {
-  document.getElementById('terminalBody').innerHTML = '<div class="t-line"><span class="t-info">Console effacée.</span></div>';
+
+  document.getElementById('step-' + currentStep).style.display = 'none';
+  const prevInd = document.getElementById('step-ind-' + currentStep);
+  prevInd.classList.remove('active');
+  if (n > currentStep) prevInd.classList.add('done');
+  else prevInd.classList.remove('done');
+
+  currentStep = n;
+  const s = document.getElementById('step-' + n);
+  s.style.display = '';
+  s.style.animation = 'none';
+  setTimeout(() => { s.style.animation = 'fadeIn 0.4s ease'; }, 10);
+  document.getElementById('step-ind-' + n).classList.add('active');
+
+  if (n === 5) updatePreview();
+  window.scrollTo({ top: 200, behavior: 'smooth' });
 }
 
-/* ── CHARTS ── */
-const chartDefaults = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(10,5,21,0.9)', borderColor: 'rgba(124,58,237,0.4)', borderWidth: 1, titleFont: { family: 'Share Tech Mono', size: 11 }, bodyFont: { family: 'Share Tech Mono', size: 11 }, titleColor: '#c4b5fd', bodyColor: '#a78bfa', padding: 10 } },
-  scales: {
-    x: { grid: { color: 'rgba(124,58,237,0.08)', drawBorder: false }, ticks: { color: '#4a4268', font: { family: 'Share Tech Mono', size: 9 }, maxTicksLimit: 6 }, border: { display: false } },
-    y: { grid: { color: 'rgba(124,58,237,0.08)', drawBorder: false }, ticks: { color: '#4a4268', font: { family: 'Share Tech Mono', size: 9 }, maxTicksLimit: 5 }, border: { display: false } }
+// ════════════════════════════════════════════════════════════════
+//  COLOR
+// ════════════════════════════════════════════════════════════════
+function pickColor(el) {
+  document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  embedColor = el.dataset.color;
+  updatePreview();
+}
+function customColor(input) {
+  embedColor = input.value;
+  document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
+  updatePreview();
+}
+
+// ════════════════════════════════════════════════════════════════
+//  IMAGE
+// ════════════════════════════════════════════════════════════════
+function handleImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    imageBase64 = ev.target.result;
+    document.getElementById('img-preview-el').src = imageBase64;
+    document.getElementById('img-preview-wrap').style.display = 'block';
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+}
+function removeImage() {
+  imageBase64 = null;
+  document.getElementById('img-preview-el').src = '';
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  updatePreview();
+}
+
+// ════════════════════════════════════════════════════════════════
+//  PREVIEW
+// ════════════════════════════════════════════════════════════════
+function updatePreview() {
+  const title = document.getElementById('embed-title')?.value || '';
+  const desc = document.getElementById('embed-desc')?.value || '';
+  const author = document.getElementById('embed-author')?.value || '';
+  const footer = document.getElementById('embed-footer')?.value || '';
+  const imgUrl = document.getElementById('embed-img-url')?.value || '';
+  const pingEvery = document.getElementById('toggle-everyone')?.classList.contains('on');
+  const showDate = document.getElementById('toggle-date')?.classList.contains('on');
+  const showUser = document.getElementById('toggle-user')?.classList.contains('on');
+
+  document.getElementById('preview-bar').style.background = embedColor;
+  document.getElementById('preview-title').textContent = title || 'Titre de l\'embed';
+  document.getElementById('preview-desc').textContent = desc || 'Description ici...';
+
+  const pingEl = document.getElementById('preview-ping');
+  pingEl.style.display = pingEvery ? 'inline-block' : 'none';
+
+  const authorEl = document.getElementById('preview-author');
+  const authorText = document.getElementById('preview-author-text');
+  const authorVal = (showUser && currentUser ? currentUser + (author ? ' • ' + author : '') : author);
+  if (authorVal) {
+    authorEl.style.display = 'flex';
+    authorText.textContent = authorVal;
+  } else {
+    authorEl.style.display = 'none';
   }
-};
 
-function makeGrad(ctx, c1, c2) {
-  const g = ctx.createLinearGradient(0, 0, 0, 200);
-  g.addColorStop(0, c1); g.addColorStop(1, c2); return g;
+  const imgEl = document.getElementById('preview-image');
+  const src = imageBase64 || imgUrl;
+  if (src) { imgEl.src = src; imgEl.style.display = 'block'; }
+  else { imgEl.style.display = 'none'; }
+
+  const footerEl = document.getElementById('preview-footer');
+  const parts = [];
+  if (footer) parts.push(footer);
+  if (showDate) parts.push(new Date().toLocaleString('fr-FR'));
+  footerEl.textContent = parts.join('  •  ');
+  footerEl.style.display = parts.length ? 'block' : 'none';
 }
 
-const hours = Array.from({length:24}, (_,i) => `${i}:00`);
-const cpuData = [8,12,15,10,9,14,18,22,28,32,25,30,24,20,26,31,28,22,19,24,26,23,25,24];
-const ramData = [300,320,340,310,305,330,380,440,510,540,490,520,512,480,510,530,520,500,495,510,515,505,508,512];
+// ════════════════════════════════════════════════════════════════
+//  SEND
+// ════════════════════════════════════════════════════════════════
+async function sendWebhook() {
+  if (!selectedChannel) { showToast('❗ Aucun salon sélectionné', 'error'); return; }
 
-// CPU Chart
-const cpuCtx = document.getElementById('cpuChart').getContext('2d');
-new Chart(cpuCtx, {
-  type: 'line',
-  data: {
-    labels: hours,
-    datasets: [{
-      data: cpuData,
-      borderColor: '#8b5cf6',
-      borderWidth: 2,
-      backgroundColor: makeGrad(cpuCtx, 'rgba(124,58,237,0.25)', 'rgba(124,58,237,0.01)'),
-      fill: true,
-      tension: 0.45,
-      pointRadius: 0,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: '#8b5cf6'
-    }]
-  },
-  options: { ...JSON.parse(JSON.stringify(chartDefaults)), scales: { ...JSON.parse(JSON.stringify(chartDefaults.scales)), y: { ...JSON.parse(JSON.stringify(chartDefaults.scales.y)), max: 100, ticks: { ...JSON.parse(JSON.stringify(chartDefaults.scales.y.ticks)), callback: v => v+'%' } } } }
-});
+  const title = document.getElementById('embed-title').value.trim();
+  const desc = document.getElementById('embed-desc').value.trim();
+  if (!title || !desc) { showToast('❗ Titre et description requis', 'error'); return; }
 
-// RAM Chart
-const ramCtx = document.getElementById('ramChart').getContext('2d');
-new Chart(ramCtx, {
-  type: 'line',
-  data: {
-    labels: hours,
-    datasets: [{
-      data: ramData,
-      borderColor: '#ec4899',
-      borderWidth: 2,
-      backgroundColor: makeGrad(ramCtx, 'rgba(219,39,119,0.25)', 'rgba(219,39,119,0.01)'),
-      fill: true,
-      tension: 0.45,
-      pointRadius: 0,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: '#ec4899'
-    }]
-  },
-  options: { ...JSON.parse(JSON.stringify(chartDefaults)), scales: { ...JSON.parse(JSON.stringify(chartDefaults.scales)), y: { ...JSON.parse(JSON.stringify(chartDefaults.scales.y)), max: 1000, ticks: { ...JSON.parse(JSON.stringify(chartDefaults.scales.y.ticks)), callback: v => v+'M' } } } }
-});
+  const author = document.getElementById('embed-author').value.trim();
+  const footer = document.getElementById('embed-footer').value.trim();
+  const imgUrl = document.getElementById('embed-img-url').value.trim();
+  const pingEvery = document.getElementById('toggle-everyone').classList.contains('on');
+  const showDate = document.getElementById('toggle-date').classList.contains('on');
+  const showUser = document.getElementById('toggle-user').classList.contains('on');
+  const whName = document.getElementById('webhook-name').value.trim() || '7x | Hub';
+  const whAvatar = document.getElementById('webhook-avatar').value.trim();
 
-// Network Chart
-const netCtx = document.getElementById('networkChart').getContext('2d');
-const netLabels = Array.from({length:30}, (_,i) => i+'s');
-const netIn  = Array.from({length:30}, () => Math.random()*20+5);
-const netOut = Array.from({length:30}, () => Math.random()*12+2);
-const networkChart = new Chart(netCtx, {
-  type: 'line',
-  data: {
-    labels: netLabels,
-    datasets: [
-      { label:'↓ Entrant', data: netIn,  borderColor: '#06b6d4', borderWidth: 1.5, backgroundColor: 'rgba(6,182,212,0.08)', fill:true, tension:0.4, pointRadius:0 },
-      { label:'↑ Sortant', data: netOut, borderColor: '#a78bfa', borderWidth: 1.5, backgroundColor: 'rgba(167,139,250,0.06)', fill:true, tension:0.4, pointRadius:0 }
-    ]
-  },
-  options: { ...JSON.parse(JSON.stringify(chartDefaults)), plugins: { ...JSON.parse(JSON.stringify(chartDefaults.plugins)), legend: { display:true, labels: { color:'#7c6fa0', font:{ family:'Share Tech Mono', size:10 }, boxWidth:10 } } }, scales: { ...JSON.parse(JSON.stringify(chartDefaults.scales)), y: { ...JSON.parse(JSON.stringify(chartDefaults.scales.y)), ticks: { ...JSON.parse(JSON.stringify(chartDefaults.scales.y.ticks)), callback: v => v+'KB/s' } } } }
-});
+  // Convert hex color to decimal for Discord
+  const colorInt = parseInt(embedColor.replace('#', ''), 16);
 
-/* ── LIVE UPDATES ── */
-setInterval(() => {
-  // Simulate CPU jitter
-  const newCpu = Math.max(5, Math.min(95, cpuData[cpuData.length-1] + (Math.random()-0.5)*5));
-  cpuData.push(Math.round(newCpu)); cpuData.shift();
-  document.getElementById('cpuVal').innerHTML = Math.round(newCpu) + '<span style="font-size:16px;color:var(--text-muted)">%</span>';
+  // Build embed
+  const embed = {
+    title,
+    description: desc,
+    color: colorInt,
+  };
 
-  // Network live
-  networkChart.data.datasets[0].data.push(Math.random()*22+4);
-  networkChart.data.datasets[0].data.shift();
-  networkChart.data.datasets[1].data.push(Math.random()*14+2);
-  networkChart.data.datasets[1].data.shift();
-  networkChart.update('none');
+  const authorName = (showUser && currentUser)
+    ? (currentUser + (author ? ' • ' + author : ''))
+    : author;
+  if (authorName) embed.author = { name: authorName };
 
-  // Player count jitter
-  const p = Math.max(8, Math.min(20, 12 + Math.round((Math.random()-0.5)*3)));
-  document.getElementById('playersVal').innerHTML = p + '<span style="font-size:14px;color:var(--text-muted)">/20</span>';
-}, 2000);
+  const imageSource = imageBase64 || imgUrl;
+  if (imageSource && !imageBase64) embed.image = { url: imageSource };
 
-/* ── WELCOME TOAST ── */
-setTimeout(() => showToast('success', 'Bienvenue sur Astral ™', 'Galaxy Theme activé ✨'), 800);
-setTimeout(() => showToast('info',  'Server-de-X77', '12 joueurs connectés · TPS 19.8'), 2000);
+  const footerParts = [];
+  if (footer) footerParts.push(footer);
+  if (showDate) footerParts.push(new Date().toLocaleString('fr-FR'));
+  if (footerParts.length) embed.footer = { text: footerParts.join('  •  ') };
+  if (showDate) embed.timestamp = new Date().toISOString();
+
+  const payload = {
+    username: whName,
+    embeds: [embed]
+  };
+  if (whAvatar) payload.avatar_url = whAvatar;
+  if (pingEvery) payload.content = '@everyone';
+
+  // Disable button
+  const btn = document.getElementById('send-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(selectedChannel.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok || res.status === 204) {
+      // Add to history
+      history.unshift({
+        channel: selectedChannel.label,
+        title,
+        time: new Date().toLocaleTimeString('fr-FR'),
+        user: currentUser
+      });
+      renderHistory();
+      document.getElementById('success-channel-name').textContent = selectedChannel.label;
+      document.getElementById('success-overlay').classList.add('show');
+    } else {
+      const err = await res.text();
+      showToast('❌ Erreur Discord: ' + res.status, 'error');
+      console.error(err);
+    }
+  } catch(e) {
+    showToast('❌ Erreur réseau: ' + e.message, 'error');
+  }
+
+  btn.classList.remove('loading');
+  btn.disabled = false;
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (!history.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;font-family:\'Inter\',sans-serif;">Aucune annonce envoyée.</div>';
+    return;
+  }
+  el.innerHTML = history.map(h => `
+    <div class="history-item">
+      <div class="hi-left">
+        <span class="hi-channel">${h.channel}</span>
+        <span class="hi-title">— ${h.title.substring(0,40)}${h.title.length>40?'…':''}</span>
+      </div>
+      <span class="hi-time">par ${h.user} • ${h.time}</span>
+    </div>
+  `).join('');
+}
+
+function resetForm() {
+  document.getElementById('success-overlay').classList.remove('show');
+  // Reset all fields
+  document.getElementById('embed-title').value = '';
+  document.getElementById('embed-desc').value = '';
+  document.getElementById('embed-author').value = '';
+  document.getElementById('embed-footer').value = '';
+  document.getElementById('embed-img-url').value = '';
+  document.getElementById('webhook-name').value = '7x | Hub';
+  document.getElementById('webhook-avatar').value = '';
+  imageBase64 = null;
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  embedColor = '#5865f2';
+  document.querySelectorAll('.channel-option').forEach(x => x.classList.remove('selected'));
+  document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
+  document.querySelector('.color-chip[data-color="#5865f2"]').classList.add('selected');
+  ['toggle-everyone','toggle-pin'].forEach(id => document.getElementById(id).classList.remove('on'));
+  ['toggle-date','toggle-user'].forEach(id => document.getElementById(id).classList.add('on'));
+  selectedChannel = null;
+  // Go back to step 1
+  document.getElementById('step-' + currentStep).style.display = 'none';
+  document.getElementById('step-ind-' + currentStep).classList.remove('active','done');
+  for (let i=1;i<=5;i++) {
+    document.getElementById('step-ind-'+i).classList.remove('active','done');
+  }
+  currentStep = 1;
+  document.getElementById('step-1').style.display = '';
+  document.getElementById('step-ind-1').classList.add('active');
+  updatePreview();
+}
+
+// ════════════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
 </script>
 </body>
 </html>
