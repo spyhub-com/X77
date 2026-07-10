@@ -1,1539 +1,471 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>7x | Dev Tools</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #080b10;
-    --panel: #0d1117;
-    --border: #1a2332;
-    --accent: #00d4ff;
-    --accent2: #7b2fff;
-    --green: #00ff88;
-    --red: #ff3366;
-    --yellow: #ffcc00;
-    --text: #c9d1d9;
-    --muted: #4a5568;
-    --glow: 0 0 20px rgba(0,212,255,0.3);
-    --glow2: 0 0 20px rgba(123,47,255,0.3);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* HEADER */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 22px;
-    font-weight: 900;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 2px;
-    text-shadow: none;
-    filter: drop-shadow(0 0 10px rgba(0,212,255,0.4));
-  }
-
-  .logo span {
-    opacity: 0.5;
-    font-size: 13px;
-    font-family: 'JetBrains Mono', monospace;
-    background: none;
-    -webkit-text-fill-color: var(--muted);
-    filter: none;
-    margin-left: 10px;
-    font-weight: 300;
-  }
-
-  .status-bar {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    display: inline-block;
-    margin-right: 5px;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  /* TABS */
-  .tabs {
-    display: flex;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-    padding: 0 10px;
-  }
-
-  .tab {
-    padding: 10px 20px;
-    font-size: 12px;
-    cursor: pointer;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    user-select: none;
-    letter-spacing: 0.5px;
-  }
-
-  .tab:hover { color: var(--text); }
-  .tab.active {
-    color: var(--accent);
-    border-bottom: 2px solid var(--accent);
-  }
-
-  /* MAIN LAYOUT */
-  .main {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: 220px;
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    flex-shrink: 0;
-  }
-
-  .sidebar-section {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sidebar-title {
-    font-size: 10px;
-    color: var(--accent2);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-
-  .snippet-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: 1px solid transparent;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-bottom: 3px;
-  }
-
-  .snippet-btn:hover {
-    background: rgba(0,212,255,0.07);
-    border-color: rgba(0,212,255,0.2);
-    color: var(--accent);
-  }
-
-  .snippet-btn .tag {
-    font-size: 9px;
-    color: var(--accent2);
-    float: right;
-    margin-top: 1px;
-  }
-
-  /* EDITOR AREA */
-  .editor-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .editor-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #0a0e14;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .editor-toolbar button {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 5px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .editor-toolbar button:hover {
-    background: rgba(0,212,255,0.1);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .editor-toolbar button.primary {
-    background: rgba(0,212,255,0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .file-name {
-    font-size: 12px;
-    color: var(--muted);
-    margin-left: auto;
-  }
-
-  /* CODE EDITOR */
-  .code-wrapper {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .line-numbers {
-    width: 45px;
-    background: #090d13;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 20px;
-    padding: 12px 8px;
-    text-align: right;
-    user-select: none;
-    overflow: hidden;
-    flex-shrink: 0;
-    border-right: 1px solid var(--border);
-  }
-
-  #code-editor {
-    flex: 1;
-    background: #090d13;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 20px;
-    padding: 12px;
-    border: none;
-    outline: none;
-    resize: none;
-    tab-size: 2;
-    overflow-y: auto;
-    caret-color: var(--accent);
-  }
-
-  #code-editor::selection { background: rgba(0,212,255,0.2); }
-
-  /* AUTOCOMPLETE */
-  #autocomplete {
-    position: absolute;
-    background: #131a24;
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    box-shadow: var(--glow), 0 8px 30px rgba(0,0,0,0.5);
-    z-index: 100;
-    min-width: 220px;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-  }
-
-  .ac-item {
-    padding: 7px 14px;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.1s;
-  }
-
-  .ac-item:hover, .ac-item.selected {
-    background: rgba(0,212,255,0.12);
-    color: var(--accent);
-  }
-
-  .ac-item .ac-icon {
-    font-size: 10px;
-    background: rgba(123,47,255,0.3);
-    color: var(--accent2);
-    padding: 2px 5px;
-    border-radius: 3px;
-    flex-shrink: 0;
-  }
-
-  .ac-item .ac-desc {
-    color: var(--muted);
-    font-size: 10px;
-    margin-left: auto;
-  }
-
-  /* BOTTOM PANEL */
-  .bottom-panel {
-    height: 220px;
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .terminal-tabs {
-    display: flex;
-    background: #0a0e14;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .term-tab {
-    padding: 6px 16px;
-    font-size: 11px;
-    cursor: pointer;
-    color: var(--muted);
-    border-right: 1px solid var(--border);
-    user-select: none;
-    transition: all 0.15s;
-  }
-  .term-tab.active { color: var(--green); background: rgba(0,255,136,0.05); }
-  .term-tab:hover { color: var(--text); }
-
-  /* TERMINAL */
-  #terminal {
-    flex: 1;
-    background: #060a0f;
-    padding: 8px 12px;
-    overflow-y: auto;
-    font-size: 12px;
-    line-height: 18px;
-  }
-
-  .term-line {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 2px;
-  }
-
-  .term-prompt { color: var(--green); flex-shrink: 0; }
-  .term-output { color: var(--text); }
-  .term-error { color: var(--red); }
-  .term-info { color: var(--accent); }
-  .term-warn { color: var(--yellow); }
-
-  .term-input-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 0;
-  }
-
-  #term-input {
-    flex: 1;
-    background: none;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    caret-color: var(--green);
-  }
-
-  /* LUA INFO PANEL */
-  .info-panel {
-    width: 260px;
-    background: var(--panel);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .info-header {
-    padding: 10px 14px;
-    font-size: 10px;
-    color: var(--accent2);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    font-weight: 600;
-  }
-
-  #info-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px;
-    font-size: 11px;
-    line-height: 18px;
-  }
-
-  .info-fn {
-    background: rgba(0,212,255,0.05);
-    border: 1px solid rgba(0,212,255,0.15);
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-
-  .info-fn-name {
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
-
-  .info-fn-sig {
-    color: var(--accent2);
-    font-size: 10px;
-    margin-bottom: 6px;
-  }
-
-  .info-fn-desc {
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 16px;
-  }
-
-  .info-fn-example {
-    margin-top: 8px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 4px;
-    padding: 6px 8px;
-    color: var(--green);
-    font-size: 10px;
-  }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-  /* SCAN LINES EFFECT */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 1000;
-  }
-
-  .glow-text { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-  .hidden { display: none !important; }
-
-  /* HIGHLIGHT KEYWORDS */
-  .kw { color: #ff7b72; }
-  .fn { color: #79c0ff; }
-  .str { color: #a5d6ff; }
-  .num { color: #f2cc60; }
-  .com { color: #8b949e; font-style: italic; }
-
-  /* Lua reference quick list */
-  .ref-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    cursor: pointer;
-    transition: color 0.1s;
-  }
-  .ref-item:hover { color: var(--accent); }
-  .ref-item .ref-cat { font-size: 9px; color: var(--accent2); }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpyHub Obfuscator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(192, 132, 252, .18), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(168, 85, 247, .14), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(126, 34, 206, .18), transparent 30%),
+        linear-gradient(180deg, #040208 0%, #080510 36%, #050309 100%);
+      color: #f5ecff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    ::selection { background: rgba(192, 132, 252, .35); color: #fff; }
+    .glass {
+      background: rgba(15, 10, 24, .55);
+      border: 1px solid rgba(192, 132, 252, .16);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .03);
+      backdrop-filter: blur(18px);
+    }
+    .grad-text {
+      background: linear-gradient(135deg, #f5d0fe 0%, #d8b4fe 22%, #c084fc 45%, #a855f7 70%, #e9d5ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(24px);
+      pointer-events: none;
+      opacity: .45;
+    }
+    .grid-overlay {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .02) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .85), rgba(0, 0, 0, 0));
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .85), rgba(0, 0, 0, 0));
+    }
+    .noise {
+      position: absolute;
+      inset: 0;
+      opacity: .09;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='.52'/%3E%3C/svg%3E");
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .card-hover {
+      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      border-color: rgba(192, 132, 252, .3);
+      box-shadow: 0 18px 55px rgba(168, 85, 247, .12), inset 0 1px 0 rgba(255, 255, 255, .04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #c026d3 0%, #a855f7 38%, #7e22ce 100%);
+      box-shadow: 0 12px 35px rgba(168, 85, 247, .24);
+      transition: filter .2s, transform .2s;
+    }
+    .btn-primary:hover {
+      filter: saturate(1.08);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(192, 132, 252, .16);
+      transition: background .2s;
+    }
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .07);
+    }
+    .code-area {
+      min-height: 240px;
+      resize: none;
+      background: linear-gradient(180deg, rgba(10, 6, 18, .9), rgba(6, 3, 10, .98));
+      color: #f5d0fe;
+      caret-color: #e879f9;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+    .code-area::placeholder {
+      color: rgba(216, 180, 254, .45);
+    }
+    .input-glow:focus {
+      box-shadow: 0 0 0 1px rgba(192, 132, 252, .35), 0 0 0 6px rgba(168, 85, 247, .08);
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">7x <span>| dev tools v1.0</span></div>
-  <div class="status-bar">
-    <span><span class="status-dot"></span>Lua 5.4</span>
-    <span>UTF-8</span>
-    <span id="cursor-pos">Ln 1, Col 1</span>
-  </div>
-</header>
+  <div class="fixed inset-0 pointer-events-none grid-overlay"></div>
+  <div class="noise fixed inset-0"></div>
+  <div class="orb w-72 h-72 bg-violet-500/30 top-[-6rem] left-[-4rem]"></div>
+  <div class="orb w-96 h-96 bg-fuchsia-500/20 top-[20rem] right-[-8rem]"></div>
+  <div class="orb w-80 h-80 bg-purple-700/25 bottom-[12rem] left-[15%]"></div>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('editor')">📝 Éditeur</div>
-  <div class="tab" onclick="switchTab('terminal')">⚡ Terminal</div>
-  <div class="tab" onclick="switchTab('ref')">📖 Référence</div>
-</div>
-
-<div class="main">
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-title">Snippets Rapides</div>
-
-      <button class="snippet-btn" onclick="insertSnippet('if')">if / elseif <span class="tag">ctrl</span></button>
-      <button class="snippet-btn" onclick="insertSnippet('for')">for loop <span class="tag">lp</span></button>
-      <button class="snippet-btn" onclick="insertSnippet('while')">while loop</button>
-      <button class="snippet-btn" onclick="insertSnippet('function')">function</button>
-      <button class="snippet-btn" onclick="insertSnippet('table')">table {}</button>
-      <button class="snippet-btn" onclick="insertSnippet('class')">class (OOP)</button>
-      <button class="snippet-btn" onclick="insertSnippet('pcall')">pcall / error</button>
-      <button class="snippet-btn" onclick="insertSnippet('coroutine')">coroutine</button>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-title">FiveM / Roblox</div>
-      <button class="snippet-btn" onclick="insertSnippet('event')">RegisterNetEvent</button>
-      <button class="snippet-btn" onclick="insertSnippet('trigger')">TriggerEvent</button>
-      <button class="snippet-btn" onclick="insertSnippet('thread')">CreateThread</button>
-      <button class="snippet-btn" onclick="insertSnippet('wait')">Wait / Citizen</button>
-      <button class="snippet-btn" onclick="insertSnippet('export')">exports</button>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-title">Actions</div>
-      <button class="snippet-btn" onclick="analyzeCode()">🔍 Analyser</button>
-      <button class="snippet-btn" onclick="formatCode()">✨ Formater</button>
-      <button class="snippet-btn" onclick="clearEditor()">🗑️ Effacer</button>
-      <button class="snippet-btn" onclick="copyCode()">📋 Copier</button>
-    </div>
-  </div>
-
-  <!-- EDITOR AREA -->
-  <div class="editor-area">
-    <div class="editor-toolbar">
-      <button class="primary" onclick="analyzeCode()">▶ Analyser</button>
-      <button onclick="formatCode()">✦ Formater</button>
-      <button onclick="insertSnippet('function')">+ Fonction</button>
-      <button onclick="insertSnippet('for')">+ Boucle</button>
-      <button onclick="askAI()">🤖 Ask AI</button>
-      <span class="file-name">script.lua</span>
-    </div>
-
-    <div class="code-wrapper">
-      <div class="line-numbers" id="line-numbers">1</div>
-      <textarea id="code-editor" spellcheck="false" placeholder="-- Écris ton code Lua ici...
--- L'autocomplétion s'active en tapant !
-
-print('Hello 7x!')"></textarea>
-      <div id="autocomplete"></div>
-    </div>
-
-    <!-- TERMINAL BOTTOM -->
-    <div class="bottom-panel">
-      <div class="terminal-tabs">
-        <div class="term-tab active">Terminal</div>
-        <div class="term-tab" onclick="clearTerminal()">Effacer</div>
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-[#050309]/75 backdrop-blur-xl">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <a href="#" class="flex items-center gap-3 text-sm font-semibold tracking-[0.24em] text-white/90">
+        <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 via-purple-500 to-violet-700 shadow-[0_12px_35px_rgba(168,85,247,.25)]">⛧</span>
+        <span class="leading-none">
+          <span class="block text-[10px] uppercase text-white/45">Premium Lua Protection</span>
+          <span class="block text-base tracking-[0.18em]">SPYHUB OBFUSCATOR</span>
+        </span>
+      </a>
+      <div class="hidden items-center gap-3 md:flex">
+        <a href="#features" class="rounded-full px-4 py-2 text-sm text-white/70 transition hover:text-white">Features</a>
+        <a href="#why" class="rounded-full px-4 py-2 text-sm text-white/70 transition hover:text-white">Why SpyHub</a>
+        <a href="https://discord.gg/b8QsvrMCNq" target="_blank" rel="noreferrer" class="rounded-full border border-white/10 px-4 py-2 text-sm text-white/85 transition hover:border-fuchsia-300/40 hover:bg-white/5">Discord</a>
+        <a href="#demo" class="rounded-full btn-primary px-5 py-2.5 text-sm font-semibold text-white transition">Try Now</a>
       </div>
-      <div id="terminal">
-        <div class="term-line"><span class="term-info">7x Dev Tools — Prêt. Tape "help" pour les commandes.</span></div>
-        <div class="term-line"><span class="term-prompt">lua></span><span class="term-output"> Bienvenue dans le terminal Lua 7x !</span></div>
+      <a href="#demo" class="md:hidden rounded-full btn-primary px-4 py-2 text-sm font-semibold text-white transition">Try Now</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="relative overflow-hidden">
+      <div class="mx-auto max-w-7xl px-4 pb-12 pt-16 sm:px-6 sm:pb-16 lg:px-8 lg:pt-24">
+        <div class="reveal grid items-center gap-14 lg:grid-cols-[1.15fr_.85fr] show">
+          <div class="max-w-3xl">
+            <h1 class="max-w-3xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
+              Make your code <span class="grad-text">nearly irreversible</span>.
+            </h1>
+            <p class="mt-5 max-w-xl text-base text-white/65">
+              Multi-layer obfuscation designed to break analysis, conceal logic, and protect what truly matters.
+            </p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href="#demo" class="inline-flex items-center justify-center rounded-full btn-primary px-7 py-4 text-sm font-semibold text-white transition">Obfuscate Code</a>
+              <a href="https://discord.gg/b8QsvrMCNq" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-full btn-ghost px-7 py-4 text-sm font-semibold text-white/90 transition hover:bg-white/7">Join Community</a>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-fuchsia-500/12 via-purple-500/10 to-transparent blur-3xl"></div>
+            <div class="relative glass rounded-[2rem] p-5 sm:p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs uppercase tracking-[0.3em] text-white/45">Protection Panel</div>
+                  <div class="mt-2 text-xl font-semibold text-white">SpyHub Engine</div>
+                </div>
+                <div class="rounded-full border border-fuchsia-300/20 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200">Active</div>
+              </div>
+              <div class="mt-6 space-y-4">
+                <div class="rounded-2xl border border-white/8 bg-white/4 p-4">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-white/60">Virtualization</span>
+                    <span class="text-fuchsia-200">99%</span>
+                  </div>
+                  <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/6">
+                    <div class="h-full w-[99%] rounded-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-violet-700"></div>
+                  </div>
+                </div>
+                <div class="rounded-2xl border border-white/8 bg-white/4 p-4">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-white/60">Static Analysis Resistance</span>
+                    <span class="text-fuchsia-200">95%</span>
+                  </div>
+                  <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/6">
+                    <div class="h-full w-[95%] rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-purple-700"></div>
+                  </div>
+                </div>
+                <div class="rounded-2xl border border-white/8 bg-white/4 p-4">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-white/60">Execution Overhead</span>
+                    <span class="text-fuchsia-200">Low</span>
+                  </div>
+                  <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/6">
+                    <div class="h-full w-[27%] rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-700"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="rounded-2xl border border-white/8 bg-black/20 p-4">
+                  <div class="text-xs uppercase tracking-[0.24em] text-white/40">Owner</div>
+                  <div class="mt-2 text-lg font-semibold text-white">@spy.dev</div>
+                </div>
+                <div class="rounded-2xl border border-white/8 bg-black/20 p-4">
+                  <div class="text-xs uppercase tracking-[0.24em] text-white/40">Decoding</div>
+                  <div class="mt-2 text-lg font-semibold text-white">Dynamic</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="term-input-row" style="padding: 4px 12px; border-top: 1px solid var(--border);">
-        <span class="term-prompt">lua></span>
-        <input id="term-input" placeholder="Tape une commande..." autocomplete="off" />
+    </section>
+
+    <section id="features" class="reveal mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="max-w-2xl">
+        <div class="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-200/80">Features</div>
+        <h2 class="mt-4 text-3xl font-black tracking-[-0.03em] text-white sm:text-4xl">
+          Layered protection designed to increase analysis complexity without sacrificing clarity.
+        </h2>
+        <p class="mt-4 text-base leading-8 text-white/65">
+          A technical and straightforward approach: each layer reinforces the protected code's resilience while maintaining a clean experience.
+        </p>
       </div>
-    </div>
-  </div>
-
-  <!-- INFO PANEL -->
-  <div class="info-panel">
-    <div class="info-header">⚡ Doc Contextuelle</div>
-    <div id="info-content">
-      <div style="color: var(--muted); font-size: 11px; padding: 4px 0;">
-        Commence à taper pour voir la documentation Lua en temps réel...
+      <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">⛧</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Virtualization Layer</h3>
+          <p class="mt-3 leading-7 text-white/64">Converts parts of the script into an internal representation that's hard to read and reconstruct.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🔒</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">String Encryption</h3>
+          <p class="mt-3 leading-7 text-white/64">Encrypts all string literals with a dynamic key to hide their purpose.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🌀</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Control Flow Flattening</h3>
+          <p class="mt-3 leading-7 text-white/64">Restructures conditional logic to make tracking more difficult.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🧩</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Dead Code Injection</h3>
+          <p class="mt-3 leading-7 text-white/64">Inserts harmless instructions that increase noise for analysts.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🛡️</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Anti‑Debugging</h3>
+          <p class="mt-3 leading-7 text-white/64">Detects debugging environments and alters behavior to mislead.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">⚡</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Obfuscated Constants</h3>
+          <p class="mt-3 leading-7 text-white/64">Hides numeric and boolean values using complex expressions.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🧬</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Self‑Modifying Code</h3>
+          <p class="mt-3 leading-7 text-white/64">Some parts of the script rewrite themselves during execution.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">📦</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Compression & Encoding</h3>
+          <p class="mt-3 leading-7 text-white/64">Compresses and encodes the code to reduce size and readability.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🔐</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">License Management</h3>
+          <p class="mt-3 leading-7 text-white/64">Binds the script to a license file to prevent unauthorized use.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">📊</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Advanced Renaming</h3>
+          <p class="mt-3 leading-7 text-white/64">Renames all variables and functions with dynamically generated names.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🔄</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Junk Instructions</h3>
+          <p class="mt-3 leading-7 text-white/64">Adds pointless operations to increase analysis time.</p>
+        </article>
+        <article class="card-hover glass rounded-[1.75rem] p-6">
+          <div class="text-2xl">🌐</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Multi‑Layer Obfuscation</h3>
+          <p class="mt-3 leading-7 text-white/64">Combines multiple techniques in a single pass for enhanced protection.</p>
+        </article>
       </div>
-    </div>
-  </div>
+    </section>
 
-</div>
+    <section id="why" class="reveal mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="max-w-2xl">
+        <div class="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-200/80">Why SpyHub</div>
+        <h2 class="mt-4 text-3xl font-black tracking-[-0.03em] text-white sm:text-4xl">
+          Built for those who demand <span class="grad-text">results</span>.
+        </h2>
+        <p class="mt-4 text-base leading-8 text-white/65">
+          This isn't just a simple obfuscation tool. It's a protection ecosystem that prioritizes performance and security.
+        </p>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="glass rounded-[2rem] p-6">
+          <div class="text-2xl">⚙️</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Optimized Performance</h3>
+          <p class="mt-3 leading-7 text-white/65">Runtime overhead is minimal, even with all layers activated.</p>
+        </div>
+        <div class="glass rounded-[2rem] p-6">
+          <div class="text-2xl">🧠</div>
+          <h3 class="mt-4 text-xl font-semibold text-white">Constant Updates</h3>
+          <p class="mt-3 leading-7 text-white/65">Obfuscation patterns are regularly updated to counter new analysis techniques.</p>
+        </div>
+      </div>
+    </section>
 
-<script>
-// =================== LUA DATABASE ===================
-const LUA_DB = {
-  // Fonctions built-in
-  'print': {
-    sig: 'print(v1, v2, ...)',
-    cat: 'Built-in',
-    desc: 'Affiche les valeurs dans la sortie standard, séparées par des tabulations.',
-    example: 'print("Hello", 42, true)',
-    color: '#00d4ff'
-  },
-  'tostring': {
-    sig: 'tostring(v)',
-    cat: 'Built-in',
-    desc: 'Convertit n\'importe quelle valeur en string.',
-    example: 'tostring(42) --> "42"'
-  },
-  'tonumber': {
-    sig: 'tonumber(e [, base])',
-    cat: 'Built-in',
-    desc: 'Convertit en nombre. Base optionnelle (2-36).',
-    example: 'tonumber("10", 16) --> 16'
-  },
-  'type': {
-    sig: 'type(v)',
-    cat: 'Built-in',
-    desc: 'Retourne le type de v en string: "nil","number","string","boolean","table","function","thread","userdata".',
-    example: 'type(42) --> "number"'
-  },
-  'ipairs': {
-    sig: 'ipairs(t)',
-    cat: 'Itérateur',
-    desc: 'Itère sur les indices consécutifs d\'un tableau (1,2,3...)',
-    example: 'for i, v in ipairs(t) do\n  print(i, v)\nend'
-  },
-  'pairs': {
-    sig: 'pairs(t)',
-    cat: 'Itérateur',
-    desc: 'Itère sur toutes les paires clé-valeur d\'une table.',
-    example: 'for k, v in pairs(t) do\n  print(k, v)\nend'
-  },
-  'pcall': {
-    sig: 'pcall(f, arg1, ...)',
-    cat: 'Erreurs',
-    desc: 'Appelle f en mode protégé. Retourne (true, results) ou (false, erreur).',
-    example: 'local ok, err = pcall(function()\n  error("oops")\nend)'
-  },
-  'error': {
-    sig: 'error(message [, level])',
-    cat: 'Erreurs',
-    desc: 'Lève une erreur. Level indique où l\'erreur est rapportée (1=current, 2=caller).',
-    example: 'error("Valeur invalide", 2)'
-  },
-  'assert': {
-    sig: 'assert(v [, message])',
-    cat: 'Erreurs',
-    desc: 'Vérifie que v est truthy, sinon lève une erreur.',
-    example: 'assert(x > 0, "x doit être positif")'
-  },
-  'rawget': {
-    sig: 'rawget(table, index)',
-    cat: 'Table',
-    desc: 'Lit table[index] sans invoquer les métaméthodes.',
-    example: 'rawget(t, "key")'
-  },
-  'rawset': {
-    sig: 'rawset(table, index, value)',
-    cat: 'Table',
-    desc: 'Écrit table[index] = value sans invoquer les métaméthodes.',
-    example: 'rawset(t, "key", val)'
-  },
-  'select': {
-    sig: 'select(index, ...)',
-    cat: 'Built-in',
-    desc: 'Retourne les arguments à partir de index, ou "#" pour compter.',
-    example: 'select(2, "a","b","c") --> "b","c"'
-  },
-  'unpack': {
-    sig: 'table.unpack(list [, i [, j]])',
-    cat: 'Table',
-    desc: 'Retourne les éléments d\'une table comme valeurs multiples.',
-    example: 'local a, b = table.unpack({10, 20})'
-  },
-  'setmetatable': {
-    sig: 'setmetatable(table, metatable)',
-    cat: 'Méta',
-    desc: 'Définit la métatable d\'une table. Permet OOP, opérateurs, etc.',
-    example: 'setmetatable(obj, MyClass)'
-  },
-  'getmetatable': {
-    sig: 'getmetatable(object)',
-    cat: 'Méta',
-    desc: 'Retourne la métatable de l\'objet, ou nil si aucune.',
-    example: 'local mt = getmetatable(obj)'
-  },
-  'rawequal': { sig: 'rawequal(v1, v2)', cat: 'Built-in', desc: 'Compare sans métaméthodes __eq.', example: 'rawequal(a, b)' },
-  'load': { sig: 'load(chunk [, chunkname [, mode [, env]]])', cat: 'Built-in', desc: 'Compile du code Lua depuis une string.', example: 'load("return 1+1")()' },
-  'dofile': { sig: 'dofile([filename])', cat: 'Built-in', desc: 'Exécute un fichier Lua.', example: 'dofile("script.lua")' },
-  'require': { sig: 'require(modname)', cat: 'Built-in', desc: 'Charge un module Lua. Met en cache.', example: 'local json = require("json")' },
+    <section id="demo" class="reveal mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+        <div>
+          <div class="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-200/80">Interactive</div>
+          <h2 class="mt-4 text-3xl font-black tracking-[-0.03em] text-white sm:text-4xl">
+            Write your script, get a protected version, and share the result instantly.
+          </h2>
+        </div>
+      </div>
+      <div class="mt-8 grid gap-6 lg:grid-cols-2">
+        <div class="glass rounded-[2rem] p-5 sm:p-6">
+          <div class="mb-3 flex items-center justify-between">
+            <div>
+              <div class="text-xs uppercase tracking-[0.28em] text-white/40">Source</div>
+              <div class="mt-1 text-lg font-semibold text-white">Lua Input</div>
+            </div>
+            <div class="rounded-full border border-fuchsia-300/15 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200" id="statusBadge">Ready</div>
+          </div>
+          <textarea id="input" class="code-area input-glow w-full rounded-[1.4rem] border border-white/8 p-4 outline-none transition" placeholder="-- Paste your Lua script here&#10;local value = 'hello world'"></textarea>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <button id="obfuscateBtn" class="btn-primary rounded-full px-5 py-3 text-sm font-semibold text-white transition">Obfuscate</button>
+            <button id="sampleBtn" class="btn-ghost rounded-full px-5 py-3 text-sm font-semibold text-white/80 transition">Load Sample</button>
+            <button id="copyBtn" class="btn-ghost rounded-full px-5 py-3 text-sm font-semibold text-white/80 transition">Copy</button>
+          </div>
+        </div>
+        <div class="glass rounded-[2rem] p-5 sm:p-6">
+          <div class="mb-3 flex items-center justify-between">
+            <div>
+              <div class="text-xs uppercase tracking-[0.28em] text-white/40">Output</div>
+              <div class="mt-1 text-lg font-semibold text-white">Protected Output</div>
+            </div>
+            <div class="rounded-full border border-fuchsia-300/15 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200" id="outputStatus">Inactive</div>
+          </div>
+          <textarea id="output" class="code-area input-glow w-full rounded-[1.4rem] border border-white/8 p-4 outline-none transition" readonly placeholder="-- Obfuscated code will appear here"></textarea>
+        </div>
+      </div>
+    </section>
 
-  // String
-  'string.format': {
-    sig: 'string.format(formatstring, ...)',
-    cat: 'String',
-    desc: 'Formate une string comme sprintf en C. %s=string, %d=int, %f=float, %q=quoted.',
-    example: 'string.format("%s a %d ans", name, age)'
-  },
-  'string.find': {
-    sig: 'string.find(s, pattern [, init [, plain]])',
-    cat: 'String',
-    desc: 'Cherche pattern dans s. Retourne start, end ou nil.',
-    example: 'string.find("hello", "ll") --> 3, 4'
-  },
-  'string.match': {
-    sig: 'string.match(s, pattern [, init])',
-    cat: 'String',
-    desc: 'Cherche pattern et retourne les captures.',
-    example: 'string.match("2024-01", "(%d+)-(%d+)")'
-  },
-  'string.gsub': {
-    sig: 'string.gsub(s, pattern, repl [, n])',
-    cat: 'String',
-    desc: 'Remplace les occurrences de pattern. repl peut être string, table ou fonction.',
-    example: 'string.gsub("hello", "l", "L") --> "heLLo"'
-  },
-  'string.sub': {
-    sig: 'string.sub(s, i [, j])',
-    cat: 'String',
-    desc: 'Retourne la sous-string de i à j. Indices négatifs = depuis la fin.',
-    example: 'string.sub("hello", 2, 4) --> "ell"'
-  },
-  'string.len': { sig: 'string.len(s)', cat: 'String', desc: 'Retourne la longueur de s (équivalent à #s).', example: '#"hello" --> 5' },
-  'string.upper': { sig: 'string.upper(s)', cat: 'String', desc: 'Convertit en majuscules.', example: 'string.upper("hi") --> "HI"' },
-  'string.lower': { sig: 'string.lower(s)', cat: 'String', desc: 'Convertit en minuscules.', example: 'string.lower("HI") --> "hi"' },
-  'string.rep': { sig: 'string.rep(s, n [, sep])', cat: 'String', desc: 'Répète s n fois avec sep.', example: 'string.rep("ab", 3, "-") --> "ab-ab-ab"' },
-  'string.byte': { sig: 'string.byte(s [, i [, j]])', cat: 'String', desc: 'Retourne le code ASCII des caractères.', example: 'string.byte("A") --> 65' },
-  'string.char': { sig: 'string.char(...)', cat: 'String', desc: 'Convertit des codes ASCII en string.', example: 'string.char(65, 66) --> "AB"' },
-  'string.reverse': { sig: 'string.reverse(s)', cat: 'String', desc: 'Inverse la string.', example: 'string.reverse("hello") --> "olleh"' },
+  </main>
 
-  // Table
-  'table.insert': {
-    sig: 'table.insert(list, [pos,] value)',
-    cat: 'Table',
-    desc: 'Insère value à la position pos (défaut: fin). Décale les éléments suivants.',
-    example: 'table.insert(t, "item")\ntable.insert(t, 2, "item")'
-  },
-  'table.remove': {
-    sig: 'table.remove(list [, pos])',
-    cat: 'Table',
-    desc: 'Supprime et retourne l\'élément à pos (défaut: dernier).',
-    example: 'local last = table.remove(t)'
-  },
-  'table.sort': {
-    sig: 'table.sort(list [, comp])',
-    cat: 'Table',
-    desc: 'Trie la liste en place. comp(a,b) retourne true si a doit être avant b.',
-    example: 'table.sort(t, function(a,b) return a > b end)'
-  },
-  'table.concat': {
-    sig: 'table.concat(list [, sep [, i [, j]]])',
-    cat: 'Table',
-    desc: 'Concatène les éléments string/number avec sep.',
-    example: 'table.concat({"a","b","c"}, ", ") --> "a, b, c"'
-  },
-  'table.move': { sig: 'table.move(a1, f, e, t [, a2])', cat: 'Table', desc: 'Déplace des éléments entre tables.', example: 'table.move(src, 1, #src, 1, dst)' },
+  <footer class="border-t border-white/5 bg-[#050309]/50 py-6 text-center backdrop-blur-sm">
+    <p class="text-sm text-white/40">
+      © 2026 SpyHub Obfuscator — Developed by <span class="font-semibold text-fuchsia-300">@spy.dev</span>
+    </p>
+  </footer>
 
-  // Math
-  'math.floor': { sig: 'math.floor(x)', cat: 'Math', desc: 'Arrondit vers le bas.', example: 'math.floor(3.9) --> 3' },
-  'math.ceil': { sig: 'math.ceil(x)', cat: 'Math', desc: 'Arrondit vers le haut.', example: 'math.ceil(3.1) --> 4' },
-  'math.abs': { sig: 'math.abs(x)', cat: 'Math', desc: 'Valeur absolue.', example: 'math.abs(-5) --> 5' },
-  'math.max': { sig: 'math.max(x, ...)', cat: 'Math', desc: 'Retourne le maximum des valeurs.', example: 'math.max(1, 5, 3) --> 5' },
-  'math.min': { sig: 'math.min(x, ...)', cat: 'Math', desc: 'Retourne le minimum des valeurs.', example: 'math.min(1, 5, 3) --> 1' },
-  'math.sqrt': { sig: 'math.sqrt(x)', cat: 'Math', desc: 'Racine carrée.', example: 'math.sqrt(16) --> 4.0' },
-  'math.random': {
-    sig: 'math.random([m [, n]])',
-    cat: 'Math',
-    desc: 'Sans args: float [0,1). Avec m: int [1,m]. Avec m,n: int [m,n].',
-    example: 'math.random(1, 6) -- dé à 6 faces'
-  },
-  'math.randomseed': { sig: 'math.randomseed(x)', cat: 'Math', desc: 'Initialise le générateur aléatoire.', example: 'math.randomseed(os.time())' },
-  'math.huge': { sig: 'math.huge', cat: 'Math', desc: 'Représente l\'infini positif.', example: 'math.huge > 99999999 --> true' },
-  'math.pi': { sig: 'math.pi', cat: 'Math', desc: 'La constante π ≈ 3.14159...', example: 'local circ = 2 * math.pi * r' },
-  'math.sin': { sig: 'math.sin(x)', cat: 'Math', desc: 'Sinus de x (en radians).', example: 'math.sin(math.pi/2) --> 1.0' },
-  'math.cos': { sig: 'math.cos(x)', cat: 'Math', desc: 'Cosinus de x (en radians).', example: 'math.cos(0) --> 1.0' },
-  'math.pow': { sig: 'math.pow(x, y)', cat: 'Math', desc: 'x à la puissance y (Lua 5.2). En 5.3+ utilise x^y.', example: 'math.pow(2, 10) --> 1024' },
-  'math.log': { sig: 'math.log(x [, base])', cat: 'Math', desc: 'Logarithme naturel, ou en base spécifiée.', example: 'math.log(100, 10) --> 2.0' },
-  'math.modf': { sig: 'math.modf(x)', cat: 'Math', desc: 'Retourne partie entière et fractionnelle.', example: 'math.modf(3.7) --> 3, 0.7' },
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-  // OS
-  'os.time': { sig: 'os.time([table])', cat: 'OS', desc: 'Retourne le timestamp Unix actuel.', example: 'os.time()' },
-  'os.clock': { sig: 'os.clock()', cat: 'OS', desc: 'CPU time utilisé par le programme.', example: 'local t0 = os.clock()' },
-  'os.date': { sig: 'os.date([format [, time]])', cat: 'OS', desc: 'Formate une date. %Y=année, %m=mois, %d=jour, %H=heure, %M=min.', example: 'os.date("%Y-%m-%d %H:%M")' },
-  'os.exit': { sig: 'os.exit([code])', cat: 'OS', desc: 'Quitte le programme avec un code.', example: 'os.exit(0)' },
+      const inputEl = document.getElementById('input');
+      const outputEl = document.getElementById('output');
+      const obfuscateBtn = document.getElementById('obfuscateBtn');
+      const sampleBtn = document.getElementById('sampleBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const statusBadge = document.getElementById('statusBadge');
+      const outputStatus = document.getElementById('outputStatus');
 
-  // IO
-  'io.write': { sig: 'io.write(...)', cat: 'IO', desc: 'Écrit sans retour à la ligne (contrairement à print).', example: 'io.write("pas de newline")' },
-  'io.read': { sig: 'io.read([format])', cat: 'IO', desc: 'Lit depuis stdin. "*l"=ligne, "*n"=nombre, "*a"=tout.', example: 'local line = io.read("*l")' },
+      const SAMPLE_CODE = `-- Simple Lua Script
+      local function greet(name)
+        print("Hello, " .. name)
+      end
 
-  // FiveM
-  'RegisterNetEvent': {
-    sig: 'RegisterNetEvent(eventName)',
-    cat: 'FiveM',
-    desc: 'Enregistre un événement réseau côté client ou serveur.',
-    example: 'RegisterNetEvent("myResource:myEvent")\nAddEventHandler("myResource:myEvent", function(data)\n  print(data)\nend)'
-  },
-  'TriggerEvent': {
-    sig: 'TriggerEvent(eventName, ...)',
-    cat: 'FiveM',
-    desc: 'Déclenche un événement local.',
-    example: 'TriggerEvent("myResource:update", {value = 42})'
-  },
-  'TriggerNetEvent': {
-    sig: 'TriggerNetEvent(eventName, ...)',
-    cat: 'FiveM',
-    desc: 'Déclenche un événement réseau depuis le client vers le serveur.',
-    example: 'TriggerNetEvent("myResource:serverEvent", data)'
-  },
-  'TriggerClientEvent': {
-    sig: 'TriggerClientEvent(eventName, source, ...)',
-    cat: 'FiveM',
-    desc: 'Déclenche un événement réseau depuis le serveur vers un client. -1 = tous.',
-    example: 'TriggerClientEvent("myResource:update", source, data)'
-  },
-  'CreateThread': {
-    sig: 'CreateThread(threadFunction)',
-    cat: 'FiveM',
-    desc: 'Crée un thread asynchrone Citizen.',
-    example: 'CreateThread(function()\n  while true do\n    Wait(1000)\n    print("tick")\n  end\nend)'
-  },
-  'Wait': {
-    sig: 'Wait(ms)',
-    cat: 'FiveM',
-    desc: 'Pause le thread actuel pendant ms millisecondes. Doit être dans un CreateThread.',
-    example: 'Wait(1000) -- 1 seconde'
-  },
-  'exports': {
-    sig: 'exports["resourceName"]:functionName(...)',
-    cat: 'FiveM',
-    desc: 'Appelle une fonction exportée d\'une autre ressource.',
-    example: 'exports["myResource"]:GetPlayerData(PlayerId())'
-  },
-  'AddEventHandler': {
-    sig: 'AddEventHandler(eventName, handler)',
-    cat: 'FiveM',
-    desc: 'Ajoute un handler pour un événement.',
-    example: 'AddEventHandler("playerSpawned", function()\n  print("Joueur spawn!")\nend)'
-  },
+      local players = {"Alice", "Bob", "Charlie"}
+      for i, p in ipairs(players) do
+        greet(p)
+      end`;
 
-  // Keywords
-  'if': { sig: 'if condition then ... [elseif condition then ...] [else ...] end', cat: 'Mot-clé', desc: 'Structure conditionnelle.', example: 'if x > 0 then\n  print("positif")\nelseif x == 0 then\n  print("zéro")\nelse\n  print("négatif")\nend' },
-  'for': { sig: 'for i = start, end [, step] do ... end', cat: 'Mot-clé', desc: 'Boucle numérique ou générique.', example: 'for i = 1, 10 do\n  print(i)\nend' },
-  'while': { sig: 'while condition do ... end', cat: 'Mot-clé', desc: 'Boucle tant que condition est vraie.', example: 'while x > 0 do\n  x = x - 1\nend' },
-  'repeat': { sig: 'repeat ... until condition', cat: 'Mot-clé', desc: 'Exécute au moins une fois, continue jusqu\'à condition vraie.', example: 'repeat\n  x = x + 1\nuntil x >= 10' },
-  'function': { sig: 'function name(params) ... end', cat: 'Mot-clé', desc: 'Définit une fonction.', example: 'function add(a, b)\n  return a + b\nend' },
-  'local': { sig: 'local name [= value]', cat: 'Mot-clé', desc: 'Déclare une variable locale au bloc. Toujours préférer local!', example: 'local x = 42\nlocal function helper() end' },
-  'return': { sig: 'return [explist]', cat: 'Mot-clé', desc: 'Retourne des valeurs depuis une fonction.', example: 'return x, y, z -- valeurs multiples' },
-  'break': { sig: 'break', cat: 'Mot-clé', desc: 'Sort de la boucle la plus proche.', example: 'for i = 1, 10 do\n  if i == 5 then break end\nend' },
-  'goto': { sig: 'goto label / ::label::', cat: 'Mot-clé', desc: 'Saute à un label (Lua 5.2+). Utiliser avec précaution.', example: '::continue::\ngoto continue' },
-  'do': { sig: 'do ... end', cat: 'Mot-clé', desc: 'Crée un bloc de portée pour les variables locales.', example: 'do\n  local temp = compute()\n  use(temp)\nend' },
-  'not': { sig: 'not expr', cat: 'Opérateur', desc: 'Négation logique.', example: 'if not isActive then ... end' },
-  'and': { sig: 'a and b', cat: 'Opérateur', desc: 'Retourne a si false/nil, sinon b. Court-circuit.', example: 'local val = cond and "oui" or "non"' },
-  'or': { sig: 'a or b', cat: 'Opérateur', desc: 'Retourne a si truthy, sinon b. Court-circuit.', example: 'local x = val or defaultVal' },
-  'nil': { sig: 'nil', cat: 'Type', desc: 'Valeur nulle en Lua. Assigner nil à une variable la supprime d\'une table.', example: 'local x = nil\nt["key"] = nil -- supprime la clé' },
-  'true': { sig: 'true', cat: 'Type', desc: 'Valeur booléenne vraie.', example: 'local active = true' },
-  'false': { sig: 'false', cat: 'Type', desc: 'Valeur booléenne fausse. Seuls nil et false sont "falsy" en Lua!', example: 'local active = false' },
-  'in': { sig: 'for k, v in pairs(t) do', cat: 'Mot-clé', desc: 'Utilisé dans les boucles for génériques avec des itérateurs.', example: 'for k, v in pairs(myTable) do end' },
-  'then': { sig: 'if cond then', cat: 'Mot-clé', desc: 'Commence le bloc d\'un if ou elseif.', example: 'if x then\n  ...\nend' },
-  'else': { sig: 'else', cat: 'Mot-clé', desc: 'Bloc alternatif d\'un if.', example: 'if cond then ... else ... end' },
-  'elseif': { sig: 'elseif condition then', cat: 'Mot-clé', desc: 'Condition alternative dans un if.', example: 'if a then\nelseif b then\nelse\nend' },
-  'end': { sig: 'end', cat: 'Mot-clé', desc: 'Ferme un bloc if/for/while/function/do.', example: '-- Chaque bloc ouvert a besoin de son end' },
+      sampleBtn.addEventListener('click', () => {
+        inputEl.value = SAMPLE_CODE;
+        outputEl.value = '';
+        statusBadge.textContent = 'Ready';
+        statusBadge.className = 'rounded-full border border-fuchsia-300/15 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200';
+        outputStatus.textContent = 'Inactive';
+        outputStatus.className = 'rounded-full border border-fuchsia-300/15 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200';
+      });
 
-  // Toggle et autres mots courants du jeu
-  'toggle': { sig: 'toggle (variable booléenne)', cat: 'Astuce', desc: 'En Lua, toggle = inverser un booléen. Utilise not pour inverser.', example: 'local isOpen = false\nfunction Toggle()\n  isOpen = not isOpen\nend' },
-};
-
-// =================== AUTOCOMPLETE ===================
-const LUA_KEYWORDS = Object.keys(LUA_DB);
-
-const editor = document.getElementById('code-editor');
-const acMenu = document.getElementById('autocomplete');
-const lineNumbers = document.getElementById('line-numbers');
-const infoContent = document.getElementById('info-content');
-
-let acIndex = 0;
-let acSuggestions = [];
-let currentWord = '';
-
-function getCurrentWord() {
-  const pos = editor.selectionStart;
-  const text = editor.value.substring(0, pos);
-  const match = text.match(/[\w\.]+$/);
-  return match ? match[0] : '';
-}
-
-function showAutocomplete(word) {
-  currentWord = word;
-  if (!word || word.length < 2) {
-    hideAutocomplete();
-    return;
-  }
-
-  const lw = word.toLowerCase();
-  acSuggestions = LUA_KEYWORDS.filter(k =>
-    k.toLowerCase().startsWith(lw) || k.toLowerCase().includes(lw)
-  ).slice(0, 12);
-
-  if (!acSuggestions.length) { hideAutocomplete(); return; }
-
-  acMenu.innerHTML = acSuggestions.map((s, i) => {
-    const d = LUA_DB[s];
-    return `<div class="ac-item ${i===0?'selected':''}" onclick="applyAC('${s}')">
-      <span class="ac-icon">${d.cat.slice(0,3)}</span>
-      <span>${s}</span>
-      <span class="ac-desc">${d.sig.split('(')[0].trim().replace(/^.*\./,'')}</span>
-    </div>`;
-  }).join('');
-
-  acIndex = 0;
-
-  // Position
-  const edRect = editor.getBoundingClientRect();
-  const pos = getCaretCoords();
-  acMenu.style.left = (pos.left - edRect.left + 55) + 'px';
-  acMenu.style.top = (pos.top - edRect.top + 22) + 'px';
-  acMenu.style.display = 'block';
-
-  // Update info panel
-  showInfo(acSuggestions[0]);
-}
-
-function hideAutocomplete() {
-  acMenu.style.display = 'none';
-  acSuggestions = [];
-}
-
-function applyAC(word) {
-  const pos = editor.selectionStart;
-  const text = editor.value;
-  const before = text.substring(0, pos);
-  const after = text.substring(pos);
-  const lastDot = before.match(/([\w\.]+)$/);
-  const len = lastDot ? lastDot[0].length : 0;
-
-  editor.value = before.substring(0, pos - len) + word + after;
-  editor.selectionStart = editor.selectionEnd = pos - len + word.length;
-  hideAutocomplete();
-  editor.focus();
-  showInfo(word);
-}
-
-function getCaretCoords() {
-  // Approx caret position
-  const lines = editor.value.substring(0, editor.selectionStart).split('\n');
-  const line = lines.length;
-  const col = lines[lines.length - 1].length;
-  return {
-    top: (line - 1) * 20 + 12 - editor.scrollTop,
-    left: col * 7.8 + 12
-  };
-}
-
-// =================== INFO PANEL ===================
-function showInfo(key) {
-  if (!key || !LUA_DB[key]) {
-    // Try partial match
-    const found = LUA_KEYWORDS.find(k => k.toLowerCase() === key.toLowerCase());
-    if (found) key = found;
-    else {
-      const partial = LUA_KEYWORDS.filter(k => k.toLowerCase().startsWith(key.toLowerCase()));
-      if (partial.length > 0) {
-        renderInfoList(partial);
-        return;
+      function obfuscateLua(code) {
+        let obf = code.replace(/--.*$/gm, '');
+        const localVars = obf.match(/local\s+(\w+)/g) || [];
+        const varMap = {};
+        localVars.forEach(match => {
+          const name = match.replace('local ', '');
+          if (!varMap[name]) {
+            varMap[name] = '_' + Math.random().toString(36).substring(2, 8);
+          }
+        });
+        for (const [orig, alias] of Object.entries(varMap)) {
+          const regex = new RegExp(`\\b${orig}\\b`, 'g');
+          obf = obf.replace(regex, alias);
+        }
+        const noise = [
+          'local _ = 42 -- dead code',
+          'if false then print("never") end',
+          'local function unused() return 0 end'
+        ];
+        obf = noise.join('\n') + '\n' + obf;
+        obf = obf.replace(/"([^"]*)"/g, (match, str) => {
+          return `string.char(${Array.from(str).map(c => c.charCodeAt(0)).join(',')})`;
+        });
+        return obf;
       }
-      return;
-    }
-  }
 
-  const d = LUA_DB[key];
-  const catColor = {
-    'Built-in': '#00d4ff', 'String': '#ff7b72', 'Table': '#ffa657',
-    'Math': '#f2cc60', 'OS': '#7ee787', 'IO': '#bc8cff',
-    'FiveM': '#ff9f43', 'Mot-clé': '#79c0ff', 'Opérateur': '#d2a8ff',
-    'Type': '#7ee787', 'Itérateur': '#ffa657', 'Méta': '#ff7b72',
-    'Erreurs': '#ff3366', 'Astuce': '#00ff88'
-  }[d.cat] || '#00d4ff';
+      obfuscateBtn.addEventListener('click', () => {
+        const code = inputEl.value.trim();
+        if (!code) {
+          statusBadge.textContent = 'Empty';
+          statusBadge.className = 'rounded-full border border-amber-300/15 bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-200';
+          outputStatus.textContent = 'Error';
+          outputStatus.className = 'rounded-full border border-red-300/15 bg-red-400/10 px-3 py-1 text-xs font-medium text-red-200';
+          return;
+        }
 
-  infoContent.innerHTML = `
-    <div class="info-fn">
-      <div class="info-fn-name" style="color:${catColor}">${key}</div>
-      <div class="info-fn-sig">${escHtml(d.sig)}</div>
-      <span style="font-size:9px;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:10px;color:${catColor}">${d.cat}</span>
-      <div class="info-fn-desc" style="margin-top:8px">${d.desc}</div>
-      <div class="info-fn-example">-- Exemple:\n${escHtml(d.example)}</div>
-    </div>
-  `;
-}
+        statusBadge.textContent = 'Processing...';
+        statusBadge.className = 'rounded-full border border-blue-300/15 bg-blue-400/10 px-3 py-1 text-xs font-medium text-blue-200';
+        outputStatus.textContent = 'Running...';
+        outputStatus.className = 'rounded-full border border-blue-300/15 bg-blue-400/10 px-3 py-1 text-xs font-medium text-blue-200';
 
-function renderInfoList(keys) {
-  const items = keys.slice(0, 8).map(k => {
-    const d = LUA_DB[k];
-    return `<div class="ref-item" onclick="showInfo('${k}')">
-      <span>${k}</span>
-      <span class="ref-cat">${d.cat}</span>
-    </div>`;
-  }).join('');
-  infoContent.innerHTML = `<div style="margin-bottom:8px;color:var(--muted);font-size:10px">${keys.length} correspondances :</div>${items}`;
-}
+        setTimeout(() => {
+          try {
+            const result = obfuscateLua(code);
+            outputEl.value = result;
+            statusBadge.textContent = 'Done';
+            statusBadge.className = 'rounded-full border border-emerald-300/15 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-200';
+            outputStatus.textContent = 'Ready';
+            outputStatus.className = 'rounded-full border border-emerald-300/15 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-200';
+          } catch (err) {
+            outputEl.value = '-- Obfuscation error :\n-- ' + err.message;
+            statusBadge.textContent = 'Error';
+            statusBadge.className = 'rounded-full border border-red-300/15 bg-red-400/10 px-3 py-1 text-xs font-medium text-red-200';
+            outputStatus.textContent = 'Error';
+            outputStatus.className = 'rounded-full border border-red-300/15 bg-red-400/10 px-3 py-1 text-xs font-medium text-red-200';
+          }
+        }, 400);
+      });
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+      copyBtn.addEventListener('click', () => {
+        const text = outputEl.value;
+        if (!text) return;
+        navigator.clipboard?.writeText(text).then(() => {
+          const original = copyBtn.textContent;
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = original; }, 1500);
+        }).catch(() => {
+          outputEl.select();
+          document.execCommand('copy');
+        });
+      });
 
-// =================== EDITOR EVENTS ===================
-editor.addEventListener('input', () => {
-  updateLineNumbers();
-  const word = getCurrentWord();
-  showAutocomplete(word);
-});
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          }
+        });
+      }, { threshold: 0.15 });
+      reveals.forEach(el => observer.observe(el));
 
-editor.addEventListener('keydown', (e) => {
-  if (acMenu.style.display === 'block' && acSuggestions.length) {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      acIndex = (acIndex + 1) % acSuggestions.length;
-      updateAcSelection();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      acIndex = (acIndex - 1 + acSuggestions.length) % acSuggestions.length;
-      updateAcSelection();
-    } else if (e.key === 'Enter' || e.key === 'Tab') {
-      e.preventDefault();
-      applyAC(acSuggestions[acIndex]);
-    } else if (e.key === 'Escape') {
-      hideAutocomplete();
-    }
-    return;
-  }
-
-  // Tab = 2 spaces
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const s = editor.selectionStart;
-    editor.value = editor.value.substring(0, s) + '  ' + editor.value.substring(editor.selectionEnd);
-    editor.selectionStart = editor.selectionEnd = s + 2;
-  }
-});
-
-editor.addEventListener('keyup', () => {
-  updateCursorPos();
-});
-
-editor.addEventListener('click', () => {
-  hideAutocomplete();
-  updateCursorPos();
-});
-
-function updateAcSelection() {
-  const items = acMenu.querySelectorAll('.ac-item');
-  items.forEach((item, i) => {
-    item.classList.toggle('selected', i === acIndex);
-    if (i === acIndex) showInfo(acSuggestions[i]);
-  });
-}
-
-function updateLineNumbers() {
-  const lines = editor.value.split('\n').length;
-  lineNumbers.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join('\n');
-}
-
-function updateCursorPos() {
-  const text = editor.value.substring(0, editor.selectionStart);
-  const lines = text.split('\n');
-  document.getElementById('cursor-pos').textContent =
-    `Ln ${lines.length}, Col ${lines[lines.length-1].length + 1}`;
-}
-
-editor.addEventListener('scroll', () => {
-  lineNumbers.scrollTop = editor.scrollTop;
-});
-
-// =================== SNIPPETS ===================
-const SNIPPETS = {
-  'if': `if condition then
-  -- code
-elseif autreCondition then
-  -- code
-else
-  -- code
-end`,
-  'for': `for i = 1, 10 do
-  -- code avec i
-end
-
--- Ou boucle générique :
-for k, v in pairs(maTable) do
-  print(k, v)
-end`,
-  'while': `local i = 0
-while i < 10 do
-  i = i + 1
-  -- code
-end`,
-  'function': `local function maFonction(param1, param2)
-  -- code
-  return resultat
-end
-
--- Appel :
-local res = maFonction(valeur1, valeur2)`,
-  'table': `local maTable = {
-  cle1 = "valeur1",
-  cle2 = 42,
-  cle3 = true,
-}
-
--- Accès :
-print(maTable.cle1)
-print(maTable["cle2"])
-
--- Tableau indexé :
-local liste = {"a", "b", "c"}
-print(liste[1]) -- "a" (indices commencent à 1)`,
-  'class': `-- OOP en Lua avec métatable
-local MaClasse = {}
-MaClasse.__index = MaClasse
-
-function MaClasse.new(nom, valeur)
-  local instance = setmetatable({}, MaClasse)
-  instance.nom = nom
-  instance.valeur = valeur
-  return instance
-end
-
-function MaClasse:afficher()
-  print(self.nom .. " = " .. tostring(self.valeur))
-end
-
--- Utilisation :
-local obj = MaClasse.new("test", 42)
-obj:afficher()`,
-  'pcall': `-- Gestion d'erreurs sécurisée
-local ok, resultat = pcall(function()
-  -- code qui peut échouer
-  if erreur then
-    error("Message d'erreur", 2)
-  end
-  return "succès"
-end)
-
-if ok then
-  print("Succès:", resultat)
-else
-  print("Erreur:", resultat)
-end`,
-  'coroutine': `-- Coroutine Lua
-local co = coroutine.create(function(a, b)
-  print("Démarrage avec", a, b)
-  local c = coroutine.yield(a + b)
-  print("Repris avec", c)
-  return "fin"
-end)
-
-local ok, val = coroutine.resume(co, 10, 20)
-print("Yielded:", val) -- 30
-local ok2, val2 = coroutine.resume(co, "hello")
-print("Return:", val2) -- "fin"`,
-  'event': `-- FiveM : RegisterNetEvent
-RegisterNetEvent("monScript:monEvenement")
-AddEventHandler("monScript:monEvenement", function(data)
-  print("Reçu:", json.encode(data))
-  -- code ici
-end)`,
-  'trigger': `-- FiveM : TriggerEvent
--- Événement local :
-TriggerEvent("monScript:update", {valeur = 42})
-
--- Client vers Serveur :
-TriggerNetEvent("monScript:serverEvent", {
-  playerId = GetPlayerServerId(PlayerId()),
-  data = "exemple"
-})
-
--- Serveur vers Client (depuis server.lua) :
-TriggerClientEvent("monScript:clientEvent", source, {msg = "ok"})`,
-  'thread': `-- FiveM : Thread asynchrone
-CreateThread(function()
-  while true do
-    Wait(1000) -- toutes les secondes
-    -- code exécuté en boucle
-    local playerPed = PlayerPedId()
-    print("Joueur:", GetPlayerName(PlayerId()))
-  end
-end)`,
-  'wait': `-- FiveM : Citizen.Wait / Wait
-CreateThread(function()
-  -- Attendre 2 secondes
-  Wait(2000)
-  print("2 secondes passées")
-  
-  -- Attendre la frame suivante (0ms)
-  while true do
-    Wait(0) -- yield, évite le crash
-    -- code frame-perfect
-  end
-end)`,
-  'export': `-- FiveM : Exports
--- Dans fxmanifest.lua : exports { 'maFonction' }
-
--- Définir l'export (dans ton resource) :
-exports('maFonction', function(param)
-  return "résultat: " .. tostring(param)
-end)
-
--- Appeler depuis une autre resource :
-local res = exports["monResource"]:maFonction("test")
-print(res)`
-};
-
-function insertSnippet(key) {
-  const snippet = SNIPPETS[key];
-  if (!snippet) return;
-  const s = editor.selectionStart;
-  editor.value = editor.value.substring(0, s) + snippet + '\n' + editor.value.substring(s);
-  editor.selectionStart = editor.selectionEnd = s + snippet.length + 1;
-  editor.focus();
-  updateLineNumbers();
-  termLog(`Snippet "${key}" inséré !`, 'info');
-}
-
-// =================== TERMINAL ===================
-const terminal = document.getElementById('terminal');
-const termInput = document.getElementById('term-input');
-let termHistory = [];
-let historyIndex = -1;
-
-const TERM_COMMANDS = {
-  'help': () => {
-    termLog('Commandes disponibles:', 'info');
-    termLog('  help           - Afficher cette aide', 'output');
-    termLog('  clear          - Effacer le terminal', 'output');
-    termLog('  analyze        - Analyser le code de l\'éditeur', 'output');
-    termLog('  snippets       - Lister les snippets', 'output');
-    termLog('  lua <expr>     - Évaluer une expression Lua', 'output');
-    termLog('  doc <fonction> - Voir la doc d\'une fonction', 'output');
-    termLog('  version        - Infos sur 7x Dev Tools', 'output');
-    termLog('  search <mot>   - Chercher dans la doc Lua', 'output');
-  },
-  'clear': () => clearTerminal(),
-  'version': () => {
-    termLog('7x | Dev Tools v1.0', 'info');
-    termLog('Lua 5.4 / FiveM / Roblox Support', 'output');
-    termLog('Made for coders who mean business.', 'output');
-  },
-  'analyze': () => analyzeCode(),
-  'snippets': () => {
-    termLog('Snippets disponibles: ' + Object.keys(SNIPPETS).join(', '), 'info');
-  },
-};
-
-termInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const cmd = termInput.value.trim();
-    if (!cmd) return;
-    termHistory.unshift(cmd);
-    historyIndex = -1;
-    termLog(cmd, 'prompt');
-    executeCommand(cmd);
-    termInput.value = '';
-  } else if (e.key === 'ArrowUp') {
-    if (historyIndex < termHistory.length - 1) {
-      historyIndex++;
-      termInput.value = termHistory[historyIndex];
-    }
-  } else if (e.key === 'ArrowDown') {
-    if (historyIndex > 0) {
-      historyIndex--;
-      termInput.value = termHistory[historyIndex];
-    } else {
-      historyIndex = -1;
-      termInput.value = '';
-    }
-  }
-});
-
-function executeCommand(cmd) {
-  const parts = cmd.split(' ');
-  const base = parts[0].toLowerCase();
-
-  if (TERM_COMMANDS[base]) {
-    TERM_COMMANDS[base](parts.slice(1));
-    return;
-  }
-
-  if (base === 'doc') {
-    const fn = parts.slice(1).join(' ');
-    const key = LUA_KEYWORDS.find(k => k.toLowerCase() === fn.toLowerCase());
-    if (key) {
-      const d = LUA_DB[key];
-      termLog(`📖 ${key}`, 'info');
-      termLog(`   Sig: ${d.sig}`, 'output');
-      termLog(`   Cat: ${d.cat}`, 'output');
-      termLog(`   ${d.desc}`, 'output');
-      termLog(`   Ex: ${d.example.split('\n')[0]}`, 'warn');
-      showInfo(key);
-    } else {
-      termLog(`Inconnu: "${fn}". Tape "search ${fn}" pour chercher.`, 'error');
-    }
-    return;
-  }
-
-  if (base === 'search') {
-    const query = parts.slice(1).join(' ').toLowerCase();
-    const results = LUA_KEYWORDS.filter(k =>
-      k.toLowerCase().includes(query) ||
-      LUA_DB[k].desc.toLowerCase().includes(query) ||
-      LUA_DB[k].cat.toLowerCase().includes(query)
-    );
-    if (results.length) {
-      termLog(`Résultats pour "${query}": ${results.slice(0,8).join(', ')}${results.length > 8 ? ` (+${results.length-8})` : ''}`, 'info');
-      renderInfoList(results);
-    } else {
-      termLog(`Aucun résultat pour "${query}"`, 'error');
-    }
-    return;
-  }
-
-  if (base === 'lua') {
-    const expr = parts.slice(1).join(' ');
-    simulateLua(expr);
-    return;
-  }
-
-  termLog(`Commande inconnue: "${cmd}". Tape "help".`, 'error');
-}
-
-function simulateLua(expr) {
-  // Basic Lua expression simulation
-  try {
-    // Simple math expressions
-    const mathExpr = expr.replace(/math\.floor/g, 'Math.floor')
-      .replace(/math\.ceil/g, 'Math.ceil')
-      .replace(/math\.abs/g, 'Math.abs')
-      .replace(/math\.sqrt/g, 'Math.sqrt')
-      .replace(/math\.max/g, 'Math.max')
-      .replace(/math\.min/g, 'Math.min')
-      .replace(/math\.pi/g, 'Math.PI')
-      .replace(/math\.random\(\)/g, 'Math.random()')
-      .replace(/\^/g, '**');
-    
-    if (/^[\d\s\+\-\*\/\%\(\)\.Math\[\]a-zA-Z_]+$/.test(mathExpr) && !mathExpr.includes(';')) {
-      const res = eval(mathExpr);
-      if (res !== undefined) {
-        termLog(`→ ${res}`, 'output');
-        return;
-      }
-    }
-  } catch(e) {}
-  
-  termLog('(Simulation Lua basique — utilisez un vrai interpréteur pour des scripts complets)', 'warn');
-  termLog(`Expression: ${expr}`, 'output');
-}
-
-function termLog(msg, type = 'output') {
-  const div = document.createElement('div');
-  div.className = 'term-line';
-  const span = document.createElement('span');
-
-  if (type === 'prompt') {
-    div.innerHTML = `<span class="term-prompt">lua></span><span class="term-output"> ${escHtml(msg)}</span>`;
-  } else {
-    span.className = `term-${type}`;
-    span.textContent = msg;
-    div.appendChild(span);
-  }
-
-  terminal.insertBefore(div, terminal.lastElementChild);
-  terminal.scrollTop = terminal.scrollHeight;
-}
-
-function clearTerminal() {
-  terminal.innerHTML = '<div class="term-line"><span class="term-info">Terminal effacé.</span></div>';
-  const inputRow = document.createElement('div');
-}
-
-// =================== ANALYZE ===================
-function analyzeCode() {
-  const code = editor.value;
-  if (!code.trim()) { termLog('Éditeur vide !', 'warn'); return; }
-
-  termLog('--- Analyse du code ---', 'info');
-
-  const lines = code.split('\n');
-  termLog(`Lignes: ${lines.length} | Caractères: ${code.length}`, 'output');
-
-  // Count functions
-  const fns = code.match(/function\s+[\w:\.]+/g) || [];
-  if (fns.length) termLog(`Fonctions: ${fns.map(f => f.replace('function ', '')).join(', ')}`, 'output');
-
-  // Check local usage
-  const nonLocalVars = code.match(/^(?!local\s|--|function\s)(\w+)\s*=/gm) || [];
-  if (nonLocalVars.length) termLog(`⚠ Vars potentiellement globales: ${nonLocalVars.slice(0,5).join(', ')}`, 'warn');
-
-  // Missing end
-  const openBlocks = (code.match(/\b(if|for|while|function|do|repeat)\b/g) || []).length;
-  const closeBlocks = (code.match(/\bend\b/g) || []).length;
-  const untilBlocks = (code.match(/\buntil\b/g) || []).length;
-  const expected = closeBlocks + untilBlocks;
-  if (openBlocks !== expected) {
-    termLog(`⚠ Blocs: ${openBlocks} ouverts / ${expected} fermés — possible "end" manquant`, 'warn');
-  } else {
-    termLog(`✓ Blocs correctement fermés (${openBlocks})`, 'output');
-  }
-
-  // FiveM detection
-  if (code.includes('CreateThread') || code.includes('TriggerNetEvent') || code.includes('RegisterNetEvent')) {
-    termLog('🎮 Code FiveM détecté', 'info');
-  }
-
-  termLog('--- Analyse terminée ---', 'info');
-}
-
-// =================== FORMAT ===================
-function formatCode() {
-  let code = editor.value;
-  // Basic formatting
-  code = code.replace(/\t/g, '  ');
-  code = code.replace(/\r\n/g, '\n');
-  // Add space after keywords
-  code = code.replace(/\b(if|while|for|function)\(/g, '$1 (');
-  // Clean multiple blank lines
-  code = code.replace(/\n{3,}/g, '\n\n');
-  editor.value = code;
-  updateLineNumbers();
-  termLog('✨ Code formaté !', 'info');
-}
-
-function clearEditor() {
-  if (confirm('Effacer tout le code ?')) {
-    editor.value = '';
-    updateLineNumbers();
-    termLog('Éditeur effacé.', 'warn');
-  }
-}
-
-function copyCode() {
-  navigator.clipboard.writeText(editor.value).then(() => {
-    termLog('✓ Code copié dans le presse-papier !', 'info');
-  });
-}
-
-// =================== ASK AI ===================
-async function askAI() {
-  const code = editor.value.trim();
-  if (!code) { termLog('Écris du code d\'abord !', 'warn'); return; }
-
-  termLog('🤖 Analyse IA en cours...', 'info');
-  infoContent.innerHTML = '<div style="color:var(--accent)">⟳ Analyse en cours...</div>';
-
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{
-          role: "user",
-          content: `Tu es un expert Lua et FiveM. Analyse ce code Lua et donne:
-1. Un résumé de ce que fait le code (2-3 phrases)
-2. Les problèmes ou améliorations possibles
-3. Une suggestion concrète d'amélioration
-
-Code:
-\`\`\`lua
-${code}
-\`\`\`
-
-Réponds en français, de façon concise et technique.`
-        }]
-      })
     });
+  </script>
 
-    const data = await response.json();
-    const text = data.content?.map(i => i.text || '').join('\n') || 'Erreur IA';
-
-    // Show in info panel
-    infoContent.innerHTML = `
-      <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-radius:6px;padding:10px;font-size:11px;line-height:17px;color:var(--text)">
-        <div style="color:var(--accent);font-size:10px;letter-spacing:1px;margin-bottom:8px">🤖 ANALYSE IA</div>
-        ${escHtml(text).replace(/\n/g, '<br>')}
-      </div>`;
-
-    termLog('✓ Analyse IA terminée — voir panneau droit', 'info');
-  } catch(e) {
-    termLog('Erreur IA: ' + e.message, 'error');
-    infoContent.innerHTML = '<div style="color:var(--red)">Erreur IA. Vérifie ta connexion.</div>';
-  }
-}
-
-// =================== TABS ===================
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', ['editor','terminal','ref'][i] === tab);
-  });
-
-  if (tab === 'ref') {
-    // Show full reference
-    const grouped = {};
-    LUA_KEYWORDS.forEach(k => {
-      const cat = LUA_DB[k].cat;
-      if (!grouped[cat]) grouped[cat] = [];
-      grouped[cat].push(k);
-    });
-
-    infoContent.innerHTML = Object.entries(grouped).map(([cat, keys]) => `
-      <div style="margin-bottom:12px">
-        <div style="color:var(--accent2);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">${cat}</div>
-        ${keys.map(k => `<div class="ref-item" onclick="showInfo('${k}')"><span>${k}</span><span class="ref-cat">?</span></div>`).join('')}
-      </div>
-    `).join('');
-  }
-}
-
-// =================== INIT ===================
-updateLineNumbers();
-
-// Starter code
-editor.value = `-- 7x Dev Tools — Éditeur Lua
--- Tape pour activer l'autocomplétion !
-
-local function toggleActive(state)
-  state = not state  -- toggle !
-  return state
-end
-
-local isOpen = false
-isOpen = toggleActive(isOpen)
-print("isOpen:", tostring(isOpen))
-
--- FiveM example :
--- CreateThread(function()
---   while true do
---     Wait(1000)
---     print("tick")
---   end
--- end)`;
-updateLineNumbers();
-</script>
 </body>
 </html>
